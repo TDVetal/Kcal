@@ -1462,18 +1462,29 @@ function getExtendedDietPlans(mode) {
     return []; // стандартные и вегетарианские подтягиваются из основного кода
 }
 </script>
-    <!-- Кнопки выбора языка в Профиль -->
-<div class="glass-panel rounded-3xl p-5 space-y-3 mt-4">
-    <h3 class="font-black text-base">🌐 Язык интерфейса / Мова / Language</h3>
-    <div class="grid grid-cols-2 gap-2">
-        <button onclick="changeAppLanguage('ru')" class="sub-card py-3 rounded-2xl text-sm font-black text-center hover:border-blue-500">🇷🇺 Русский</button>
-        <button onclick="changeAppLanguage('ua')" class="sub-card py-3 rounded-2xl text-sm font-black text-center hover:border-blue-500">🇺🇦 Українська</button>
-        <button onclick="changeAppLanguage('en')" class="sub-card py-3 rounded-2xl text-sm font-black text-center hover:border-blue-500">🇬🇧 English</button>
-        <button onclick="changeAppLanguage('nl')" class="sub-card py-3 rounded-2xl text-sm font-black text-center hover:border-blue-500">🇳🇱 Nederlands</button>
-    </div>
-</body>
-</html>
-
+   <!-- Компактная кнопка языка в шапку -->
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+    const headerEl = document.querySelector('header') || document.querySelector('.flex');
+    if (headerEl && !document.getElementById('langSelectorBtn')) {
+        const langBtn = document.createElement('div');
+        langBtn.id = 'langSelectorBtn';
+        langBtn.className = 'flex items-center gap-1 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full cursor-pointer text-xs font-bold text-white shadow-sm';
+        langBtn.innerHTML = `🌐 ${typeof currentLang !== 'undefined' ? currentLang.toUpperCase() : 'RU'}`;
+        langBtn.onclick = () => {
+            const langs = ['ru', 'ua', 'en', 'nl'];
+            let nextLang = langs[(langs.indexOf(typeof currentLang !== 'undefined' ? currentLang : 'ru') + 1) % langs.length];
+            if (typeof changeAppLanguage === 'function') {
+                changeAppLanguage(nextLang);
+            } else {
+                localStorage.setItem('kcal_lang', nextLang);
+                location.reload();
+            }
+        };
+        headerEl.appendChild(langBtn);
+    }
+});
+</script>
 
 </body>
 </html>
