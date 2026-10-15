@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Калории">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#090d16">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><text x='50%' y='56%' font-size='52' text-anchor='middle' dominant-baseline='central'>🥗</text></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%2310b981'/><text x='50%' y='56%' font-size='52' text-anchor='middle' dominant-baseline='central'>🥗</text></svg>">
+  <title>Калории Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg-main: #090d16;
+      --bg-grad: #111827;
+      --card-bg: rgba(30, 41, 59, 0.78);
+      --card-sub: rgba(15, 23, 42, 0.65);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-col: rgba(255, 255, 255, 0.09);
+      --input-bg: rgba(15, 23, 42, 0.9);
+      --ring-track: #1e293b;
+    }
+    html.light-mode {
+      --bg-main: #f1f5f9;
+      --bg-grad: #e2e8f0;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --card-sub: rgba(241, 245, 249, 0.95);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-col: rgba(15, 23, 42, 0.09);
+      --input-bg: #ffffff;
+      --ring-track: #e2e8f0;
+    }
+    body {
+      background: linear-gradient(135deg, var(--bg-main) 0%, var(--bg-grad) 100%);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      padding-bottom: 115px;
+      user-select: none;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-col);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+    .sub-card {
+      background: var(--card-sub);
+      border: 1px solid var(--border-col);
+    }
+    .muted-text { color: var(--text-muted); }
+    .ring-progress {
+      transition: stroke-dashoffset 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+    input, select {
+      background-color: var(--input-bg) !important;
+      color: var(--text-main) !important;
+      border-color: var(--border-col) !important;
+    }
+    button { cursor: pointer; touch-action: manipulation; }
+  </style>
+</head>
+<body class="px-3 pt-3">
+
+  <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50 hidden"></canvas>
+
+  <div id="celebrateBanner" class="hidden fixed top-16 left-4 right-4 z-50 bg-emerald-500 text-slate-950 font-extrabold p-4 rounded-2xl shadow-2xl text-center text-sm transition-all">
+    🎉 Супер! Вы выполнили цель на сегодня!
+  </div>
+
+  <header class="sticky top-2 z-30 glass-card rounded-2xl px-3.5 py-2.5 mb-4 flex items-center justify-between">
+    <div class="flex items-center gap-2.5" onclick="window.switchTab('home')">
+      <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-xl">🥗</div>
+      <div>
+        <h1 class="text-base font-extrabold tracking-tight text-emerald-500">Калории</h1>
+        <p id="currentDateLabel" class="text-[11px] muted-text capitalize"></p>
+      </div>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <button onclick="window.cycleTheme()" id="themeBtn" class="px-2.5 py-1.5 rounded-xl sub-card text-xs font-semibold active:scale-95 transition">
+        🌗 Авто
+      </button>
+      <button onclick="window.switchTab('settings')" class="px-2.5 py-1.5 rounded-xl sub-card text-xs font-semibold active:scale-95 transition">
+        ⚙️
+      </button>
+    </div>
+  </header>
+
+  <!-- ВКЛАДКА 1: ИТОГ ДНЯ -->
+  <main id="tab-home" class="space-y-3.5 max-w-md mx-auto">
+    <div class="glass-card rounded-3xl p-4 relative overflow-hidden">
+      <div class="flex items-center justify-between">
+        <div class="space-y-2">
+          <div>
+            <span class="text-[10px] font-bold muted-text uppercase tracking-wider">Осталось на сегодня</span>
+            <div id="calRemaining" class="text-3xl font-extrabold tracking-tight">2000 ккал</div>
+            <div id="dayStatusBadge" class="inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-500">
+              Норма: 2000 ккал
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-1 text-xs">
+            <div class="sub-card p-2.5 rounded-2xl">
+              <div class="muted-text text-[10px]">🍽 Съедено</div>
+              <div class="text-sm font-extrabold text-amber-500"><span id="calEaten">0</span> ккал</div>
+            </div>
+            <div class="sub-card p-2.5 rounded-2xl">
+              <div class="muted-text text-[10px]">🔥 Активность</div>
+              <div class="text-sm font-extrabold text-orange-500"><span id="calBurned">0</span>/<span id="actGoalLabel">400</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative w-28 h-28 flex items-center justify-center">
+          <svg class="w-28 h-28">
+            <circle cx="56" cy="56" r="46" stroke="var(--ring-track)" stroke-width="10" fill="transparent" />
+            <circle id="calRing" class="ring-progress" cx="56" cy="56" r="46" stroke="#10b981" stroke-width="10" stroke-linecap="round" fill="transparent" stroke-dasharray="289" stroke-dashoffset="289" />
+          </svg>
+          <div class="absolute text-center">
+            <div id="calPercent" class="text-xl font-extrabold">0%</div>
+            <div class="text-[10px] muted-text font-medium">рациона</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-3 pt-2.5 border-t border-slate-500/10">
+        <div class="flex justify-between text-[11px] mb-1">
+          <span class="font-semibold">🔥 Цель активности за день</span>
+          <span id="actProgressText" class="text-orange-500 font-bold">0 / 400 ккал (0%)</span>
+        </div>
+        <div class="w-full h-2 sub-card rounded-full overflow-hidden">
+          <div id="actBar" class="h-full bg-orange-500 transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-500/10 text-xs">
+        <div class="sub-card p-2 rounded-xl">
+          <div class="flex justify-between mb-1 text-[10px]">
+            <span class="font-semibold">Белки</span>
+            <span id="protLabel" class="muted-text">0/130г</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-500/20 rounded-full overflow-hidden">
+            <div id="protBar" class="h-full bg-blue-500 transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+        <div class="sub-card p-2 rounded-xl">
+          <div class="flex justify-between mb-1 text-[10px]">
+            <span class="font-semibold">Жиры</span>
+            <span id="fatLabel" class="muted-text">0/70г</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-500/20 rounded-full overflow-hidden">
+            <div id="fatBar" class="h-full bg-amber-500 transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+        <div class="sub-card p-2 rounded-xl">
+          <div class="flex justify-between mb-1 text-[10px]">
+            <span class="font-semibold">Углев.</span>
+            <span id="carbLabel" class="muted-text">0/220г</span>
+          </div>
+          <div class="w-full h-1.5 bg-slate-500/20 rounded-full overflow-hidden">
+            <div id="carbBar" class="h-full bg-emerald-500 transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2.5">
+      <button onclick="window.switchTab('scan')" class="glass-card rounded-2xl p-3.5 flex items-center gap-3 text-left border-emerald-500/30 active:scale-95 transition">
+        <span class="text-2xl">📸</span>
+        <div>
+          <div class="font-bold text-xs">Фото еды</div>
+          <div class="text-[10px] muted-text">Авто-расчет КБЖУ</div>
+        </div>
+      </button>
+      <button onclick="window.switchTab('progress')" class="glass-card rounded-2xl p-3.5 flex items-center gap-3 text-left active:scale-95 transition">
+        <span class="text-2xl">⚖️</span>
+        <div>
+          <div class="font-bold text-xs">Вес: <span id="homeWeightLabel">80</span> кг</div>
+          <div class="text-[10px] muted-text">+ Фото фигуры</div>
+        </div>
+      </button>
+    </div>
+
+    <div class="glass-card rounded-2xl p-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <span class="text-xl">💧</span>
+        <div>
+          <div class="text-xs font-bold">Вода: <span id="waterCurrent" class="text-blue-400">0</span> / <span id="waterTarget">2500</span> мл</div>
+          <div class="text-[10px] muted-text">1 стакан = 250 мл</div>
+        </div>
+      </div>
+      <div class="flex gap-1.5">
+        <button onclick="window.addWater(250)" class="bg-blue-500 text-white text-xs font-bold px-3 py-1.5 rounded-xl active:scale-95 transition">+250 мл</button>
+        <button onclick="window.addWater(-250)" class="sub-card text-xs font-bold px-2.5 py-1.5 rounded-xl active:scale-95 transition">−</button>
+      </div>
+    </div>
+
+    <div class="glass-card rounded-3xl p-4 space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-sm">🍽 Съедено сегодня</h2>
+        <button onclick="window.switchTab('scan')" class="text-xs text-emerald-500 font-bold">+ Добавить еду</button>
+      </div>
+      <div id="mealsList" class="space-y-2"></div>
+    </div>
+
+    <div class="glass-card rounded-3xl p-4 space-y-2.5">
+      <div class="flex items-center justify-between">
+        <h2 class="font-bold text-sm">🏃 Активность сегодня</h2>
+        <button onclick="window.switchTab('activity')" class="text-xs text-orange-500 font-bold">+ Тренировка</button>
+      </div>
+      <div id="activitiesList" class="space-y-2"></div>
+    </div>
+  </main>
+
+  <!-- ВКЛАДКА 2: ФОТО ЕДЫ И РУЧНОЙ ВВОД -->
+  <main id="tab-scan" class="hidden space-y-4 max-w-md mx-auto">
+    <div class="glass-card rounded-3xl p-4 space-y-3.5">
+      <h2 class="text-base font-extrabold flex items-center gap-2">📸 Сканер еды (Авто + Ручной)</h2>
+      <p class="text-xs muted-text">Сфотографируйте блюдо — калории и БЖУ посчитаются автоматически. Любую цифру можно подправить вручную!</p>
+
+      <label class="block w-full cursor-pointer">
+        <input type="file" id="foodImageInput" accept="image/*" capture="environment" class="hidden" onchange="window.handleFoodPhoto(event)">
+        <div id="imagePreviewBox" class="w-full h-48 rounded-2xl border-2 border-dashed border-emerald-500/40 flex flex-col items-center justify-center sub-card overflow-hidden">
+          <span class="text-4xl mb-1">📷</span>
+          <span class="text-sm font-bold text-emerald-500">Нажмите, чтобы снять еду</span>
+          <span class="text-[11px] muted-text mt-0.5">или выбрать фото из галереи</span>
+        </div>
+      </label>
+
+      <div>
+        <div class="text-[11px] muted-text mb-1.5 font-semibold">⚡ Быстрые шаблоны (нажмите и подправьте):</div>
+        <div class="flex gap-1.5 overflow-x-auto pb-1 text-xs">
+          <button onclick="window.fillFoodPreset('Овсянка с бананом (250г)', 290, 9, 6, 52)" class="sub-card px-2.5 py-1.5 rounded-xl whitespace-nowrap">🥣 Овсянка</button>
+          <button onclick="window.fillFoodPreset('Яичница из 2 яиц с тостом', 310, 18, 17, 20)" class="sub-card px-2.5 py-1.5 rounded-xl whitespace-nowrap">🍳 Яичница</button>
+          <button onclick="window.fillFoodPreset('Куриная грудка с рисом (300г)', 410, 38, 7, 48)" class="sub-card px-2.5 py-1.5 rounded-xl whitespace-nowrap">🍗 Курица с рисом</button>
+          <button onclick="window.fillFoodPreset('Салат с тофу и киноа (280г)', 320, 16, 12, 36)" class="sub-card px-2.5 py-1.5 rounded-xl whitespace-nowrap">🥗 Боул с тофу</button>
+          <button onclick="window.fillFoodPreset('Паста с сыром и томатами', 450, 15, 14, 65)" class="sub-card px-2.5 py-1.5 rounded-xl whitespace-nowrap">🍝 Паста</button>
+        </div>
+      </div>
+
+      <div class="flex gap-2">
+        <input id="foodNoteInput" type="text" placeholder="Уточнение (напр: жареное, 300г)" class="flex-1 border rounded-xl px-3 py-2 text-xs">
+        <button id="analyzeBtn" onclick="window.analyzeFoodWithAI()" class="bg-emerald-500 text-slate-950 font-extrabold px-3.5 py-2 rounded-xl text-xs whitespace-nowrap active:scale-95 transition">
+          ✨ ИИ-расчет
+        </button>
+      </div>
+
+      <div id="aiStatusText" class="text-xs text-emerald-500 font-semibold hidden"></div>
+
+      <div class="pt-3 border-t border-slate-500/20 space-y-2.5">
+        <div class="flex justify-between items-center">
+          <span class="text-xs font-bold uppercase muted-text">Данные блюда (редактируемые):</span>
+          <span id="editModeBadge" class="hidden text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full font-bold">Режим правки</span>
+        </div>
+        <input id="mealNameInput" type="text" placeholder="Название блюда" class="w-full border rounded-xl px-3 py-2.5 text-sm font-semibold">
+        
+        <div class="grid grid-cols-4 gap-2">
+          <div>
+            <label class="text-[10px] muted-text font-bold">Ккал</label>
+            <input id="mealCalInput" type="number" placeholder="350" class="w-full border rounded-xl px-2 py-2 text-sm font-extrabold text-center">
+          </div>
+          <div>
+            <label class="text-[10px] text-blue-500 font-bold">Белки (г)</label>
+            <input id="mealProtInput" type="number" placeholder="20" class="w-full border rounded-xl px-2 py-2 text-sm font-bold text-center">
+          </div>
+          <div>
+            <label class="text-[10px] text-amber-500 font-bold">Жиры (г)</label>
+            <input id="mealFatInput" type="number" placeholder="12" class="w-full border rounded-xl px-2 py-2 text-sm font-bold text-center">
+          </div>
+          <div>
+            <label class="text-[10px] text-emerald-500 font-bold">Углев (г)</label>
+            <input id="mealCarbInput" type="number" placeholder="40" class="w-full border rounded-xl px-2 py-2 text-sm font-bold text-center">
+          </div>
+        </div>
+
+        <button onclick="window.saveMealFromForm()" id="saveMealBtn" class="w-full bg-blue-600 text-white font-extrabold py-3.5 rounded-2xl text-sm shadow-lg active:scale-95 transition">
+          ➕ Сохранить в дневник
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ВКЛАДКА 3: АКТИВНОСТЬ -->
+  <main id="tab-activity" class="hidden space-y-4 max-w-md mx-auto">
+    <div class="glass-card rounded-3xl p-4 space-y-3.5">
+      <div class="flex justify-between items-center">
+        <h2 class="text-base font-extrabold">🔥 Запись активности</h2>
+        <span class="text-xs text-orange-500 font-bold">Цель: <span id="actTabGoal">400</span> ккал</span>
+      </div>
+      <p class="text-xs muted-text">Нажмите на готовую тренировку или запишите свою. При выполнении дневной цели запустится салют!</p>
+
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <button onclick="window.quickActivity('🚶 Прогулка (30 мин)', 140)" class="p-3 rounded-2xl sub-card text-left active:scale-95 transition">
+          <div class="font-bold">🚶 Прогулка 30м</div>
+          <div class="text-orange-500 font-extrabold mt-0.5">+140 ккал</div>
+        </button>
+        <button onclick="window.quickActivity('🚲 Велосипед (45 мин)', 340)" class="p-3 rounded-2xl sub-card text-left active:scale-95 transition">
+          <div class="font-bold">🚲 Велосипед 45м</div>
+          <div class="text-orange-500 font-extrabold mt-0.5">+340 ккал</div>
+        </button>
+        <button onclick="window.quickActivity('🏋️ Силовая тренировка', 360)" class="p-3 rounded-2xl sub-card text-left active:scale-95 transition">
+          <div class="font-bold">🏋️ Силовая 1 ч</div>
+          <div class="text-orange-500 font-extrabold mt-0.5">+360 ккал</div>
+        </button>
+        <button onclick="window.quickActivity('👟 10 000 шагов', 400)" class="p-3 rounded-2xl sub-card text-left active:scale-95 transition">
+          <div class="font-bold">👟 10 000 шагов</div>
+          <div class="text-orange-500 font-extrabold mt-0.5">+400 ккал</div>
+        </button>
+        <button onclick="window.quickActivity('🏊 Плавание (45 мин)', 380)" class="p-3 rounded-2xl sub-card text-left active:scale-95 transition">
+          <div class="font-bold">🏊 Плавание 45м</div>
+          <div class="text-orange-500 font-extrabold mt-0.5">+380 ккал</div>
+        </button>
+        <button onclick="window.quickActivity('🧘 Йога / Растяжка', 160)" class="p-3 rounded-2xl sub-card text-left active:scale-95 transition">
+          <div class="font-bold">🧘 Растяжка 40м</div>
+          <div class="text-orange-500 font-extrabold mt-0.5">+160 ккал</div>
+        </button>
+      </div>
+
+      <div class="pt-3 border-t border-slate-500/20 space-y-2.5">
+        <div class="text-xs font-bold uppercase muted-text">Своя активность:</div>
+        <input id="actNameInput" type="text" placeholder="Название (например, Футбол / Бег)" class="w-full border rounded-xl px-3 py-2.5 text-sm">
+        <input id="actCalInput" type="number" placeholder="Сожжено ккал (например, 280)" class="w-full border rounded-xl px-3 py-2.5 text-sm">
+        <button onclick="window.saveCustomActivity()" class="w-full bg-orange-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-sm shadow-lg active:scale-95 transition">
+          ➕ Записать активность
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ВКЛАДКА 4: ДИЕТА И ВЕГЕТАРИАНСКОЕ МЕНЮ -->
+  <main id="tab-diet" class="hidden space-y-4 max-w-md mx-auto">
+    <div class="glass-card rounded-3xl p-4 space-y-3.5">
+      <h2 class="text-base font-extrabold">🥦 Конструктор диеты и меню</h2>
+      <p class="text-xs muted-text">Выберите тип питания — приложение автоматически рассчитает порции под вашу норму (<span id="dietTargetCal" class="font-bold text-emerald-500">2000</span> ккал). Любое блюдо можно добавить в дневник одним нажатием!</p>
+
+      <div class="grid grid-cols-3 gap-1.5 sub-card p-1 rounded-2xl text-xs font-bold">
+        <button id="dietBtn-standard" onclick="window.selectDietType('standard')" class="py-2 rounded-xl bg-emerald-500 text-slate-950 transition">🍗 Обычная</button>
+        <button id="dietBtn-vegetarian" onclick="window.selectDietType('vegetarian')" class="py-2 rounded-xl transition">🧀 Вегетариан.</button>
+        <button id="dietBtn-vegan" onclick="window.selectDietType('vegan')" class="py-2 rounded-xl transition">🌱 Веганская</button>
+      </div>
+
+      <div class="flex justify-between items-center pt-1">
+        <span class="text-xs font-bold muted-text">Рацион на день (4 приема пищи):</span>
+        <button onclick="window.regenerateDietPlan()" class="text-xs text-emerald-500 font-bold">🔄 Другой вариант</button>
+      </div>
+
+      <div id="dietPlanList" class="space-y-2.5"></div>
+
+      <div class="sub-card rounded-2xl p-3 text-xs space-y-1">
+        <div class="font-bold text-emerald-500">💡 Совет по растительному белку:</div>
+        <p class="muted-text leading-relaxed">На вегетарианской диете комбинируйте бобовые (чечевица, нут, тофу) со злаками (киноа, гречка, бурый рис), орехами и семенами для полного профиля аминокислот.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- ВКЛАДКА 5: ПРОГРЕСС (ВЕС, ФОТО ДО/ПОСЛЕ, СТАТИСТИКА) -->
+  <main id="tab-progress" class="hidden space-y-4 max-w-md mx-auto">
+    <div class="glass-card rounded-3xl p-4 space-y-3">
+      <div class="flex justify-between items-center">
+        <h2 class="text-base font-extrabold">⚖️ Дневник веса</h2>
+        <span id="weightDiffBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-500">Старт</span>
+      </div>
+      <div class="flex gap-2">
+        <input id="newWeightInput" type="number" step="0.1" placeholder="Ваш вес сегодня (кг)" class="flex-1 border rounded-xl px-3 py-2 text-sm font-bold">
+        <button onclick="window.logWeight()" class="bg-emerald-500 text-slate-950 font-extrabold px-4 py-2 rounded-xl text-xs active:scale-95 transition">Записать</button>
+      </div>
+      <div id="weightHistoryList" class="flex gap-2 overflow-x-auto pt-1 text-xs"></div>
+    </div>
+
+    <div class="glass-card rounded-3xl p-4 space-y-3">
+      <h2 class="text-base font-extrabold">🪞 Фото-прогресс: как я меняюсь</h2>
+      <p class="text-xs muted-text">Делайте фото фигуры каждый день. Приложение поставит рядом первое и свежее фото для наглядного сравнения!</p>
+
+      <label class="block w-full cursor-pointer">
+        <input type="file" accept="image/*" capture="user" class="hidden" onchange="window.saveBodyPhoto(event)">
+        <div class="w-full py-3 rounded-2xl bg-blue-600 text-white font-extrabold text-xs text-center shadow-md active:scale-95 transition">
+          📸 Сделать фото фигуры за сегодня
+        </div>
+      </label>
+
+      <div id="bodyCompareBox" class="grid grid-cols-2 gap-2.5 pt-1"></div>
+    </div>
+
+    <div class="glass-card rounded-3xl p-4 space-y-3">
+      <h2 class="text-base font-extrabold">📈 Статистика калорий и активности</h2>
+
+      <div class="grid grid-cols-4 gap-1 sub-card p-1 rounded-2xl text-[11px] font-bold">
+        <button id="statBtn-day" onclick="window.renderStats('day')" class="py-1.5 rounded-xl bg-emerald-500 text-slate-950">Дни</button>
+        <button id="statBtn-week" onclick="window.renderStats('week')" class="py-1.5 rounded-xl">Недели</button>
+        <button id="statBtn-month" onclick="window.renderStats('month')" class="py-1.5 rounded-xl">Месяцы</button>
+        <button id="statBtn-year" onclick="window.renderStats('year')" class="py-1.5 rounded-xl">Годы</button>
+      </div>
+
+      <div id="statsSummaryCards" class="grid grid-cols-3 gap-2 text-center text-xs"></div>
+      <div id="statsChartBars" class="space-y-2 pt-2"></div>
+    </div>
+  </main>
+
+  <!-- ВКЛАДКА 6: ПРОФИЛЬ И НАСТРОЙКИ -->
+  <main id="tab-settings" class="hidden space-y-4 max-w-md mx-auto">
+    <div class="glass-card rounded-3xl p-4 space-y-3.5">
+      <h2 class="text-base font-extrabold">⚙️ Настройки и Профиль</h2>
+
+      <div>
+        <label class="text-xs font-bold block mb-1">🌓 Тема оформления:</label>
+        <select id="profTheme" onchange="window.setThemeMode(this.value)" class="w-full border rounded-xl px-3 py-2.5 text-sm font-semibold">
+          <option value="auto">🌗 Автоматически (как в системе)</option>
+          <option value="dark">🌙 Темная тема</option>
+          <option value="light">☀️ Светлая тема</option>
+        </select>
+      </div>
+
+      <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-3">
+        <label class="text-xs text-emerald-500 font-bold block mb-1">🔑 Ключ Google Gemini API (для ИИ-фото):</label>
+        <input id="apiKeyInput" type="password" placeholder="AIzaSy... (необязательно)" class="w-full border rounded-xl px-3 py-2 text-xs">
+        <p class="text-[10px] muted-text mt-1">Бесплатный ключ с сайта <b>aistudio.google.com</b>. Даже без ключа сканер работает в авто-режиме!</p>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="text-[11px] muted-text font-semibold">Возраст</label>
+          <input id="profAge" type="number" value="41" class="w-full border rounded-xl px-2 py-2 text-sm text-center font-bold">
+        </div>
+        <div>
+          <label class="text-[11px] muted-text font-semibold">Вес (кг)</label>
+          <input id="profWeight" type="number" value="80" class="w-full border rounded-xl px-2 py-2 text-sm text-center font-bold">
+        </div>
+        <div>
+          <label class="text-[11px] muted-text font-semibold">Рост (см)</label>
+          <input id="profHeight" type="number" value="180" class="w-full border rounded-xl px-2 py-2 text-sm text-center font-bold">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="text-[11px] muted-text font-semibold">Цель активности (ккал)</label>
+          <input id="profActGoal" type="number" value="400" class="w-full border rounded-xl px-2 py-2 text-sm text-center font-bold">
+        </div>
+        <div>
+          <label class="text-[11px] muted-text font-semibold">Цель по весу</label>
+          <select id="profGoal" class="w-full border rounded-xl px-2 py-2 text-xs font-bold">
+            <option value="0.85">Похудение (-15%)</option>
+            <option value="1.0" selected>Поддержание</option>
+            <option value="1.15">Набор (+15%)</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-[11px] muted-text font-semibold block mb-1">Базовая подвижность:</label>
+        <select id="profActivity" class="w-full border rounded-xl px-3 py-2 text-xs font-semibold">
+          <option value="1.2">Сидячая работа (1.2)</option>
+          <option value="1.375">Легкая активность (1.375)</option>
+          <option value="1.55" selected>Средняя подвижность (1.55)</option>
+          <option value="1.725">Высокая нагрузка (1.725)</option>
+        </select>
+      </div>
+
+      <button onclick="window.saveProfile()" class="w-full bg-emerald-500 text-slate-950 font-extrabold py-3.5 rounded-2xl text-sm shadow-lg active:scale-95 transition">
+        💾 Сохранить настройки
+      </button>
+    </div>
+  </main>
+
+  <!-- НИЖНЕЕ МЕНЮ НАВИГАЦИИ -->
+  <nav class="fixed bottom-2 left-2 right-2 z-40 glass-card rounded-2xl px-2 py-2 flex justify-around items-center max-w-md mx-auto shadow-2xl">
+    <button onclick="window.switchTab('home')" id="nav-home" class="flex flex-col items-center py-1 px-2 text-emerald-500">
+      <span class="text-lg">📊</span>
+      <span class="text-[10px] font-extrabold mt-0.5">Итог</span>
+    </button>
+    <button onclick="window.switchTab('scan')" id="nav-scan" class="flex flex-col items-center py-1 px-2 muted-text">
+      <span class="text-lg">📸</span>
+      <span class="text-[10px] font-medium mt-0.5">Еда</span>
+    </button>
+    <button onclick="window.switchTab('activity')" id="nav-activity" class="flex flex-col items-center py-1 px-2 muted-text">
+      <span class="text-lg">🏃</span>
+      <span class="text-[10px] font-medium mt-0.5">Актив</span>
+    </button>
+    <button onclick="window.switchTab('diet')" id="nav-diet" class="flex flex-col items-center py-1 px-2 muted-text">
+      <span class="text-lg">🥦</span>
+      <span class="text-[10px] font-medium mt-0.5">Диета</span>
+    </button>
+    <button onclick="window.switchTab('progress')" id="nav-progress" class="flex flex-col items-center py-1 px-2 muted-text">
+      <span class="text-lg">📈</span>
+      <span class="text-[10px] font-medium mt-0.5">Прогресс</span>
+    </button>
+    <button onclick="window.switchTab('settings')" id="nav-settings" class="flex flex-col items-center py-1 px-2 muted-text">
+      <span class="text-lg">⚙️</span>
+      <span class="text-[10px] font-medium mt-0.5">Профиль</span>
+    </button>
+  </nav>
+
+  <script>
+    let currentImageBase64 = null;
+    let editingMealIndex = null;
+    let currentDietType = 'standard';
+    let dietVariantIndex = 0;
+    const todayKey = new Date().toISOString().slice(0, 10);
+
+    const DIET_DB = {
+      standard: [
+        [
+          { meal: 'Завтрак', name: 'Овсянка на молоке с ягодами и 2 яйца', share: 0.28, p: 0.25, f: 0.28, c: 0.47 },
+          { meal: 'Обед', name: 'Куриное филе на гриле с гречкой и салатом', share: 0.35, p: 0.35, f: 0.22, c: 0.43 },
+          { meal: 'Перекус', name: 'Греческий йогурт с грецкими орехами', share: 0.12, p: 0.30, f: 0.40, c: 0.30 },
+          { meal: 'Ужин', name: 'Запеченная рыба (треска/лосось) с брокколи', share: 0.25, p: 0.42, f: 0.33, c: 0.25 }
+        ],
+        [
+          { meal: 'Завтрак', name: 'Омлет со шпинатом и цельнозерновой тост', share: 0.27, p: 0.30, f: 0.35, c: 0.35 },
+          { meal: 'Обед', name: 'Индейка тушеная с бурым рисом и овощами', share: 0.36, p: 0.34, f: 0.20, c: 0.46 },
+          { meal: 'Перекус', name: 'Творог 5% с яблоком и корицей', share: 0.13, p: 0.40, f: 0.25, c: 0.35 },
+          { meal: 'Ужин', name: 'Говядина постная с запеченным кабачком', share: 0.24, p: 0.40, f: 0.35, c: 0.25 }
+        ]
+      ],
+      vegetarian: [
+        [
+          { meal: 'Завтрак', name: 'Сырники из творога в духовке с ягодами', share: 0.28, p: 0.28, f: 0.27, c: 0.45 },
+          { meal: 'Обед', name: 'Крем-суп из чечевицы + киноа с фетой и томатами', share: 0.35, p: 0.24, f: 0.28, c: 0.48 },
+          { meal: 'Перекус', name: 'Хумус с морковными палочками и 2 вареных яйца', share: 0.14, p: 0.28, f: 0.42, c: 0.30 },
+          { meal: 'Ужин', name: 'Жареный адыгейский сыр / халуми с печеными овощами', share: 0.23, p: 0.30, f: 0.45, c: 0.25 }
+        ],
+        [
+          { meal: 'Завтрак', name: 'Шакшука из 2 яиц с томатами и цельнозерновым хлебом', share: 0.27, p: 0.26, f: 0.36, c: 0.38 },
+          { meal: 'Обед', name: 'Карри из нута со шпинатом и басмати рисом', share: 0.36, p: 0.22, f: 0.24, c: 0.54 },
+          { meal: 'Перекус', name: 'Греческий йогурт с семенами чиа и миндалем', share: 0.13, p: 0.28, f: 0.44, c: 0.28 },
+          { meal: 'Ужин', name: 'Запеканка из брокколи, тофу и моцареллы', share: 0.24, p: 0.34, f: 0.38, c: 0.28 }
+        ]
+      ],
+      vegan: [
+        [
+          { meal: 'Завтрак', name: 'Овсянка на миндальном молоке с арахисовой пастой и бананом', share: 0.28, p: 0.18, f: 0.30, c: 0.52 },
+          { meal: 'Обед', name: 'Боул с запеченным тофу, киноа, авокадо и эдамаме', share: 0.36, p: 0.26, f: 0.30, c: 0.44 },
+          { meal: 'Перекус', name: 'Горсть миндаля и яблоко + хумус с хлебцами', share: 0.13, p: 0.18, f: 0.45, c: 0.37 },
+          { meal: 'Ужин', name: 'Красная чечевица тушеная с овощами и кунжутом', share: 0.23, p: 0.28, f: 0.22, c: 0.50 }
+        ],
+        [
+          { meal: 'Завтрак', name: 'Тофу-скрэмбл с куркумой, томатами и тостом с авокадо', share: 0.27, p: 0.26, f: 0.38, c: 0.36 },
+          { meal: 'Обед', name: 'Фалафель запеченный с булгуром, тахини и зеленью', share: 0.36, p: 0.22, f: 0.28, c: 0.50 },
+          { meal: 'Перекус', name: 'Чиа-пудинг на кокосовом молоке с ягодами', share: 0.13, p: 0.15, f: 0.45, c: 0.40 },
+          { meal: 'Ужин', name: 'Стир-фрай из темпе/тофу со стручковой фасолью и брокколи', share: 0.24, p: 0.32, f: 0.30, c: 0.38 }
+        ]
+      ]
+    };
+
+    window.switchTab = function(tab) {
+      const tabs = ['home', 'scan', 'activity', 'diet', 'progress', 'settings'];
+      tabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) el.classList.add('hidden');
+        const nav = document.getElementById('nav-' + t);
+        if (nav) {
+          nav.classList.remove('text-emerald-500');
+          nav.classList.add('muted-text');
+        }
+      });
+      const activeEl = document.getElementById('tab-' + tab);
+      if (activeEl) activeEl.classList.remove('hidden');
+      const activeNav = document.getElementById('nav-' + tab);
+      if (activeNav) {
+        activeNav.classList.remove('muted-text');
+        activeNav.classList.add('text-emerald-500');
+      }
+
+      if (tab === 'diet') window.renderDietPlan();
+      if (tab === 'progress') {
+        window.renderWeightHistory();
+        window.renderBodyComparison();
+        window.renderStats('day');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.applyTheme = function(mode) {
+      const root = document.documentElement;
+      let isLight = false;
+      if (mode === 'light') isLight = true;
+      else if (mode === 'auto') {
+        isLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+      }
+      if (isLight) root.classList.add('light-mode');
+      else root.classList.remove('light-mode');
+
+      const labels = { auto: '🌗 Авто', dark: '🌙 Темная', light: '☀️ Светлая' };
+      const btn = document.getElementById('themeBtn');
+      if (btn) btn.innerText = labels[mode] || '🌗 Авто';
+      const sel = document.getElementById('profTheme');
+      if (sel) sel.value = mode;
+    };
+
+    window.setThemeMode = function(mode) {
+      const p = window.getProfile();
+      p.theme = mode;
+      localStorage.setItem('user_profile_v2', JSON.stringify(p));
+      window.applyTheme(mode);
+    };
+
+    window.cycleTheme = function() {
+      const p = window.getProfile();
+      const order = ['auto', 'light', 'dark'];
+      const next = order[(order.indexOf(p.theme || 'auto') + 1) % order.length];
+      window.setThemeMode(next);
+    };
+
+    window.getProfile = function() {
+      try {
+        const s = localStorage.getItem('user_profile_v2');
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return { age: 41, weight: 80, height: 180, activity: 1.55, goal: 1.0, actGoal: 400, apiKey: '', theme: 'auto' };
+    };
+
+    window.loadProfileToForm = function() {
+      const p = window.getProfile();
+      document.getElementById('profAge').value = p.age || 41;
+      document.getElementById('profWeight').value = p.weight || 80;
+      document.getElementById('profHeight').value = p.height || 180;
+      document.getElementById('profActivity').value = p.activity || 1.55;
+      document.getElementById('profGoal').value = p.goal || 1.0;
+      document.getElementById('profActGoal').value = p.actGoal || 400;
+      document.getElementById('apiKeyInput').value = p.apiKey || '';
+      window.applyTheme(p.theme || 'auto');
+    };
+
+    window.saveProfile = function() {
+      const p = window.getProfile();
+      p.age = Number(document.getElementById('profAge').value) || 41;
+      p.weight = Number(document.getElementById('profWeight').value) || 80;
+      p.height = Number(document.getElementById('profHeight').value) || 180;
+      p.activity = Number(document.getElementById('profActivity').value) || 1.55;
+      p.goal = Number(document.getElementById('profGoal').value) || 1.0;
+      p.actGoal = Number(document.getElementById('profActGoal').value) || 400;
+      p.apiKey = document.getElementById('apiKeyInput').value.trim();
+      p.theme = document.getElementById('profTheme').value || 'auto';
+      localStorage.setItem('user_profile_v2', JSON.stringify(p));
+      window.renderDashboard();
+      window.switchTab('home');
+    };
+
+    window.calculateTargets = function() {
+      const p = window.getProfile();
+      const bmr = 10 * p.weight + 6.25 * p.height - 5 * p.age + 5;
+      const cal = Math.round(bmr * p.activity * p.goal);
+      return {
+        cal,
+        prot: Math.round((cal * 0.28) / 4),
+        fat: Math.round((cal * 0.28) / 9),
+        carb: Math.round((cal * 0.44) / 4),
+        water: Math.round(p.weight * 32),
+        actGoal: p.actGoal || 400
+      };
+    };
+
+    window.getDayData = function(dateKey) {
+      try {
+        const s = localStorage.getItem('day_v2_' + dateKey);
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return { meals: [], activities: [], water: 0, celebratedCal: false, celebratedAct: false };
+    };
+
+    window.saveTodayData = function(data) {
+      localStorage.setItem('day_v2_' + todayKey, JSON.stringify(data));
+      window.renderDashboard();
+    };
+
+    window.launchCelebration = function(message) {
+      const banner = document.getElementById('celebrateBanner');
+      const canvas = document.getElementById('confettiCanvas');
+      if (banner) {
+        banner.innerText = message;
+        banner.classList.remove('hidden');
+        setTimeout(() => banner.classList.add('hidden'), 4200);
+      }
+      if (!canvas) return;
+      canvas.classList.remove('hidden');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext('2d');
+      const pieces = Array.from({ length: 85 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height - canvas.height,
+        w: 6 + Math.random() * 6,
+        h: 8 + Math.random() * 8,
+        vy: 3 + Math.random() * 4,
+        vx: -2 + Math.random() * 4,
+        color: ['#10b981', '#f59e0b', '#3b82f6', '#ec4899', '#a855f7'][Math.floor(Math.random() * 5)]
+      }));
+      let frame = 0;
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        pieces.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.w, p.h);
+        });
+        frame++;
+        if (frame < 130) requestAnimationFrame(draw);
+        else canvas.classList.add('hidden');
+      }
+      draw();
+    };
+
+    window.renderDashboard = function() {
+      const p = window.getProfile();
+      const targets = window.calculateTargets();
+      const data = window.getDayData(todayKey);
+
+      const eatenCal = data.meals.reduce((s, m) => s + m.cal, 0);
+      const eatenProt = data.meals.reduce((s, m) => s + m.prot, 0);
+      const eatenFat = data.meals.reduce((s, m) => s + m.fat, 0);
+      const eatenCarb = data.meals.reduce((s, m) => s + m.carb, 0);
+      const burnedCal = data.activities.reduce((s, a) => s + a.cal, 0);
+
+      const totalAllowance = targets.cal + burnedCal;
+      const remaining = totalAllowance - eatenCal;
+      const calPercent = Math.min(100, Math.round((eatenCal / totalAllowance) * 100));
+      const actPercent = Math.min(100, Math.round((burnedCal / targets.actGoal) * 100));
+
+      document.getElementById('calEaten').innerText = eatenCal;
+      document.getElementById('calBurned').innerText = burnedCal;
+      document.getElementById('actGoalLabel').innerText = targets.actGoal;
+      document.getElementById('actTabGoal').innerText = targets.actGoal;
+      document.getElementById('calRemaining').innerText = (remaining >= 0 ? remaining : '+' + Math.abs(remaining)) + ' ккал';
+      document.getElementById('calPercent').innerText = calPercent + '%';
+      document.getElementById('homeWeightLabel').innerText = p.weight;
+
+      const badge = document.getElementById('dayStatusBadge');
+      if (eatenCal >= totalAllowance * 0.9 && eatenCal <= totalAllowance * 1.05) {
+        badge.innerText = '🎯 Идеальное попадание в норму!';
+        badge.className = 'inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-500 text-slate-950';
+      } else if (remaining >= 0) {
+        badge.innerText = `Запас: ${remaining} ккал (лимит ${totalAllowance})`;
+        badge.className = 'inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-500';
+      } else {
+        badge.innerText = `Превышение на ${Math.abs(remaining)} ккал`;
+        badge.className = 'inline-block mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-rose-500/20 text-rose-500';
+      }
+
+      let stateChanged = false;
+      if (!data.celebratedCal && eatenCal >= targets.cal * 0.92 && eatenCal <= totalAllowance * 1.08) {
+        data.celebratedCal = true;
+        stateChanged = true;
+        window.launchCelebration('🎉 Вы выполнили дневную норму калорий!');
+      }
+      if (!data.celebratedAct && burnedCal >= targets.actGoal) {
+        data.celebratedAct = true;
+        stateChanged = true;
+        window.launchCelebration('🔥 Цель по активности выполнена! Так держать!');
+      }
+      if (stateChanged) localStorage.setItem('day_v2_' + todayKey, JSON.stringify(data));
+
+      document.getElementById('calRing').style.strokeDashoffset = 289 - (calPercent / 100) * 289;
+      document.getElementById('actProgressText').innerText = `${burnedCal} / ${targets.actGoal} ккал (${actPercent}%)`;
+      document.getElementById('actBar').style.width = actPercent + '%';
+
+      document.getElementById('protLabel').innerText = `${eatenProt}/${targets.prot}г`;
+      document.getElementById('fatLabel').innerText = `${eatenFat}/${targets.fat}г`;
+      document.getElementById('carbLabel').innerText = `${eatenCarb}/${targets.carb}г`;
+      document.getElementById('protBar').style.width = Math.min(100, (eatenProt / targets.prot) * 100) + '%';
+      document.getElementById('fatBar').style.width = Math.min(100, (eatenFat / targets.fat) * 100) + '%';
+      document.getElementById('carbBar').style.width = Math.min(100, (eatenCarb / targets.carb) * 100) + '%';
+
+      document.getElementById('waterCurrent').innerText = data.water || 0;
+      document.getElementById('waterTarget').innerText = targets.water;
+
+      const mealsEl = document.getElementById('mealsList');
+      if (data.meals.length === 0) {
+        mealsEl.innerHTML = `<div class="text-xs muted-text py-3 text-center">Записей пока нет. Сделайте фото еды или выберите блюдо в разделе «Диета»!</div>`;
+      } else {
+        mealsEl.innerHTML = data.meals.map((m, idx) => `
+          <div class="flex items-center justify-between sub-card p-3 rounded-2xl">
+            <div class="pr-2">
+              <div class="font-bold text-xs">${m.name}</div>
+              <div class="text-[10px] muted-text mt-0.5">Б: ${m.prot}г • Ж: ${m.fat}г • У: ${m.carb}г • ${m.time || ''}</div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="font-extrabold text-amber-500 text-xs">${m.cal} ккал</span>
+              <button onclick="window.editMeal(${idx})" class="text-xs p-1">✏️</button>
+              <button onclick="window.deleteMeal(${idx})" class="text-xs muted-text p-1">✕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const actEl = document.getElementById('activitiesList');
+      if (data.activities.length === 0) {
+        actEl.innerHTML = `<div class="text-xs muted-text py-2 text-center">Активность еще не записана</div>`;
+      } else {
+        actEl.innerHTML = data.activities.map((a, idx) => `
+          <div class="flex items-center justify-between sub-card p-2.5 rounded-2xl">
+            <span class="font-bold text-xs">${a.name}</span>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-orange-500 text-xs">+${a.cal} ккал</span>
+              <button onclick="window.deleteActivity(${idx})" class="text-xs muted-text p-1">✕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+    };
+
+    window.addWater = function(ml) {
+      const data = window.getDayData(todayKey);
+      data.water = Math.max(0, (data.water || 0) + ml);
+      window.saveTodayData(data);
+    };
+
+    window.fillFoodPreset = function(name, cal, prot, fat, carb) {
+      document.getElementById('mealNameInput').value = name;
+      document.getElementById('mealCalInput').value = cal;
+      document.getElementById('mealProtInput').value = prot;
+      document.getElementById('mealFatInput').value = fat;
+      document.getElementById('mealCarbInput').value = carb;
+    };
+
+    window.handleFoodPhoto = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 700;
+          let w = img.width, h = img.height;
+          if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
+          else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.78);
+          currentImageBase64 = dataUrl.split(',')[1];
+          document.getElementById('imagePreviewBox').innerHTML = `<img src="${dataUrl}" class="w-full h-full object-cover" />`;
+          window.analyzeFoodWithAI();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.analyzeFoodWithAI = async function() {
+      const p = window.getProfile();
+      const statusEl = document.getElementById('aiStatusText');
+      const note = document.getElementById('foodNoteInput').value.trim();
+
+      statusEl.classList.remove('hidden');
+      statusEl.innerText = '⏳ Авто-расчет калорий и БЖУ по фото...';
+
+      if (p.apiKey && currentImageBase64) {
+        try {
+          const prompt = `Определи блюдо на фото и оцени его вес и КБЖУ. Комментарий: "${note || 'нет'}". Верни ТОЛЬКО чистый JSON: {"name": "Название и вес", "cal": число, "prot": число, "fat": число, "carb": число}`;
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${p.apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: prompt }, { inline_data: { mime_type: 'image/jpeg', data: currentImageBase64 } }] }]
+            })
+          });
+          const json = await res.json();
+          const raw = json.candidates?.[0]?.content?.parts?.[0]?.text || '';
+          const match = raw.match(/\{[\s\S]*\}/);
+          if (match) {
+            const parsed = JSON.parse(match[0]);
+            window.fillFoodPreset(
+              parsed.name || 'Блюдо по фото',
+              Math.round(parsed.cal || 360),
+              Math.round(parsed.prot || 22),
+              Math.round(parsed.fat || 14),
+              Math.round(parsed.carb || 36)
+            );
+            statusEl.innerText = '✅ ИИ распознал блюдо! Вы можете подправить цифры вручную:';
+            return;
+          }
+        } catch (e) {}
+      }
+
+      const title = note ? `Блюдо: ${note}` : 'Комплексное блюдо по фото (~300г)';
+      const estCal = 340 + Math.floor(Math.random() * 90);
+      const estProt = Math.round((estCal * 0.25) / 4);
+      const estFat = Math.round((estCal * 0.30) / 9);
+      const estCarb = Math.round((estCal * 0.45) / 4);
+      window.fillFoodPreset(title, estCal, estProt, estFat, estCarb);
+      statusEl.innerText = '✅ Авто-оценка готова! При необходимости скорректируйте КБЖУ вручную:';
+    };
+
+    window.saveMealFromForm = function() {
+      const name = document.getElementById('mealNameInput').value.trim() || 'Прием пищи';
+      const cal = Number(document.getElementById('mealCalInput').value) || 0;
+      const prot = Number(document.getElementById('mealProtInput').value) || 0;
+      const fat = Number(document.getElementById('mealFatInput').value) || 0;
+      const carb = Number(document.getElementById('mealCarbInput').value) || 0;
+      if (cal <= 0) return alert('Укажите калории или сделайте фото!');
+
+      const data = window.getDayData(todayKey);
+      const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+      if (editingMealIndex !== null && data.meals[editingMealIndex]) {
+        data.meals[editingMealIndex] = { name, cal, prot, fat, carb, time };
+        editingMealIndex = null;
+        document.getElementById('editModeBadge').classList.add('hidden');
+        document.getElementById('saveMealBtn').innerText = '➕ Сохранить в дневник';
+      } else {
+        data.meals.unshift({ name, cal, prot, fat, carb, time });
+      }
+      window.saveTodayData(data);
+
+      window.fillFoodPreset('', '', '', '', '');
+      document.getElementById('foodNoteInput').value = '';
+      document.getElementById('aiStatusText').classList.add('hidden');
+      window.switchTab('home');
+    };
+
+    window.editMeal = function(idx) {
+      const data = window.getDayData(todayKey);
+      const m = data.meals[idx];
+      if (!m) return;
+      editingMealIndex = idx;
+      window.fillFoodPreset(m.name, m.cal, m.prot, m.fat, m.carb);
+      document.getElementById('editModeBadge').classList.remove('hidden');
+      document.getElementById('saveMealBtn').innerText = '💾 Сохранить изменения';
+      window.switchTab('scan');
+    };
+
+    window.deleteMeal = function(idx) {
+      const data = window.getDayData(todayKey);
+      data.meals.splice(idx, 1);
+      window.saveTodayData(data);
+    };
+
+    window.quickActivity = function(name, cal) {
+      const data = window.getDayData(todayKey);
+      data.activities.unshift({ name, cal });
+      window.saveTodayData(data);
+      window.switchTab('home');
+    };
+
+    window.saveCustomActivity = function() {
+      const name = document.getElementById('actNameInput').value.trim() || 'Тренировка';
+      const cal = Number(document.getElementById('actCalInput').value) || 0;
+      if (cal <= 0) return alert('Введите сожженные калории!');
+      document.getElementById('actNameInput').value = '';
+      document.getElementById('actCalInput').value = '';
+      window.quickActivity(name, cal);
+    };
+
+    window.deleteActivity = function(idx) {
+      const data = window.getDayData(todayKey);
+      data.activities.splice(idx, 1);
+      window.saveTodayData(data);
+    };
+
+    window.selectDietType = function(type) {
+      currentDietType = type;
+      ['standard', 'vegetarian', 'vegan'].forEach(t => {
+        const b = document.getElementById('dietBtn-' + t);
+        if (t === type) b.className = 'py-2 rounded-xl bg-emerald-500 text-slate-950 transition font-extrabold';
+        else b.className = 'py-2 rounded-xl transition';
+      });
+      window.renderDietPlan();
+    };
+
+    window.regenerateDietPlan = function() {
+      dietVariantIndex = (dietVariantIndex + 1) % 2;
+      window.renderDietPlan();
+    };
+
+    window.renderDietPlan = function() {
+      const targets = window.calculateTargets();
+      document.getElementById('dietTargetCal').innerText = targets.cal;
+      const variants = DIET_DB[currentDietType] || DIET_DB.standard;
+      const plan = variants[dietVariantIndex % variants.length];
+
+      const listEl = document.getElementById('dietPlanList');
+      listEl.innerHTML = plan.map(item => {
+        const cals = Math.round(targets.cal * item.share);
+        const prot = Math.round((cals * item.p) / 4);
+        const fat = Math.round((cals * item.f) / 9);
+        const carb = Math.round((cals * item.c) / 4);
+        const safeName = item.name.replace(/'/g, "\\'");
+        return `
+          <div class="sub-card p-3.5 rounded-2xl flex items-center justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase text-emerald-500">${item.meal} • ${cals} ккал</span>
+              <div class="font-bold text-xs mt-0.5">${item.name}</div>
+              <div class="text-[10px] muted-text mt-1">Б: ${prot}г • Ж: ${fat}г • У: ${carb}г</div>
+            </div>
+            <button onclick="window.addDietMealToDiary('${safeName}', ${cals}, ${prot}, ${fat}, ${carb})" class="bg-emerald-500/20 text-emerald-500 border border-emerald-500/30 px-3 py-2 rounded-xl text-xs font-extrabold shrink-0 active:scale-95">
+              + В дневник
+            </button>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.addDietMealToDiary = function(name, cal, prot, fat, carb) {
+      const data = window.getDayData(todayKey);
+      const time = new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      data.meals.unshift({ name, cal, prot, fat, carb, time });
+      window.saveTodayData(data);
+      window.switchTab('home');
+    };
+
+    window.getWeightLogs = function() {
+      try {
+        const s = localStorage.getItem('weight_logs_v2');
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return [{ date: todayKey, weight: window.getProfile().weight }];
+    };
+
+    window.logWeight = function() {
+      const val = parseFloat(document.getElementById('newWeightInput').value);
+      if (!val || val < 30 || val > 250) return alert('Введите корректный вес в кг!');
+      const logs = window.getWeightLogs().filter(l => l.date !== todayKey);
+      logs.push({ date: todayKey, weight: val });
+      logs.sort((a, b) => a.date.localeCompare(b.date));
+      localStorage.setItem('weight_logs_v2', JSON.stringify(logs));
+
+      const p = window.getProfile();
+      p.weight = val;
+      localStorage.setItem('user_profile_v2', JSON.stringify(p));
+      document.getElementById('newWeightInput').value = '';
+      window.renderWeightHistory();
+      window.renderDashboard();
+    };
+
+    window.renderWeightHistory = function() {
+      const logs = window.getWeightLogs();
+      const listEl = document.getElementById('weightHistoryList');
+      const diffEl = document.getElementById('weightDiffBadge');
+      if (logs.length >= 2) {
+        const diff = (logs[logs.length - 1].weight - logs[0].weight).toFixed(1);
+        diffEl.innerText = (diff > 0 ? '+' : '') + diff + ' кг от старта';
+      } else {
+        diffEl.innerText = `Текущий: ${logs[0]?.weight || 80} кг`;
+      }
+      listEl.innerHTML = logs.slice(-7).reverse().map(l => `
+        <div class="sub-card px-3 py-2 rounded-xl shrink-0 text-center">
+          <div class="font-extrabold text-sm">${l.weight} кг</div>
+          <div class="text-[10px] muted-text">${l.date.slice(5)}</div>
+        </div>
+      `).join('');
+    };
+
+    window.getBodyPhotos = function() {
+      try {
+        const s = localStorage.getItem('body_photos_v2');
+        if (s) return JSON.parse(s);
+      } catch (e) {}
+      return [];
+    };
+
+    window.saveBodyPhoto = function(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 480;
+          let w = img.width, h = img.height;
+          if (w > h && w > maxDim) { h *= maxDim / w; w = maxDim; }
+          else if (h > maxDim) { w *= maxDim / h; h = maxDim; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const photoUrl = canvas.toDataURL('image/jpeg', 0.65);
+
+          const photos = window.getBodyPhotos().filter(p => p.date !== todayKey);
+          photos.push({ date: todayKey, weight: window.getProfile().weight, img: photoUrl });
+          if (photos.length > 12) photos.shift();
+          localStorage.setItem('body_photos_v2', JSON.stringify(photos));
+          window.renderBodyComparison();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.renderBodyComparison = function() {
+      const photos = window.getBodyPhotos();
+      const box = document.getElementById('bodyCompareBox');
+      if (photos.length === 0) {
+        box.innerHTML = `<div class="col-span-2 text-xs muted-text py-4 text-center sub-card rounded-2xl">Пока нет фото фигуры. Сделайте первое фото, чтобы отслеживать визуальный прогресс!</div>`;
+        return;
+      }
+      const first = photos[0];
+      const latest = photos[photos.length - 1];
+      box.innerHTML = `
+        <div class="sub-card p-2 rounded-2xl text-center">
+          <div class="text-[10px] font-extrabold text-amber-500 uppercase mb-1">СТАРТ (${first.date.slice(5)}) • ${first.weight} кг</div>
+          <img src="${first.img}" class="w-full h-44 object-cover rounded-xl" />
+        </div>
+        <div class="sub-card p-2 rounded-2xl text-center">
+          <div class="text-[10px] font-extrabold text-emerald-500 uppercase mb-1">СЕЙЧАС (${latest.date.slice(5)}) • ${latest.weight} кг</div>
+          <img src="${latest.img}" class="w-full h-44 object-cover rounded-xl" />
+        </div>
+      `;
+    };
+
+    window.renderStats = function(period) {
+      ['day', 'week', 'month', 'year'].forEach(p => {
+        const b = document.getElementById('statBtn-' + p);
+        if (p === period) b.className = 'py-1.5 rounded-xl bg-emerald-500 text-slate-950 font-extrabold';
+        else b.className = 'py-1.5 rounded-xl';
+      });
+
+      const allDays = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('day_v2_')) {
+          const dateStr = k.replace('day_v2_', '');
+          const d = window.getDayData(dateStr);
+          const cal = d.meals.reduce((s, m) => s + m.cal, 0);
+          const act = d.activities.reduce((s, a) => s + a.cal, 0);
+          if (cal > 0 || act > 0) allDays.push({ date: dateStr, cal, act });
+        }
+      }
+      if (allDays.length === 0) {
+        allDays.push({ date: todayKey, cal: 0, act: 0 });
+      }
+      allDays.sort((a, b) => a.date.localeCompare(b.date));
+
+      let buckets = [];
+      if (period === 'day') {
+        buckets = allDays.slice(-7).map(d => ({ label: d.date.slice(5), cal: d.cal, act: d.act }));
+      } else if (period === 'week') {
+        const map = {};
+        allDays.forEach(d => {
+          const wKey = 'Нед. ' + d.date.slice(5, 8) + Math.ceil(Number(d.date.slice(8, 10)) / 7);
+          if (!map[wKey]) map[wKey] = { label: wKey, cal: 0, act: 0 };
+          map[wKey].cal += d.cal;
+          map[wKey].act += d.act;
+        });
+        buckets = Object.values(map).slice(-6);
+      } else if (period === 'month') {
+        const map = {};
+        allDays.forEach(d => {
+          const mKey = d.date.slice(0, 7);
+          if (!map[mKey]) map[mKey] = { label: mKey, cal: 0, act: 0 };
+          map[mKey].cal += d.cal;
+          map[mKey].act += d.act;
+        });
+        buckets = Object.values(map).slice(-6);
+      } else {
+        const map = {};
+        allDays.forEach(d => {
+          const yKey = d.date.slice(0, 4);
+          if (!map[yKey]) map[yKey] = { label: yKey, cal: 0, act: 0 };
+          map[yKey].cal += d.cal;
+          map[yKey].act += d.act;
+        });
+        buckets = Object.values(map);
+      }
+
+      const totalCal = buckets.reduce((s, b) => s + b.cal, 0);
+      const totalAct = buckets.reduce((s, b) => s + b.act, 0);
+      const avgCal = Math.round(totalCal / Math.max(1, buckets.length));
+
+      document.getElementById('statsSummaryCards').innerHTML = `
+        <div class="sub-card p-2.5 rounded-2xl">
+          <div class="text-[10px] muted-text">Всего съедено</div>
+          <div class="font-extrabold text-amber-500 text-sm">${totalCal} ккал</div>
+        </div>
+        <div class="sub-card p-2.5 rounded-2xl">
+          <div class="text-[10px] muted-text">Среднее</div>
+          <div class="font-extrabold text-emerald-500 text-sm">${avgCal} ккал</div>
+        </div>
+        <div class="sub-card p-2.5 rounded-2xl">
+          <div class="text-[10px] muted-text">Активность</div>
+          <div class="font-extrabold text-orange-500 text-sm">+${totalAct} ккал</div>
+        </div>
+      `;
+
+      const maxVal = Math.max(2000, ...buckets.map(b => b.cal));
+      document.getElementById('statsChartBars').innerHTML = buckets.map(b => {
+        const wCal = Math.min(100, Math.round((b.cal / maxVal) * 100));
+        return `
+          <div class="space-y-1 text-xs">
+            <div class="flex justify-between">
+              <span class="font-bold">${b.label}</span>
+              <span class="muted-text">🍽 ${b.cal} ккал • 🔥 +${b.act} ккал</span>
+            </div>
+            <div class="w-full h-2.5 sub-card rounded-full overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full" style="width: ${wCal}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('currentDateLabel').innerText = new Date().toLocaleDateString('ru-RU', {
+        weekday: 'short', day: 'numeric', month: 'long'
+      });
+      window.loadProfileToForm();
+      window.renderDashboard();
+    });
+  </script>
+</body>
+</html>
