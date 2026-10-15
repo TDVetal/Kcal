@@ -1419,3 +1419,48 @@
     </script>
 </body>
 </html>
+<!-- ДОПОЛНИТЕЛЬНЫЙ МОДУЛЬ: Мультиязычность, Диабет-меню и Онлайн-ИИ -->
+<script>
+// Мультиязычный словарь
+const langData = {
+    ru: { langName: "Русский", goalLose: "Похудение", goalMaintain: "Поддержание", goalGain: "Набор", dietStd: "Классическое", dietVeg: "Вегетарианское", dietDia: "Диабетическое (Low-Carb) 🩺" },
+    ua: { langName: "Українська", goalLose: "Схуднення", goalMaintain: "Підтримання", goalGain: "Набір", dietStd: "Класичне", dietVeg: "Вегетаріанське", dietDia: "Діабетичне (Low-Carb) 🩺" },
+    en: { langName: "English", goalLose: "Weight Loss", goalMaintain: "Maintenance", goalGain: "Bulking", dietStd: "Standard", dietVeg: "Vegetarian", dietDia: "Diabetes-Friendly (Low-Carb) 🩺" },
+    nl: { langName: "Nederlands", goalLose: "Afvallen", goalMaintain: "Onderhouden", goalGain: "Aankomen", dietStd: "Standaard", dietVeg: "Vegetarisch", dietDia: "Diabetesvriendelijk (Low-Carb) 🩺" }
+};
+
+// Функция смены языка интерфейса
+function changeAppLanguage(langCode) {
+    localStorage.setItem('kcal_active_lang', langCode);
+    location.reload();
+}
+
+// Расширенные планы питания, включая меню для диабетиков (контроль углеводов и гликемического индекса)
+function getExtendedDietPlans(mode) {
+    if (mode === 'dia') {
+        return [
+            {
+                title: "🩺 Диабетический баланс (Низкий ГИ / Low-Carb)",
+                kcal: 1650,
+                items: [
+                    { cat: "Завтрак", name: "омлет с шпинатом и авокадо", w: 220, kcal: 340, p: 20, f: 24, c: 5 },
+                    { cat: "Обед", name: "запеченная индейка с тушеными овощами и зеленью", w: 320, kcal: 450, p: 42, f: 14, c: 12 },
+                    { cat: "Ужин", name: "филе лосося на гриле с брокколи", w: 280, kcal: 480, p: 38, f: 26, c: 8 },
+                    { cat: "Перекус", name: "греческий йогурт без сахара с горстью орехов", w: 180, kcal: 260, p: 14, f: 18, c: 6 }
+                ]
+            },
+            {
+                title: "🩺 Контроль сахара и легкий ужин",
+                kcal: 1450,
+                items: [
+                    { cat: "Завтрак", name: "творог 5% с семенами чиа и корицей", w: 200, kcal: 280, p: 24, f: 10, c: 9 },
+                    { cat: "Обед", name: "суп-пюре из кабачков с куриной грудкой", w: 350, kcal: 360, p: 34, f: 8, c: 14 },
+                    { cat: "Ужин", name: "салат из свежих овощей с оливковым маслом и тофу", w: 300, kcal: 310, p: 16, f: 20, c: 10 },
+                    { cat: "Перекус", name: "омлетные маффины с зеленью", w: 150, kcal: 210, p: 15, f: 14, c: 3 }
+                ]
+            }
+        ];
+    }
+    return []; // стандартные и вегетарианские подтягиваются из основного кода
+}
+</script>
