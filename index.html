@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Калории Pro — Умный трекер питания и здоровья</title>
+  <title>Калории Pro — Умный трекер здоровья и питания</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
@@ -25,9 +25,9 @@
       width: 100%; max-width: 420px; height: 100dvh; max-height: 915px;
       display: flex; flex-direction: column; overflow: hidden; position: relative;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); background-color: #090d16;
+      padding-top: env(safe-area-inset-top, 16px);
+      padding-bottom: env(safe-area-inset-bottom, 16px);
     }
-    .safe-top { padding-top: max(env(safe-area-inset-top), 22px); }
-    .safe-bottom { padding-bottom: max(env(safe-area-inset-bottom), 12px); }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .glass-panel { background: rgba(17, 24, 39, 0.92); border: 1px solid rgba(31, 41, 55, 0.85); backdrop-filter: blur(12px); }
@@ -47,31 +47,30 @@
   </style>
 </head>
 <body>
-<div class="app-wrapper safe-top safe-bottom">
+<div class="app-wrapper">
 
   <!-- ШАПКА -->
-  <header class="glass-panel px-3.5 py-3 flex items-center justify-between shrink-0 z-30 border-b border-slate-800">
+  <header class="glass-panel px-3.5 py-2.5 flex items-center justify-between shrink-0 z-30 border-b border-slate-800">
     <div class="flex items-center space-x-2">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-xl shadow-md shrink-0">🔥</div>
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-lg shadow-md shrink-0">🔥</div>
       <div>
-        <h1 class="font-black text-base leading-tight tracking-tight" id="appTitle">Calories Pro</h1>
-        <p id="currentDateLabel" class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Today</p>
+        <h1 class="font-black text-sm leading-tight tracking-tight" id="appTitle">Calories Pro</h1>
+        <p id="currentDateLabel" class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Today</p>
       </div>
     </div>
     <div class="flex items-center space-x-1.5">
-      <button type="button" onclick="cycleGoalQuick()" class="sub-card px-2.5 py-1.5 rounded-xl text-xs font-extrabold text-emerald-400 flex items-center gap-1 active:scale-95 transition">
+      <button type="button" onclick="cycleGoalQuick()" class="sub-card px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold text-emerald-400 flex items-center gap-1 active:scale-95 transition">
         <span id="headerGoalIcon">🔥</span>
         <span id="headerGoalType">Fat Loss</span>
       </button>
       <button type="button" onclick="toggleThemeMode()" id="themeBtn" class="sub-card px-2 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95 transition">
         <span id="themeIcon">🌙</span>
       </button>
-      <button type="button" onclick="cycleAppLanguage()" id="langSelectorBtn" class="sub-card px-2.5 py-1.5 rounded-xl text-xs font-black text-blue-400 flex items-center gap-1 active:scale-95 transition">
+      <button type="button" onclick="cycleAppLanguage()" id="langSelectorBtn" class="sub-card px-2.5 py-1.5 rounded-xl text-[11px] font-black text-blue-400 flex items-center gap-1 active:scale-95 transition">
         🌐 <span id="currentLangLabel">RU</span>
       </button>
     </div>
   </header>
-
   <!-- КОНТЕНТ -->
   <main class="flex-1 overflow-hidden relative p-3 flex flex-col justify-between">
 
@@ -86,7 +85,7 @@
             </div>
             <span id="remainBadge" class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 inline-block mt-1">Remaining: 2000</span>
           </div>
-          <!-- Кольцо калорий (исправленные размеры) -->
+          <!-- Кольцо калорий -->
           <div class="relative w-16 h-16 flex items-center justify-center shrink-0">
             <svg class="w-full h-full progress-ring" width="64" height="64" viewBox="0 0 64 64">
               <circle cx="32" cy="32" r="26" stroke="currentColor" stroke-width="5" class="text-slate-800" fill="transparent"/>
@@ -214,7 +213,6 @@
           <span id="bmiBadge" class="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400">BMI: 23.4</span>
         </div>
         <div class="grid grid-cols-3 gap-2 text-center my-3">
-          <!-- Редактируемый стартовый вес -->
           <div class="sub-card p-2.5 rounded-xl flex flex-col justify-center">
             <span id="lblStartW" class="text-[11px] text-slate-400 block mb-1">Start</span>
             <input type="number" id="inpStartWeight" step="0.1" value="82.0" onchange="updateStartWeight(this.value)" class="w-full bg-transparent text-center text-xs font-black outline-none border-b border-slate-500/40 text-slate-200 pb-0.5">
@@ -310,7 +308,7 @@
   </nav>
   <!-- МОДАЛЬНОЕ ОКНО: ДОБАВЛЕНИЕ ЕДЫ -->
   <div id="foodModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="glass-panel w-full max-w-md rounded-t-3xl sm:rounded-2xl p-4 space-y-3 max-h-[85vh] flex flex-col animate-slide-up">
+    <div class="glass-panel w-full max-w-md rounded-t-3xl sm:rounded-2xl p-4 space-y-3 max-h-[85vh] flex flex-col">
       <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
         <h3 id="modalFoodHeader" class="font-black text-sm">Add Food Item</h3>
         <button type="button" onclick="closeFoodModal()" class="w-8 h-8 rounded-xl sub-card flex items-center justify-center font-bold text-slate-400">✕</button>
@@ -380,7 +378,6 @@
       </div>
 
       <div class="space-y-3 overflow-y-auto no-scrollbar">
-        <!-- Настройка API ключа -->
         <div class="sub-card p-3 rounded-2xl space-y-2">
           <label id="lblAiKey" class="block text-[11px] font-bold text-slate-300">Gemini API Key (Google AI Studio):</label>
           <div class="flex gap-2">
@@ -390,7 +387,6 @@
           <p id="aiKeyHint" class="text-[10px] text-slate-400 leading-tight">Key is stored securely in your browser's localStorage.</p>
         </div>
 
-        <!-- Зона загрузки фото -->
         <div class="border-2 border-dashed border-slate-700 hover:border-indigo-500 transition rounded-2xl p-4 text-center cursor-pointer relative" onclick="document.getElementById('aiRealFileInput').click()">
           <input type="file" id="aiRealFileInput" accept="image/*" capture="environment" class="hidden" onchange="handleAiImageSelected(this)">
           <div id="aiUploadPrompt" class="space-y-1.5 py-3">
@@ -403,13 +399,11 @@
           </div>
         </div>
 
-        <!-- Статус распознавания -->
         <div id="aiLoadingIndicator" class="hidden py-4 text-center space-y-2">
           <div class="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
           <p id="aiLoadingText" class="text-xs font-bold text-indigo-400">Gemini is analyzing your meal...</p>
         </div>
 
-        <!-- Результат распознавания -->
         <div id="aiResultBox" class="hidden sub-card p-3 rounded-2xl space-y-2.5">
           <h4 id="aiResultHeader" class="text-xs font-black text-emerald-400">✨ Recognized Dish:</h4>
           <div class="grid grid-cols-2 gap-2 text-xs">
@@ -432,7 +426,6 @@
       </div>
     </div>
   </div>
-</div>
   <script>
     // МНОГОЯЗЫЧНЫЙ СЛОВАРЬ (RU / EN / NL)
     const i18n = {
@@ -717,12 +710,15 @@
     };
   </script>
   <script>
-    // ОСНОВНОЕ СОСТОЯНИЕ ПРИЛОЖЕНИЯ
+    // ==========================================
+    // ЧАСТЬ 6.1: ЯДРО, ЛОКАЛИЗАЦИЯ БЛЮД И ПРОФИЛЬ
+    // ==========================================
     let currentLang = 'ru';
     let currentTheme = 'dark';
     let activeMainTab = 'diary';
     let activeMealSubTab = 'breakfast';
     let activeDietCategory = 'diabetic';
+    let currentGoalMode = 'loss'; // 'loss' | 'maint' | 'gain'
 
     let userProfile = {
       gender: 'male',
@@ -732,14 +728,14 @@
       currentWeight: 78.5,
       goalWeight: 74.0,
       activity: 1.375,
-      normKcal: 2496
+      normKcal: 2000
     };
 
     let todayData = {
       date: new Date().toISOString().split('T')[0],
       eatenWater: 1000,
       targetWater: 2000,
-      burnedActivity: 1410,
+      burnedActivity: 0,
       meals: {
         breakfast: [
           { name: "Омлет с сыром, томатами и зеленью", weight: 220, kcal: 310, p: 20, f: 24, c: 5, cu: 0.4 }
@@ -750,8 +746,8 @@
       },
       weightHistory: [
         { date: '2026-09-01', weight: 81.0 },
-        { date: '2026-09-10', weight: 79.8 },
-        { date: '2026-09-20', weight: 78.5 }
+        { date: '2026-09-15', weight: 79.8 },
+        { date: '2026-10-01', weight: 78.5 }
       ],
       bodyPhotos: [],
       measurements: { waist: 84, chest: 102, hips: 98, bicep: 38 }
@@ -761,10 +757,211 @@
     let selectedAiImageBase64 = null;
     let geminiApiKey = localStorage.getItem('gemini_api_key') || '';
 
-    // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
+    // СЛОВАРЬ ПЕРЕВОДА ДИНАМИЧЕСКИХ БЛЮД, АКТИВНОСТЕЙ И РАЦИОНОВ
+    const dynamicTranslations = {
+      "Омлет с сыром, томатами и зеленью": {
+        ru: "Омлет с сыром, томатами и зеленью",
+        en: "Omelette with cheese, tomatoes & herbs",
+        nl: "Omelet met kaas, tomaten en kruiden"
+      },
+      "Омлет с сыром и томатами": {
+        ru: "Омлет с сыром и томатами",
+        en: "Omelette with cheese & tomatoes",
+        nl: "Omelet met kaas en tomaten"
+      },
+      "Куриная грудка гриль": {
+        ru: "Куриная грудка гриль",
+        en: "Grilled chicken breast",
+        nl: "Gegrilde kipfilet"
+      },
+      "Овсяная каша на воде с ягодами": {
+        ru: "Овсяная каша на воде с ягодами",
+        en: "Oatmeal with berries",
+        nl: "Havermout met bessen"
+      },
+      "Гречневая каша с маслом": {
+        ru: "Гречневая каша с маслом",
+        en: "Buckwheat porridge with butter",
+        nl: "Boekweitpap met boter"
+      },
+      "Лосось запеченный": {
+        ru: "Лосось запеченный",
+        en: "Baked salmon fillet",
+        nl: "Gebakken zalmfilet"
+      },
+      "Салат Греческий": {
+        ru: "Салат Греческий",
+        en: "Greek salad with feta",
+        nl: "Griekse salade met feta"
+      },
+      "Творог 5% со сметаной": {
+        ru: "Творог 5% со сметаной",
+        en: "Cottage cheese 5% with sour cream",
+        nl: "Kwark 5% met zure room"
+      },
+      "Яблоко свежее": {
+        ru: "Яблоко свежее",
+        en: "Fresh apple",
+        nl: "Verse appel"
+      },
+      "Быстрая ходьба (45 мин)": {
+        ru: "Быстрая ходьба (45 мин)",
+        en: "Brisk walking (45 min)",
+        nl: "Stevig wandelen (45 min)"
+      },
+      "Бег трусцой (30 мин)": {
+        ru: "Бег трусцой (30 мин)",
+        en: "Jogging (30 min)",
+        nl: "Hardlopen (30 min)"
+      },
+      "Силовая тренировка (60 мин)": {
+        ru: "Силовая тренировка (60 мин)",
+        en: "Strength training (60 min)",
+        nl: "Krachttraining (60 min)"
+      },
+      "Велосипед (45 мин)": {
+        ru: "Велосипед (45 мин)",
+        en: "Cycling (45 min)",
+        nl: "Fietsen (45 min)"
+      },
+      "Плавание (30 мин)": {
+        ru: "Плавание (30 мин)",
+        en: "Swimming (30 min)",
+        nl: "Zwemmen (30 min)"
+      },
+      "HIIT / Кардио (30 мин)": {
+        ru: "HIIT / Кардио (30 мин)",
+        en: "HIIT / Cardio (30 min)",
+        nl: "HIIT / Cardio (30 min)"
+      },
+      "Завтрак №9: Омлет с зеленью и томатами": {
+        ru: "Завтрак №9: Омлет с зеленью и томатами",
+        en: "Breakfast #9: Herb & Tomato Omelette",
+        nl: "Ontbijt #9: Kruiden- en tomatenomelet"
+      },
+      "Белки яиц, шпинат, томаты. Низкий ГИ.": {
+        ru: "Белки яиц, шпинат, томаты. Низкий ГИ.",
+        en: "Egg whites, spinach, tomatoes. Low GI.",
+        nl: "Eiwitten, spinazie, tomaten. Laag GI."
+      },
+      "Обед №9: Суп овощной с индейкой": {
+        ru: "Обед №9: Суп овощной с индейкой",
+        en: "Lunch #9: Turkey & Vegetable Soup",
+        nl: "Lunch #9: Groentesoep met kalkoen"
+      },
+      "Брокколи, цветная капуста, филе индейки.": {
+        ru: "Брокколи, цветная капуста, филе индейки.",
+        en: "Broccoli, cauliflower, turkey breast.",
+        nl: "Broccoli, bloemkool, kalkoenfilet."
+      },
+      "Ужин №9: Треска на пару с цукини": {
+        ru: "Ужин №9: Треска на пару с цукини",
+        en: "Dinner #9: Steamed Cod with Zucchini",
+        nl: "Diner #9: Gestoomde kabeljauw met courgette"
+      },
+      "Белая рыба, запеченные кабачки с оливковым маслом.": {
+        ru: "Белая рыба, запеченные кабачки с оливковым маслом.",
+        en: "White fish, zucchini with olive oil.",
+        nl: "Witvis, courgette met olijfolie."
+      },
+      "Классический завтрак: Тост с авокадо и яйцом": {
+        ru: "Классический завтрак: Тост с авокадо и яйцом",
+        en: "Classic Breakfast: Avocado & Egg Toast",
+        nl: "Klassiek ontbijt: Avocado & Ei Toast"
+      },
+      "Цельнозерновой хлеб, авокадо, яйцо пашот.": {
+        ru: "Цельнозерновой хлеб, авокадо, яйцо пашот.",
+        en: "Wholegrain bread, avocado, poached egg.",
+        nl: "Volkorenbrood, avocado, gepocheerd ei."
+      },
+      "Классический обед: Курица с бурым рисом": {
+        ru: "Классический обед: Курица с бурым рисом",
+        en: "Classic Lunch: Chicken & Brown Rice",
+        nl: "Klassieke lunch: Kip met zilvervliesrijst"
+      },
+      "Филе индейки/курицы, рис бурый, салат.": {
+        ru: "Филе индейки/курицы, рис бурый, салат.",
+        en: "Chicken/turkey breast, brown rice, salad.",
+        nl: "Kip/kalkoenfilet, zilvervliesrijst, salade."
+      },
+      "Классический ужин: Стейк лосося с овощами": {
+        ru: "Классический ужин: Стейк лосося с овощами",
+        en: "Classic Dinner: Salmon Steak & Veggies",
+        nl: "Klassiek diner: Zalmsteak met groenten"
+      },
+      "Красная рыба, спаржа, зелень.": {
+        ru: "Красная рыба, спаржа, зелень.",
+        en: "Salmon, asparagus, fresh greens.",
+        nl: "Zalm, asperges, verse groenten."
+      },
+      "Веган завтрак: Смузи-боул с чиа": {
+        ru: "Веган завтрак: Смузи-боул с чиа",
+        en: "Vegan Breakfast: Chia Smoothie Bowl",
+        nl: "Vegan ontbijt: Chia Smoothie Bowl"
+      },
+      "Ягоды, растительное молоко, семена чиа, орехи.": {
+        ru: "Ягоды, растительное молоко, семена чиа, орехи.",
+        en: "Berries, plant milk, chia seeds, nuts.",
+        nl: "Bessen, plantaardige melk, chiazaden, noten."
+      },
+      "Веган обед: Тофу с киноа и овощами вок": {
+        ru: "Веган обед: Тофу с киноа и овощами вок",
+        en: "Vegan Lunch: Tofu, Quinoa & Wok Veggies",
+        nl: "Vegan lunch: Tofu met quinoa en wokgroenten"
+      },
+      "Тофу, киноа, болгарский перец, соус соевый.": {
+        ru: "Тофу, киноа, болгарский перец, соус соевый.",
+        en: "Tofu, quinoa, bell pepper, soy sauce.",
+        nl: "Tofu, quinoa, paprika, sojasaus."
+      },
+      "Веган ужин: Чечевичный крем-суп": {
+        ru: "Веган ужин: Чечевичный крем-суп",
+        en: "Vegan Dinner: Lentil Cream Soup",
+        nl: "Vegan diner: Linzenroomsoep"
+      },
+      "Красная чечевицы, специи, оливковое масло.": {
+        ru: "Красная чечевицы, специи, оливковое масло.",
+        en: "Red lentils, spices, olive oil.",
+        nl: "Rode linzen, specerijen, olijfolie."
+      }
+    };
+
+    function translateDynamicText(text) {
+      if (!text) return "";
+      if (dynamicTranslations[text] && dynamicTranslations[text][currentLang]) {
+        return dynamicTranslations[text][currentLang];
+      }
+      for (const key in dynamicTranslations) {
+        const entry = dynamicTranslations[key];
+        if (entry.ru === text || entry.en === text || entry.nl === text) {
+          return entry[currentLang] || text;
+        }
+      }
+      return text;
+    }
+
+    // ИДЕАЛЬНАЯ КАЛИБРОВКА ОТСТУПОВ ЭКРАНА IPHONE 17 AIR
+    function applyViewportFixes() {
+      const wrapper = document.querySelector('.app-wrapper');
+      if (wrapper) {
+        wrapper.style.maxHeight = 'none';
+        wrapper.style.height = '100dvh';
+        wrapper.style.paddingTop = 'max(env(safe-area-inset-top, 10px), 10px)';
+        wrapper.style.paddingBottom = '0px';
+      }
+      const nav = document.querySelector('nav');
+      if (nav) {
+        nav.style.paddingBottom = 'max(env(safe-area-inset-bottom, 10px), 10px)';
+        nav.style.paddingTop = '8px';
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      applyViewportFixes();
       loadStateFromLocalStorage();
-      document.getElementById('geminiApiKeyInput').value = geminiApiKey;
+      const keyInput = document.getElementById('geminiApiKeyInput');
+      if (keyInput) keyInput.value = geminiApiKey;
+      syncProfileInputs();
       applyLanguage(currentLang);
       applyTheme(currentTheme);
       recalcNormAndUI();
@@ -775,33 +972,92 @@
     });
 
     function loadStateFromLocalStorage() {
+      const savedLang = localStorage.getItem('calories_pro_lang');
+      if (savedLang && i18n[savedLang]) currentLang = savedLang;
+
+      const savedGoal = localStorage.getItem('calories_pro_goal');
+      if (savedGoal) currentGoalMode = savedGoal;
+
       const savedProfile = localStorage.getItem('calories_pro_profile');
-      if (savedProfile) { try { userProfile = JSON.parse(savedProfile); } catch(e){} }
+      if (savedProfile) {
+        try { userProfile = Object.assign(userProfile, JSON.parse(savedProfile)); } catch(e){}
+      }
       const savedToday = localStorage.getItem('calories_pro_today');
-      if (savedToday) { try { todayData = JSON.parse(savedToday); } catch(e){} }
+      if (savedToday) {
+        try {
+          const parsed = JSON.parse(savedToday);
+          todayData = Object.assign(todayData, parsed);
+        } catch(e){}
+      }
     }
 
     function saveStateToLocalStorage() {
+      localStorage.setItem('calories_pro_lang', currentLang);
+      localStorage.setItem('calories_pro_goal', currentGoalMode);
       localStorage.setItem('calories_pro_profile', JSON.stringify(userProfile));
       localStorage.setItem('calories_pro_today', JSON.stringify(todayData));
     }
 
-    // ПЕРЕКЛЮЧЕНИЕ ЯЗЫКОВ
+    function syncProfileInputs() {
+      const gEl = document.getElementById('profGender');
+      const aEl = document.getElementById('profAge');
+      const hEl = document.getElementById('profHeight');
+      const gwEl = document.getElementById('profGoalWeight');
+      const actEl = document.getElementById('profActivity');
+      if (gEl) gEl.value = userProfile.gender || 'male';
+      if (aEl) aEl.value = userProfile.age || 41;
+      if (hEl) hEl.value = userProfile.height || 178;
+      if (gwEl) gwEl.value = userProfile.goalWeight || 74;
+      if (actEl) actEl.value = String(userProfile.activity || 1.375);
+    }
+
+    // ПЕРЕКЛЮЧЕНИЕ ЦЕЛИ (ПОХУДЕНИЕ / ПОДДЕРЖАНИЕ / НАБОР)
+    function cycleGoalQuick() {
+      if (currentGoalMode === 'loss') currentGoalMode = 'maint';
+      else if (currentGoalMode === 'maint') currentGoalMode = 'gain';
+      else currentGoalMode = 'loss';
+      updateGoalHeaderUI();
+      calculateMifflinNorm();
+      saveStateToLocalStorage();
+      recalcNormAndUI();
+    }
+
+    function updateGoalHeaderUI() {
+      const t = i18n[currentLang];
+      const iconEl = document.getElementById('headerGoalIcon');
+      const textEl = document.getElementById('headerGoalType');
+      if (!iconEl || !textEl) return;
+      if (currentGoalMode === 'loss') {
+        iconEl.innerText = '🔥';
+        textEl.innerText = t.fatLoss;
+      } else if (currentGoalMode === 'maint') {
+        iconEl.innerText = '⚖️';
+        textEl.innerText = t.maintenance;
+      } else {
+        iconEl.innerText = '💪';
+        textEl.innerText = t.muscleGain;
+      }
+    }
+
+    // ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА (RU -> EN -> NL)
     function cycleAppLanguage() {
       if (currentLang === 'ru') currentLang = 'en';
       else if (currentLang === 'en') currentLang = 'nl';
       else currentLang = 'ru';
-      document.getElementById('currentLangLabel').innerText = currentLang.toUpperCase();
+      saveStateToLocalStorage();
       applyLanguage(currentLang);
       renderDiaryUI();
       renderDietPlansUI();
+      renderBodyUI();
     }
 
     function applyLanguage(lang) {
       const t = i18n[lang];
+      document.getElementById('currentLangLabel').innerText = lang.toUpperCase();
       document.getElementById('appTitle').innerText = t.appTitle;
       document.getElementById('currentDateLabel').innerText = t.today;
-      document.getElementById('headerGoalType').innerText = t.fatLoss;
+      updateGoalHeaderUI();
+
       document.getElementById('lblProteins').innerText = t.proteins;
       document.getElementById('lblFats').innerText = t.fats;
       document.getElementById('lblCarbs').innerText = t.carbs;
@@ -815,6 +1071,7 @@
       document.getElementById('tabNameSnack').innerText = t.snack;
       document.getElementById('btnAddFoodTxt').innerText = t.addFood;
       document.getElementById('btnAiPhotoTxt').innerText = t.aiPhoto;
+
       document.getElementById('dietTitle').innerText = t.dietPlans;
       document.getElementById('dietSubBadge').innerText = t.balanced;
       document.getElementById('dietBtn-diabetic').innerText = `🩸 ${t.diabetic}`;
@@ -822,6 +1079,7 @@
       document.getElementById('dietBtn-veg').innerText = `🥑 ${t.vegan}`;
       document.getElementById('diabBoxTitle').innerText = t.diabBoxTitle;
       document.getElementById('diabBoxDesc').innerText = t.diabBoxDesc;
+
       document.getElementById('bodyTitle').innerText = t.weightTracker;
       document.getElementById('bodySub').innerText = t.weightSub;
       document.getElementById('lblStartW').innerText = t.start;
@@ -837,8 +1095,10 @@
       document.getElementById('lblHips').innerText = t.hips;
       document.getElementById('lblNeck').innerText = t.bicep;
       document.getElementById('weightHistTitle').innerText = t.weightHistTitle;
+
       document.getElementById('chartKcalHeader').innerText = t.chartKcalHeader;
       document.getElementById('chartWeightHeader').innerText = t.chartWeightHeader;
+
       document.getElementById('profHeader').innerText = t.profHeader;
       document.getElementById('profSub').innerText = t.profSub;
       document.getElementById('lblGender').innerText = t.gender;
@@ -854,11 +1114,13 @@
       document.getElementById('act4').innerText = t.act4;
       document.getElementById('btnCalcNorm').innerText = t.calculate;
       document.getElementById('btnClearDay').innerText = t.clearDay;
+
       document.getElementById('navTxtDiary').innerText = t.diary;
       document.getElementById('navTxtDiet').innerText = t.diet;
       document.getElementById('navTxtBody').innerText = t.body;
       document.getElementById('navTxtCharts').innerText = t.charts;
       document.getElementById('navTxtProfile').innerText = t.profile;
+
       document.getElementById('modalFoodHeader').innerText = t.modalFoodHeader;
       document.getElementById('lblFoodName').innerText = t.dishName;
       document.getElementById('lblFoodWeight').innerText = t.weightG;
@@ -866,7 +1128,7 @@
       document.getElementById('lblQuickPresets').innerText = t.quickPresets;
       document.getElementById('modalActHeader').innerText = t.modalActHeader;
       document.getElementById('aiModalTitle').innerText = t.aiModalTitle;
-      document.getElementById('lblAiKey').innerText = t.aiKeyHint;
+      document.getElementById('aiKeyHint').innerText = t.aiKeyHint;
       document.getElementById('aiUploadText').innerText = t.aiUploadText;
       document.getElementById('aiUploadSub').innerText = t.aiUploadSub;
       document.getElementById('aiLoadingText').innerText = t.aiLoadingText;
@@ -875,7 +1137,7 @@
       document.getElementById('aiBtnAdd').innerText = t.addToDiary;
     }
 
-    // ТЕМА (ТЕМНАЯ / СВЕТЛАЯ)
+    // ТЕМА И НАВИГАЦИЯ
     function toggleThemeMode() {
       currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
       applyTheme(currentTheme);
@@ -892,7 +1154,6 @@
       }
     }
 
-    // НАВИГАЦИЯ МЕЖДУ ВКЛАДКАМИ
     function switchMainTab(tabId) {
       activeMainTab = tabId;
       ['diary', 'diet', 'body', 'charts', 'profile'].forEach(id => {
@@ -917,7 +1178,16 @@
       renderDiaryUI();
     }
 
-    // ФОРМУЛА МИФФЛИНА — САН-ЖЕОРА
+    // РАСЧЕТ НОРМЫ МИФФЛИНА — САН-ЖЕОРА
+    function calculateMifflinNorm() {
+      let bmr = (10 * userProfile.currentWeight) + (6.25 * userProfile.height) - (5 * userProfile.age);
+      bmr += (userProfile.gender === 'male' ? 5 : -161);
+      let tdee = bmr * userProfile.activity;
+      if (currentGoalMode === 'loss') tdee -= 350;
+      else if (currentGoalMode === 'gain') tdee += 300;
+      userProfile.normKcal = Math.max(1200, Math.round(tdee));
+    }
+
     function recalcAndSaveProfile() {
       userProfile.gender = document.getElementById('profGender').value;
       userProfile.age = parseInt(document.getElementById('profAge').value) || 41;
@@ -925,13 +1195,11 @@
       userProfile.goalWeight = parseFloat(document.getElementById('profGoalWeight').value) || 74.0;
       userProfile.activity = parseFloat(document.getElementById('profActivity').value) || 1.375;
 
-      let bmr = (10 * userProfile.currentWeight) + (6.25 * userProfile.height) - (5 * userProfile.age);
-      bmr += (userProfile.gender === 'male' ? 5 : -161);
-      userProfile.normKcal = Math.round(bmr * userProfile.activity);
-
+      calculateMifflinNorm();
       saveStateToLocalStorage();
       recalcNormAndUI();
-      alert("Норма КБЖУ успешно пересчитана!");
+      const msg = currentLang === 'ru' ? "Норма КБЖУ успешно пересчитана!" : (currentLang === 'nl' ? "Calorienorm berekend!" : "Calorie norm recalculated!");
+      alert(msg);
     }
 
     function recalcNormAndUI() {
@@ -947,33 +1215,50 @@
     }
   </script>
   <script>
-    // РЕНДЕРИНГ ДНЕВНИКА И СМЕСТИТЕЛЕЙ
+    // ==========================================
+    // ЧАСТЬ 6.2: РЕНДЕРИНГ ДНЕВНИКА, ВОДА, АКТИВНОСТЬ И ЕДА
+    // ==========================================
     function renderDiaryUI() {
+      const t = i18n[currentLang];
       let currentMeals = todayData.meals[activeMealSubTab] || [];
       let totalEatenKcal = 0;
       let totalProt = 0, totalFats = 0, totalCarbs = 0, totalCU = 0;
 
       Object.keys(todayData.meals).forEach(mealKey => {
-        todayData.meals[mealKey].forEach(item => {
-          totalEatenKcal += (item.kcal || 0);
-          totalProt += (item.p || 0);
-          totalFats += (item.f || 0);
-          totalCarbs += (item.c || 0);
-          totalCU += (item.cu || 0);
+        (todayData.meals[mealKey] || []).forEach(item => {
+          totalEatenKcal += (Number(item.kcal) || 0);
+          totalProt += (Number(item.p) || 0);
+          totalFats += (Number(item.f) || 0);
+          totalCarbs += (Number(item.c) || 0);
+          totalCU += (Number(item.cu) || 0);
         });
       });
 
       let mealSpecificKcal = 0, mealSpecificCU = 0;
       currentMeals.forEach(item => {
-        mealSpecificKcal += (item.kcal || 0);
-        mealSpecificCU += (item.cu || 0);
+        mealSpecificKcal += (Number(item.kcal) || 0);
+        mealSpecificCU += (Number(item.cu) || 0);
       });
 
-      // Обновление цифр в шапке дневника
+      // Точная математика калорий: Норма + Активность - Съедено = Остаток
+      const normVal = Number(userProfile.normKcal) || 2000;
+      const burnedVal = Number(todayData.burnedActivity) || 0;
+      const effectiveTarget = normVal + burnedVal;
+      const remain = effectiveTarget - totalEatenKcal;
+
       document.getElementById('eatenKcal').innerText = totalEatenKcal;
-      let remain = userProfile.normKcal + todayData.burnedActivity - totalEatenKcal;
+      document.getElementById('normKcal').innerText = normVal;
+
       const remainBadge = document.getElementById('remainBadge');
-      remainBadge.innerText = `Remaining: ${remain} kcal`;
+      const unitKcalTxt = currentLang === 'ru' ? 'ккал' : 'kcal';
+      document.getElementById('unitKcal').innerText = unitKcalTxt;
+
+      if (burnedVal > 0) {
+        remainBadge.innerText = `${t.remaining}: ${remain} ${unitKcalTxt} (${normVal} + ${burnedVal} - ${totalEatenKcal})`;
+      } else {
+        remainBadge.innerText = `${t.remaining}: ${remain} ${unitKcalTxt}`;
+      }
+
       if (remain < 0) {
         remainBadge.className = "text-[11px] font-extrabold px-2.5 py-0.5 rounded-md bg-rose-500/15 text-rose-400 inline-block mt-1";
       } else {
@@ -981,54 +1266,74 @@
       }
 
       // Прогресс кольца калорий
-      let kcalPercent = Math.min(Math.round((totalEatenKcal / userProfile.normKcal) * 100), 100);
+      let kcalPercent = Math.min(Math.round((totalEatenKcal / Math.max(1, effectiveTarget)) * 100), 100);
       document.getElementById('kcalPercentText').innerText = kcalPercent + '%';
       let ringKcalOffset = 163.36 - (163.36 * kcalPercent) / 100;
       document.getElementById('ringKcal').style.strokeDashoffset = ringKcalOffset;
 
-      // БЖУ прогресс
-      let pPct = Math.min(Math.round((totalProt / 130) * 100), 100);
+      // Динамические цели БЖУ от нормы калорий
+      const targetProt = Math.round((normVal * 0.26) / 4);
+      const targetFats = Math.round((normVal * 0.29) / 9);
+      const targetCarbs = Math.round((normVal * 0.45) / 4);
+      const gUnit = currentLang === 'ru' ? 'г' : 'g';
+
+      let pPct = Math.min(Math.round((totalProt / Math.max(1, targetProt)) * 100), 100);
       document.getElementById('ringProt').style.strokeDashoffset = 113.1 - (113.1 * pPct) / 100;
       document.getElementById('protPercentText').innerText = pPct + '%';
-      document.getElementById('valProteins').innerText = `${totalProt}/130g`;
+      document.getElementById('valProteins').innerText = `${totalProt}/${targetProt}${gUnit}`;
 
-      let fPct = Math.min(Math.round((totalFats / 65) * 100), 100);
+      let fPct = Math.min(Math.round((totalFats / Math.max(1, targetFats)) * 100), 100);
       document.getElementById('ringFats').style.strokeDashoffset = 113.1 - (113.1 * fPct) / 100;
       document.getElementById('fatsPercentText').innerText = fPct + '%';
-      document.getElementById('valFats').innerText = `${totalFats}/65g`;
+      document.getElementById('valFats').innerText = `${totalFats}/${targetFats}${gUnit}`;
 
-      let cPct = Math.min(Math.round((totalCarbs / 200) * 100), 100);
+      let cPct = Math.min(Math.round((totalCarbs / Math.max(1, targetCarbs)) * 100), 100);
       document.getElementById('ringCarbs').style.strokeDashoffset = 113.1 - (113.1 * cPct) / 100;
       document.getElementById('carbsPercentText').innerText = cPct + '%';
-      document.getElementById('valCarbs').innerText = `${totalCarbs}/200g`;
+      document.getElementById('valCarbs').innerText = `${totalCarbs}/${targetCarbs}${gUnit}`;
 
-      document.getElementById('valXE').innerText = totalCU.toFixed(1) + ' CU';
+      const cuUnit = currentLang === 'ru' ? 'ХЕ' : (currentLang === 'nl' ? 'KH' : 'CU');
+      document.getElementById('valXE').innerText = `${totalCU.toFixed(1)} ${cuUnit}`;
       document.getElementById('waterCountText').innerText = `${todayData.eatenWater} / ${todayData.targetWater} ml`;
-      document.getElementById('burnedKcalText').innerText = `+${todayData.burnedActivity} kcal`;
 
-      // Название текущего приема пищи
-      const t = i18n[currentLang];
+      // Отображение активности с кнопкой быстрого сброса
+      const burnedEl = document.getElementById('burnedKcalText');
+      if (burnedVal > 0) {
+        burnedEl.innerHTML = `+${burnedVal} ${unitKcalTxt} <button type="button" onclick="resetActivityBurned()" class="ml-1 text-[10px] text-rose-400 underline font-extrabold">↺</button>`;
+      } else {
+        burnedEl.innerText = `+0 ${unitKcalTxt}`;
+      }
+
+      // Заголовок текущего приема пищи с локализацией
       const mealNamesMap = { breakfast: t.breakfast, lunch: t.lunch, dinner: t.dinner, snack: t.snack };
       const mealEmojisMap = { breakfast: '🌅', lunch: '☀️', dinner: '🌙', snack: '🍎' };
       document.getElementById('currentMealHeader').innerText = `${mealEmojisMap[activeMealSubTab]} ${mealNamesMap[activeMealSubTab]}`;
-      document.getElementById('currentMealKcal').innerText = `${mealSpecificKcal} kcal • ${mealSpecificCU.toFixed(1)} CU`;
+      document.getElementById('currentMealKcal').innerText = `${mealSpecificKcal} ${unitKcalTxt} • ${mealSpecificCU.toFixed(1)} ${cuUnit}`;
 
-      // Рендеринг списка блюд
+      // Отрисовка списка блюд с автоматическим переводом названий
       const listContainer = document.getElementById('mealItemsList');
       listContainer.innerHTML = '';
       if (currentMeals.length === 0) {
-        listContainer.innerHTML = `<div class="text-center py-6 text-slate-500 text-xs font-bold">No food added yet for this meal. Tap below to add!</div>`;
+        const emptyMsg = currentLang === 'ru'
+          ? 'В этом приеме пищи пока пусто. Нажмите «+ Добавить еду» ниже!'
+          : (currentLang === 'nl' ? 'Nog geen eten toegevoegd. Tik hieronder om toe te voegen!' : 'No food added yet for this meal. Tap below to add!');
+        listContainer.innerHTML = `<div class="text-center py-6 text-slate-500 text-xs font-bold">${emptyMsg}</div>`;
       } else {
+        const pLbl = currentLang === 'ru' ? 'Б' : (currentLang === 'nl' ? 'E' : 'P');
+        const fLbl = currentLang === 'ru' ? 'Ж' : (currentLang === 'nl' ? 'V' : 'F');
+        const cLbl = currentLang === 'ru' ? 'У' : (currentLang === 'nl' ? 'K' : 'C');
+
         currentMeals.forEach((item, idx) => {
+          const localizedName = translateDynamicText(item.name);
           let div = document.createElement('div');
-          div.className = "sub-card p-2.5 rounded-xl flex items-center justify-between text-xs animate-fade-in";
+          div.className = "sub-card p-2.5 rounded-xl flex items-center justify-between text-xs";
           div.innerHTML = `
-            <div>
-              <p class="font-black text-slate-200">${item.name}</p>
-              <p class="text-[10px] text-slate-400 mt-0.5">${item.weight}g • P:${item.p}g • F:${item.f}g • C:${item.c}g • <span class="text-rose-400 font-bold">${item.cu} CU</span></p>
+            <div class="pr-2">
+              <p class="font-black text-slate-100 text-[13px] leading-snug">${localizedName}</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">${item.weight}${gUnit} • ${pLbl}:${item.p}${gUnit} • ${fLbl}:${item.f}${gUnit} • ${cLbl}:${item.c}${gUnit} • <span class="text-rose-400 font-bold">${item.cu} ${cuUnit}</span></p>
             </div>
-            <div class="flex items-center gap-2">
-              <span class="font-black text-blue-400">${item.kcal} kcal</span>
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="font-black text-blue-400 text-[13px]">${item.kcal} ${unitKcalTxt}</span>
               <button type="button" onclick="removeFoodItem('${activeMealSubTab}', ${idx})" class="w-6 h-6 rounded-lg bg-rose-500/20 text-rose-400 font-black flex items-center justify-center active:scale-90">✕</button>
             </div>
           `;
@@ -1039,7 +1344,13 @@
 
     // УПРАВЛЕНИЕ ВОДОЙ И АКТИВНОСТЬЮ
     function addWater(amount) {
-      todayData.eatenWater = Math.max(0, todayData.eatenWater + amount);
+      todayData.eatenWater = Math.max(0, (Number(todayData.eatenWater) || 0) + amount);
+      saveStateToLocalStorage();
+      renderDiaryUI();
+    }
+
+    function resetActivityBurned() {
+      todayData.burnedActivity = 0;
       saveStateToLocalStorage();
       renderDiaryUI();
     }
@@ -1047,19 +1358,22 @@
     function openActivityModal() {
       const container = document.getElementById('activitiesListContainer');
       container.innerHTML = '';
+      const unitKcalTxt = currentLang === 'ru' ? 'ккал' : 'kcal';
+
       activitiesDatabase.forEach(act => {
+        const localizedActName = translateDynamicText(act.name);
         let btn = document.createElement('button');
         btn.type = "button";
         btn.className = "w-full sub-card p-3 rounded-xl flex items-center justify-between active:scale-95 transition text-left";
         btn.innerHTML = `
           <div class="flex items-center gap-2.5">
             <span class="text-xl">${act.icon}</span>
-            <span class="text-xs font-black text-slate-200">${act.name}</span>
+            <span class="text-xs font-black text-slate-200">${localizedActName}</span>
           </div>
-          <span class="text-xs font-black text-orange-400">+${act.kcal} kcal</span>
+          <span class="text-xs font-black text-orange-400">+${act.kcal} ${unitKcalTxt}</span>
         `;
         btn.onclick = () => {
-          todayData.burnedActivity += act.kcal;
+          todayData.burnedActivity = (Number(todayData.burnedActivity) || 0) + act.kcal;
           saveStateToLocalStorage();
           renderDiaryUI();
           closeActivityModal();
@@ -1068,19 +1382,26 @@
       });
       document.getElementById('activityModal').classList.remove('hidden');
     }
-    function closeActivityModal() { document.getElementById('activityModal').classList.add('hidden'); }
 
-    // УПРАВЛЕНИЕ ДОБАВЛЕНИЕМ ЕДЫ
+    function closeActivityModal() {
+      document.getElementById('activityModal').classList.add('hidden');
+    }
+
+    // МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ЕДЫ И ПРЕСЕТЫ
     function openFoodModal() {
       const presetsContainer = document.getElementById('quickPresetsContainer');
       presetsContainer.innerHTML = '';
+      const unitKcalTxt = currentLang === 'ru' ? 'ккал' : 'kcal';
+      const cuUnit = currentLang === 'ru' ? 'ХЕ' : (currentLang === 'nl' ? 'KH' : 'CU');
+
       foodPresets.forEach(preset => {
+        const localizedPresetName = translateDynamicText(preset.name);
         let pBtn = document.createElement('button');
         pBtn.type = "button";
         pBtn.className = "sub-card p-2 rounded-xl text-left text-xs active:scale-95 transition";
-        pBtn.innerHTML = `<p class="font-black text-slate-200 truncate">${preset.name}</p><p class="text-[10px] text-blue-400">${preset.kcal} kcal • ${preset.cu} CU</p>`;
+        pBtn.innerHTML = `<p class="font-black text-slate-200 truncate">${localizedPresetName}</p><p class="text-[10px] text-blue-400">${preset.kcal} ${unitKcalTxt} • ${preset.cu} ${cuUnit}</p>`;
         pBtn.onclick = () => {
-          document.getElementById('foodInputName').value = preset.name;
+          document.getElementById('foodInputName').value = localizedPresetName;
           document.getElementById('foodInputWeight').value = preset.weight;
           document.getElementById('foodInputKcal').value = preset.kcal;
           document.getElementById('foodInputProt').value = preset.p;
@@ -1092,7 +1413,10 @@
       });
       document.getElementById('foodModal').classList.remove('hidden');
     }
-    function closeFoodModal() { document.getElementById('foodModal').classList.add('hidden'); }
+
+    function closeFoodModal() {
+      document.getElementById('foodModal').classList.add('hidden');
+    }
 
     function confirmAddFood() {
       let name = document.getElementById('foodInputName').value.trim() || "Meal";
@@ -1101,7 +1425,7 @@
       let p = parseInt(document.getElementById('foodInputProt').value) || 10;
       let f = parseInt(document.getElementById('foodInputFats').value) || 5;
       let c = parseInt(document.getElementById('foodInputCarbs').value) || 20;
-      let cu = parseFloat(document.getElementById('foodInputCU').value) || 1.5;
+      let cu = parseFloat(document.getElementById('foodInputCU').value) || 0;
 
       if (!todayData.meals[activeMealSubTab]) todayData.meals[activeMealSubTab] = [];
       todayData.meals[activeMealSubTab].push({ name, weight, kcal, p, f, c, cu });
@@ -1117,7 +1441,10 @@
     }
 
     function resetTodayDiary() {
-      if (confirm("Очистить все приемы пищи за сегодня?")) {
+      const confirmTxt = currentLang === 'ru'
+        ? "Очистить все приемы пищи и активность за сегодня?"
+        : (currentLang === 'nl' ? "Alle maaltijden en activiteit van vandaag wissen?" : "Clear all meals and activity for today?");
+      if (confirm(confirmTxt)) {
         todayData.meals = { breakfast: [], lunch: [], dinner: [], snack: [] };
         todayData.eatenWater = 0;
         todayData.burnedActivity = 0;
@@ -1127,7 +1454,9 @@
     }
   </script>
   <script>
-    // ВКЛАДКА РАЦИОН
+    // ==========================================
+    // ЧАСТЬ 6.3: РАЦИОН, ФОРМА, ГРАФИКИ И ИИ GEMINI
+    // ==========================================
     function switchDietCategory(cat) {
       activeDietCategory = cat;
       ['diabetic', 'standard', 'veg'].forEach(c => {
@@ -1146,51 +1475,82 @@
 
     function renderDietPlansUI() {
       const container = document.getElementById('dietCardsContainer');
+      if (!container) return;
       container.innerHTML = '';
       const list = dietPlansData[activeDietCategory] || [];
-      list.forEach(plan => {
+
+      const unitKcalTxt = currentLang === 'ru' ? 'ккал' : 'kcal';
+      const cuUnit = currentLang === 'ru' ? 'ХЕ' : (currentLang === 'nl' ? 'KH' : 'CU');
+      const gUnit = currentLang === 'ru' ? 'г' : 'g';
+      const pLbl = currentLang === 'ru' ? 'Б' : (currentLang === 'nl' ? 'E' : 'P');
+      const fLbl = currentLang === 'ru' ? 'Ж' : (currentLang === 'nl' ? 'V' : 'F');
+      const cLbl = currentLang === 'ru' ? 'У' : (currentLang === 'nl' ? 'K' : 'C');
+      const addBtnTxt = currentLang === 'ru' ? '+ В дневник' : (currentLang === 'nl' ? '+ Toevoegen' : '+ Add');
+
+      list.forEach((plan, index) => {
+        const locTitle = translateDynamicText(plan.title);
+        const locDesc = translateDynamicText(plan.desc);
+
         let div = document.createElement('div');
         div.className = "sub-card p-3 rounded-2xl flex items-center justify-between text-xs";
         div.innerHTML = `
-          <div>
-            <p class="font-black text-slate-200">${plan.title}</p>
-            <p class="text-[10px] text-slate-400 mt-0.5">${plan.desc}</p>
-            <p class="text-[10px] text-rose-400 font-bold mt-1">P:${plan.p}g • F:${plan.f}g • C:${plan.c}g • ${plan.cu} CU</p>
+          <div class="pr-2">
+            <p class="font-black text-slate-100 text-[13px] leading-snug">${locTitle}</p>
+            <p class="text-[11px] text-slate-400 mt-0.5 leading-tight">${locDesc}</p>
+            <p class="text-[11px] text-rose-400 font-bold mt-1">${pLbl}:${plan.p}${gUnit} • ${fLbl}:${plan.f}${gUnit} • ${cLbl}:${plan.c}${gUnit} • ${plan.cu} ${cuUnit}</p>
           </div>
           <div class="text-right shrink-0">
-            <span class="font-black text-blue-400 block">${plan.kcal} kcal</span>
-            <button type="button" onclick="addPlanToDiary('${plan.title}', ${plan.kcal}, ${plan.p}, ${plan.f}, ${plan.c}, ${plan.cu})" class="mt-1 px-2.5 py-1 bg-blue-600 text-white rounded-lg font-black text-[10px] active:scale-90">+ Add</button>
+            <span class="font-black text-blue-400 block text-[13px]">${plan.kcal} ${unitKcalTxt}</span>
+            <button type="button" onclick="addPlanByIndex('${activeDietCategory}', ${index})" class="mt-1.5 px-2.5 py-1.5 bg-blue-600 active:bg-blue-700 text-white rounded-lg font-black text-[10px] active:scale-95 transition">${addBtnTxt}</button>
           </div>
         `;
         container.appendChild(div);
       });
     }
 
-    function addPlanToDiary(title, kcal, p, f, c, cu) {
+    function addPlanByIndex(category, idx) {
+      const list = dietPlansData[category] || [];
+      const plan = list[idx];
+      if (!plan) return;
       if (!todayData.meals[activeMealSubTab]) todayData.meals[activeMealSubTab] = [];
-      todayData.meals[activeMealSubTab].push({ name: title, weight: 250, kcal, p, f, c, cu });
+      todayData.meals[activeMealSubTab].push({
+        name: plan.title,
+        weight: 250,
+        kcal: plan.kcal,
+        p: plan.p,
+        f: plan.f,
+        c: plan.c,
+        cu: plan.cu
+      });
       saveStateToLocalStorage();
       renderDiaryUI();
-      alert("Блюдо из рациона добавлено в дневник!");
+      const msg = currentLang === 'ru' ? "Блюдо добавлено в дневник!" : (currentLang === 'nl' ? "Toegevoegd aan dagboek!" : "Added to diary!");
+      alert(msg);
     }
 
     // ВКЛАДКА ФОРМА И ТЕЛО
     function updateStartWeight(val) {
       userProfile.startWeight = parseFloat(val) || 82.0;
       saveStateToLocalStorage();
+      recalcNormAndUI();
     }
 
     function logNewWeight() {
       let inp = document.getElementById('quickWeightInput');
       let w = parseFloat(inp.value);
-      if (!w || isNaN(w)) { alert("Введите корректный вес!"); return; }
+      if (!w || isNaN(w)) {
+        const err = currentLang === 'ru' ? "Введите корректный вес!" : "Enter valid weight!";
+        alert(err);
+        return;
+      }
       userProfile.currentWeight = w;
       todayData.weightHistory.push({ date: new Date().toISOString().split('T')[0], weight: w });
       inp.value = '';
+      calculateMifflinNorm();
       saveStateToLocalStorage();
       recalcNormAndUI();
       renderBodyUI();
-      alert("Новый вес успешно записан!");
+      updateChartsData();
     }
 
     function saveBodyMeasurements() {
@@ -1199,7 +1559,8 @@
       todayData.measurements.hips = parseFloat(document.getElementById('measHips').value) || 98;
       todayData.measurements.bicep = parseFloat(document.getElementById('measBicep').value) || 38;
       saveStateToLocalStorage();
-      alert("Замеры тела сохранены!");
+      const msg = currentLang === 'ru' ? "Замеры тела сохранены!" : (currentLang === 'nl' ? "Metingen opgeslagen!" : "Measurements saved!");
+      alert(msg);
     }
 
     function saveBodyProgressPhoto(inputElement) {
@@ -1215,32 +1576,35 @@
     }
 
     function renderBodyUI() {
-      // История веса
       const histContainer = document.getElementById('weightHistoryList');
-      histContainer.innerHTML = '';
-      if (todayData.weightHistory.length === 0) {
-        histContainer.innerHTML = `<p class="text-slate-500 text-center py-2">No weight logs yet.</p>`;
-      } else {
-        [...todayData.weightHistory].reverse().forEach(item => {
-          let row = document.createElement('div');
-          row.className = "sub-card px-3 py-1.5 rounded-xl flex justify-between items-center";
-          row.innerHTML = `<span class="text-slate-400">${item.date}</span><span class="font-black text-blue-400">${item.weight} kg</span>`;
-          histContainer.appendChild(row);
-        });
+      if (histContainer) {
+        histContainer.innerHTML = '';
+        if (todayData.weightHistory.length === 0) {
+          histContainer.innerHTML = `<p class="text-slate-500 text-center py-2">No weight logs yet.</p>`;
+        } else {
+          [...todayData.weightHistory].reverse().forEach(item => {
+            let row = document.createElement('div');
+            row.className = "sub-card px-3 py-1.5 rounded-xl flex justify-between items-center";
+            row.innerHTML = `<span class="text-slate-400 font-bold">${item.date}</span><span class="font-black text-blue-400">${item.weight} kg</span>`;
+            histContainer.appendChild(row);
+          });
+        }
       }
 
-      // Фотогалерея прогресса
       const gallery = document.getElementById('bodyPhotoGallery');
-      gallery.innerHTML = '';
-      if (todayData.bodyPhotos.length === 0) {
-        gallery.innerHTML = `<p class="text-slate-500 text-[11px] col-span-3 text-center py-2">No progress photos uploaded yet.</p>`;
-      } else {
-        todayData.bodyPhotos.forEach(p => {
-          let box = document.createElement('div');
-          box.className = "relative h-24 rounded-xl overflow-hidden sub-card";
-          box.innerHTML = `<img src="${p.url}" class="w-full h-full object-cover"><span class="absolute bottom-1 left-1 bg-black/60 text-[9px] px-1.5 py-0.5 rounded text-white font-bold">${p.date}</span>`;
-          gallery.appendChild(box);
-        });
+      if (gallery) {
+        gallery.innerHTML = '';
+        if (todayData.bodyPhotos.length === 0) {
+          const emptyPhotoTxt = currentLang === 'ru' ? "Пока нет загруженных фото прогресса." : "No progress photos uploaded yet.";
+          gallery.innerHTML = `<p class="text-slate-500 text-[11px] col-span-3 text-center py-2">${emptyPhotoTxt}</p>`;
+        } else {
+          todayData.bodyPhotos.forEach(p => {
+            let box = document.createElement('div');
+            box.className = "relative h-24 rounded-xl overflow-hidden sub-card";
+            box.innerHTML = `<img src="${p.url}" class="w-full h-full object-cover"><span class="absolute bottom-1 left-1 bg-black/60 text-[9px] px-1.5 py-0.5 rounded text-white font-bold">${p.date}</span>`;
+            gallery.appendChild(box);
+          });
+        }
       }
 
       document.getElementById('measWaist').value = todayData.measurements.waist;
@@ -1251,45 +1615,76 @@
 
     // ГРАФИКИ (CHART.JS)
     function initCharts() {
-      const ctxKcal = document.getElementById('caloriesChartCanvas').getContext('2d');
-      chartsInstances.kcal = new Chart(ctxKcal, {
+      const kcalCanvas = document.getElementById('caloriesChartCanvas');
+      const weightCanvas = document.getElementById('weightChartCanvas');
+      if (!kcalCanvas || !weightCanvas) return;
+
+      chartsInstances.kcal = new Chart(kcalCanvas.getContext('2d'), {
         type: 'bar',
         data: {
           labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          datasets: [{ data: [1900, 2100, 1850, 2000, 1950, 2200, 1800], backgroundColor: '#3b82f6', borderRadius: 6 }]
+          datasets: [{ data: [1900, 2100, 1850, 2000, 1950, 2150, 1800], backgroundColor: '#3b82f6', borderRadius: 6 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+          }
+        }
       });
 
-      const ctxWeight = document.getElementById('weightChartCanvas').getContext('2d');
-      chartsInstances.weight = new Chart(ctxWeight, {
+      chartsInstances.weight = new Chart(weightCanvas.getContext('2d'), {
         type: 'line',
         data: {
-          labels: todayData.weightHistory.map(h => h.date),
-          datasets: [{ data: todayData.weightHistory.map(h => h.weight), borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', fill: true, tension: 0.3 }]
+          labels: todayData.weightHistory.map(h => h.date.slice(5)),
+          datasets: [{
+            data: todayData.weightHistory.map(h => h.weight),
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16,185,129,0.12)',
+            fill: true,
+            tension: 0.35,
+            pointRadius: 4,
+            pointBackgroundColor: '#10b981'
+          }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } }, y: { grid: { color: 'rgba(255,255,255,0.05)' } } } }
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+          }
+        }
       });
     }
 
     function updateChartsData() {
       if (chartsInstances.weight) {
-        chartsInstances.weight.data.labels = todayData.weightHistory.map(h => h.date);
+        chartsInstances.weight.data.labels = todayData.weightHistory.map(h => h.date.slice(5));
         chartsInstances.weight.data.datasets[0].data = todayData.weightHistory.map(h => h.weight);
         chartsInstances.weight.update();
       }
+      const diff = (userProfile.currentWeight - userProfile.startWeight).toFixed(1);
+      const diffEl = document.getElementById('weightDiffBadge');
+      if (diffEl) diffEl.innerText = `${diff > 0 ? '+' : ''}${diff} kg`;
     }
 
-    // ИИ СКАНИРОВАННЯ ЧЕРЕЗ GEMINI API
+    // ИИ СКАНИРОВАНИЕ ЕДЫ ПО ФОТО (GEMINI API)
     function saveGeminiApiKey() {
       geminiApiKey = document.getElementById('geminiApiKeyInput').value.trim();
       localStorage.setItem('gemini_api_key', geminiApiKey);
-      alert("API ключ Gemini успешно сохранен!");
+      const msg = currentLang === 'ru' ? "API ключ Gemini успешно сохранен!" : "Gemini API Key saved!";
+      alert(msg);
     }
 
     function triggerAiCamera() {
       document.getElementById('aiModal').classList.remove('hidden');
     }
+
     function closeAiModal() {
       document.getElementById('aiModal').classList.add('hidden');
       document.getElementById('aiResultBox').classList.add('hidden');
@@ -1316,17 +1711,21 @@
 
     async function analyzeImageWithGemini(base64Data) {
       if (!geminiApiKey) {
-        alert("Пожалуйста, введите ваш Gemini API Key в поле выше!");
+        const keyMsg = currentLang === 'ru'
+          ? "Введите ваш Gemini API Key в поле выше и нажмите Save!"
+          : "Please enter your Gemini API Key above and tap Save!";
+        alert(keyMsg);
         return;
       }
       document.getElementById('aiLoadingIndicator').classList.remove('hidden');
       document.getElementById('aiResultBox').classList.add('hidden');
 
       let base64ImageBytes = base64Data.split(',')[1];
-      let promptText = "Analyze this food image. Return STRICT JSON format with keys: name (string), weight_g (number), calories (number), proteins (number), fats (number), carbs (number), carb_units (number). No markdown, just raw JSON.";
+      let langInstruction = currentLang === 'ru' ? 'Russian' : (currentLang === 'nl' ? 'Dutch' : 'English');
+      let promptText = `Analyze this food image. Return STRICT JSON with keys: name (string in ${langInstruction}), weight_g (number), calories (number), proteins (number), fats (number), carbs (number), carb_units (number). Raw JSON only, no markdown.`;
 
-      const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
-      
+      const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
+
       try {
         let response = await fetch(apiEndpoint, {
           method: 'POST',
@@ -1360,11 +1759,11 @@
           document.getElementById('aiResultBox').classList.remove('hidden');
           document.getElementById('aiBtnAdd').disabled = false;
         } else {
-          alert("Не удалось распознать блюдо. Попробуйте еще раз.");
+          alert("Не удалось распознать блюдо. Проверьте ключ API или попробуйте другое фото.");
         }
       } catch (err) {
         document.getElementById('aiLoadingIndicator').classList.add('hidden');
-        alert("Ошибка при запросе к Gemini API: " + err.message);
+        alert("Ошибка соединения с Gemini API: " + err.message);
       }
     }
 
@@ -1374,18 +1773,18 @@
       if (!todayData.meals[activeMealSubTab]) todayData.meals[activeMealSubTab] = [];
       todayData.meals[activeMealSubTab].push({
         name: f.name || "AI Dish",
-        weight: f.weight_g || 200,
-        kcal: f.calories || 300,
-        p: f.proteins || 15,
-        f: f.fats || 10,
-        c: f.carbs || 25,
-        cu: f.carb_units || 1.0
+        weight: Number(f.weight_g) || 200,
+        kcal: Number(f.calories) || 300,
+        p: Number(f.proteins) || 15,
+        f: Number(f.fats) || 10,
+        c: Number(f.carbs) || 25,
+        cu: Number(f.carb_units) || 1.0
       });
       saveStateToLocalStorage();
       renderDiaryUI();
       closeAiModal();
-      alert("Распознанное блюдо добавлено в ваш дневник!");
     }
   </script>
+</div>
 </body>
 </html>
