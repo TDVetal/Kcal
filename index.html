@@ -1735,3 +1735,1191 @@
         </section>
       `;
     }
+    /* ========================================================================== */
+    /*               DIETA PRO - FIXED VIEWPORT ENTERPRISE EDITION                */
+    /*           PART 4 OF 6: RATION PLANS & BODY FORM/MEASUREMENTS STAGES        */
+    /* ========================================================================== */
+
+    function switchRationSubTab(subKey) {
+      state.rationSubTab = subKey;
+      safeSaveState();
+      renderApp();
+    }
+
+    function loadRationIntoDiary(rationKey) {
+      const plan = RATION_PLANS[rationKey];
+      const t = i18n[state.lang] || i18n.ru;
+      if (!plan) return;
+
+      plan.items.forEach(itemConfig => {
+        const foodDef = FOOD_DB.find(f => f.id === itemConfig.foodId);
+        if (!foodDef) return;
+
+        const factor = itemConfig.grams / 100;
+        const newItem = {
+          id: Date.now() + Math.random(),
+          foodId: foodDef.id,
+          name: foodDef.name,
+          grams: itemConfig.grams,
+          kcal: Math.round(foodDef.kcal * factor),
+          p: Math.round((foodDef.p * factor) * 10) / 10,
+          f: Math.round((foodDef.f * factor) * 10) / 10,
+          c: Math.round((foodDef.c * factor) * 10) / 10,
+          cu: Math.round((foodDef.cu * factor) * 10) / 10
+        };
+
+        if (!state.meals[itemConfig.mealKey]) state.meals[itemConfig.mealKey] = [];
+        state.meals[itemConfig.mealKey].push(newItem);
+      });
+
+      safeSaveState();
+      alert(t.rationLoadedMsg);
+      renderApp();
+    }
+
+    function renderRationStage(t) {
+      const currentPlan = RATION_PLANS[state.rationSubTab] || RATION_PLANS.normal;
+      const subTabsKeys = ["normal", "veg", "diab"];
+
+      return `
+        <section class="card card-fill" style="overflow-y:auto;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-shrink:0;">
+            <div>
+              <h2 style="font-size:14px; font-weight:800; color:var(--text-color);">${t.rationHeader}</h2>
+              <p style="font-size:10px; color:var(--text-muted);">${t.rationSub}</p>
+            </div>
+            <span style="background:var(--accent-soft); color:var(--accent); padding:3px 8px; border-radius:8px; font-size:10px; font-weight:800;">
+              ${currentPlan.badge[state.lang] || currentPlan.badge.ru}
+            </span>
+          </div>
+
+          <div class="sub-tabs-3" style="margin-bottom:8px;">
+            ${subTabsKeys.map(k => `
+              <button class="meal-tab-btn ${state.rationSubTab === k ? 'active' : ''}" onclick="switchRationSubTab('${k}')">
+                <span>${t.rationTabs[k]}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div style="background:var(--card-bg-alt); border:1px solid var(--card-border); border-radius:var(--radius-sm); padding:10px; margin-bottom:8px;">
+            <p style="font-size:11px; color:var(--text-color); line-height:1.4; margin-bottom:8px;">
+              ${currentPlan.desc[state.lang] || currentPlan.desc.ru}
+            </p>
+            <div style="font-size:10px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:4px;">Состав рациона на день:</div>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              ${currentPlan.items.map(it => {
+                const fData = FOOD_DB.find(x => x.id === it.foodId);
+                const fName = fData ? (fData.name[state.lang] || fData.name.ru) : "Блюдо";
+                const mealLabel = t.meals[it.mealKey] || it.mealKey;
+                return `
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11px; background:var(--card-bg); padding:5px 8px; border-radius:6px; border:1px solid var(--card-border);">
+                    <span style="font-weight:700; color:var(--accent);">${mealLabel}:</span>
+                    <span style="flex:1; margin-left:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${fName} (${it.grams}${t.gramUnit})</span>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+
+          <button class="btn-main" style="width:100%; margin-top:auto;" onclick="loadRationIntoDiary('${state.rationSubTab}')">
+            ${t.loadRationBtn}
+          </button>
+        </section>
+      `;
+    }
+
+    /* ========================================================================== */
+    /* FORM & BODY STAGE RENDERER (WEIGHT, MEASURES & PHOTO PROGRESS)             */
+    /* ========================================================================== */
+    function switchFormSubTab(subKey) {
+      state.formSubTab = subKey;
+      safeSaveState();
+      renderApp();
+    }
+
+    function handleManualWeightSave() {
+      const wInp = document.getElementById("manualWeightInput");
+      const hInp = document.getElementById("manualHeightInput");
+      const t = i18n[state.lang] || i18n.ru;
+
+      if (wInp) {
+        const val = parseFloat(wInp.value);
+        if (!isNaN(val) && val > 30 && val < 350) {
+          state.weight = val;
+          const todayStr = new Date().toISOString().split("T")[0];
+          const exIdx = state.weightHistory.findIndex(h => h.date === todayStr);
+          if (exIdx >= 0) state.weightHistory[exIdx].weight = val;
+          else state.weightHistory.unshift({ date: todayStr, weight: val });
+        }
+      }
+
+      if (hInp) {
+        const hVal = parseInt(hInp.value);
+        if (!isNaN(hVal) && hVal > 100 && hVal < 250) {
+          state.height = hVal;
+        }
+      }
+
+      recalculateMetabolicTargets(true);
+      safeSaveState();
+      renderApp();
+      alert(t.savedAlert);
+    }
+
+    function handleManualMeasuresSave() {
+      const w = document.getElementById("measWaist");
+      const c = document.getElementById("measChest");
+      const h = document.getElementById("measHips");
+      const b = document.getElementById("measBicep");
+      const n = document.getElementById("measNeck");
+      const th = document.getElementById("measThigh");
+      const t = i18n[state.lang] || i18n.ru;
+
+      if (w) state.measures.waist = parseFloat(w.value) || state.measures.waist;
+      if (c) state.measures.chest = parseFloat(c.value) || state.measures.chest;
+      if (h) state.measures.hips = parseFloat(h.value) || state.measures.hips;
+      if (b) state.measures.bicep = parseFloat(b.value) || state.measures.bicep;
+      if (n) state.measures.neck = parseFloat(n.value) || state.measures.neck;
+      if (th) state.measures.thigh = parseFloat(th.value) || state.measures.thigh;
+
+      safeSaveState();
+      renderApp();
+      alert(t.savedAlert);
+    }
+
+    async function handleBodyPhotoCapture(fileInputElem) {
+      if (!fileInputElem.files || !fileInputElem.files[0]) return;
+      const file = fileInputElem.files[0];
+      const t = i18n[state.lang] || i18n.ru;
+
+      try {
+        const compressedBase64 = await compressImageFile(file, 500, 650, 0.65);
+        const todayStr = new Date().toISOString().split("T")[0];
+        
+        if (!Array.isArray(state.progressPhotos)) state.progressPhotos = [];
+        state.progressPhotos.unshift({
+          id: Date.now(),
+          date: todayStr,
+          weight: state.weight,
+          url: compressedBase64
+        });
+
+        safeSaveState();
+        renderApp();
+        alert(t.savedAlert);
+      } catch (err) {
+        console.error("Photo compression error:", err);
+        alert("Не удалось обработать файл изображения.");
+      }
+    }
+
+    function deleteProgressPhoto(photoId) {
+      state.progressPhotos = state.progressPhotos.filter(p => p.id !== photoId);
+      safeSaveState();
+      renderApp();
+    }
+
+    function renderFormStage(t) {
+      const hM = (Number(state.height) || 175) / 100;
+      const bmiVal = Number((state.weight / (hM * hM)).toFixed(1));
+
+      let bmiStatusKey = "norm";
+      let bmiColor = "var(--success)";
+      if (bmiVal < 18.5) { bmiStatusKey = "under"; bmiColor = "var(--warning)"; }
+      else if (bmiVal >= 25 && bmiVal < 30) { bmiStatusKey = "over"; bmiColor = "var(--warning)"; }
+      else if (bmiVal >= 30) { bmiStatusKey = "obese"; bmiColor = "var(--danger)"; }
+
+      const subKeys = ["weight", "measures", "photos"];
+
+      let subContentHtml = "";
+      if (state.formSubTab === "weight") {
+        subContentHtml = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <div style="font-size:12px; font-weight:800;">BMI: ${bmiVal}</div>
+            <span style="background:${bmiColor}22; color:${bmiColor}; padding:3px 8px; border-radius:8px; font-size:10px; font-weight:800;">
+              ${t.bmiStatuses[bmiStatusKey]}
+            </span>
+          </div>
+
+          <div class="form-grid-3" style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-bottom:8px;">
+            <div class="weight-box" style="background:var(--card-bg-alt); border:1px solid var(--card-border); padding:8px; border-radius:var(--radius-xs); text-align:center;">
+              <div style="font-size:9px; color:var(--text-muted); font-weight:700;">${t.startWeightLbl}</div>
+              <div style="font-size:13px; font-weight:900; margin-top:2px;">${state.startWeight}</div>
+            </div>
+            <div class="weight-box" style="background:var(--card-bg-alt); border:1px solid var(--card-border); padding:8px; border-radius:var(--radius-xs); text-align:center;">
+              <div style="font-size:9px; color:var(--text-muted); font-weight:700;">${t.currentWeightLbl}</div>
+              <div style="font-size:13px; font-weight:900; margin-top:2px; color:var(--accent);">${state.weight}</div>
+            </div>
+            <div class="weight-box" style="background:var(--card-bg-alt); border:1px solid var(--card-border); padding:8px; border-radius:var(--radius-xs); text-align:center;">
+              <div style="font-size:9px; color:var(--text-muted); font-weight:700;">${t.targetWeightLbl}</div>
+              <div style="font-size:13px; font-weight:900; margin-top:2px; color:var(--success);">${state.targetWeight}</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
+            <div>
+              <label class="Form-label">${t.currentWeightLbl} (${t.kgUnit})</label>
+              <input type="number" id="manualWeightInput" class="Form-input" value="${state.weight}" step="0.1">
+            </div>
+            <div>
+              <label class="Form-label">${t.heightManualLbl}</label>
+              <input type="number" id="manualHeightInput" class="Form-input" value="${state.height}" step="1">
+            </div>
+          </div>
+
+          <button class="btn-main" style="width:100%; margin-top:auto;" onclick="handleManualWeightSave()">
+            ${t.saveWeightBtn}
+          </button>
+        `;
+      } else if (state.formSubTab === "measures") {
+        subContentHtml = `
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
+            <div>
+              <label class="Form-label">${t.waistLbl}</label>
+              <input type="number" id="measWaist" class="Form-input" value="${state.measures.waist}" step="0.5">
+            </div>
+            <div>
+              <label class="Form-label">${t.chestLbl}</label>
+              <input type="number" id="measChest" class="Form-input" value="${state.measures.chest}" step="0.5">
+            </div>
+            <div>
+              <label class="Form-label">${t.hipsLbl}</label>
+              <input type="number" id="measHips" class="Form-input" value="${state.measures.hips}" step="0.5">
+            </div>
+            <div>
+              <label class="Form-label">${t.bicepLbl}</label>
+              <input type="number" id="measBicep" class="Form-input" value="${state.measures.bicep}" step="0.5">
+            </div>
+            <div>
+              <label class="Form-label">${t.neckLbl}</label>
+              <input type="number" id="measNeck" class="Form-input" value="${state.measures.neck || 40}" step="0.5">
+            </div>
+            <div>
+              <label class="Form-label">${t.thighLbl}</label>
+              <input type="number" id="measThigh" class="Form-input" value="${state.measures.thigh || 58}" step="0.5">
+            </div>
+          </div>
+
+          <button class="btn-main" style="width:100%; margin-top:auto;" onclick="handleManualMeasuresSave()">
+            ${t.saveMeasuresBtn}
+          </button>
+        `;
+      } else if (state.formSubTab === "photos") {
+        const photosList = state.progressPhotos || [];
+        subContentHtml = `
+          <div style="margin-bottom:8px; flex-shrink:0;">
+            <label class="btn-ai-scan" style="cursor:pointer; text-align:center; width:100%; display:block; padding:10px;">
+              ${t.photoProgressBtn}
+              <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="handleBodyPhotoCapture(this)">
+            </label>
+          </div>
+
+          <div style="flex:1; min-height:0; overflow-y:auto; display:grid; grid-template-columns:repeat(2, 1fr); gap:6px; padding-right:2px;">
+            ${photosList.length === 0 ? `
+              <div style="grid-column: span 2; text-align:center; color:var(--text-muted); font-size:11px; padding:20px;">
+                ${t.noPhotosText}
+              </div>
+            ` : photosList.map(p => `
+              <div style="background:var(--card-bg-alt); border:1px solid var(--card-border); border-radius:var(--radius-xs); overflow:hidden; display:flex; flex-direction:column;">
+                <img src="${p.url}" alt="Body Photo" style="width:100%; height:110px; object-fit:cover; display:block;">
+                <div style="padding:4px 6px; display:flex; justify-content:space-between; align-items:center; font-size:9px;">
+                  <span style="font-weight:700; color:var(--text-muted);">${p.date} (${p.weight}kg)</span>
+                  <button style="background:none; border:none; color:var(--danger); font-weight:800; cursor:pointer;" onclick="deleteProgressPhoto(${p.id})">${t.deleteBtn}</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      return `
+        <section class="card card-fill">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-shrink:0;">
+            <h2 style="font-size:14px; font-weight:800; color:var(--text-color);">${t.weightTitle}</h2>
+          </div>
+
+          <div class="sub-tabs-3" style="margin-bottom:8px; flex-shrink:0;">
+            ${subKeys.map(k => `
+              <button class="meal-tab-btn ${state.formSubTab === k ? 'active' : ''}" onclick="switchFormSubTab('${k}')">
+                <span>${t.formTabs[k]}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div style="flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden;">
+            ${subContentHtml}
+          </div>
+        </section>
+      `;
+    }
+    /* ========================================================================== */
+    /*               DIETA PRO - FIXED VIEWPORT ENTERPRISE EDITION                */
+    /*             PART 5 OF 6: CHARTS ANALYTICS & PROFILE STAGES                 */
+    /* ========================================================================== */
+
+    function switchChartPeriod(periodKey) {
+      state.chartPeriod = periodKey;
+      safeSaveState();
+      renderApp();
+    }
+
+    function renderChartsStage(t) {
+      const periods = ["days", "weeks", "months"];
+      const history = state.weightHistory || [];
+
+      // Рассчитываем сводную статистику
+      let totalWChange = 0;
+      if (history.length >= 2) {
+        totalWChange = Number((history[0].weight - history[history.length - 1].weight).toFixed(1));
+      }
+      const waterPct = Math.round((state.water / Math.max(1, state.waterGoal)) * 100);
+      const hM = (Number(state.height) || 175) / 100;
+      const bmiVal = (state.weight / (hM * hM)).toFixed(1);
+
+      setTimeout(() => {
+        drawAnalyticsCanvas(state.chartPeriod);
+      }, 50);
+
+      return `
+        <section class="card card-fill" style="overflow-y:auto;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-shrink:0;">
+            <h2 style="font-size:14px; font-weight:800; color:var(--text-color);">${t.chartsHeader}</h2>
+          </div>
+
+          <div class="sub-tabs-3" style="margin-bottom:8px; flex-shrink:0;">
+            ${periods.map(p => `
+              <button class="meal-tab-btn ${state.chartPeriod === p ? 'active' : ''}" onclick="switchChartPeriod('${p}')">
+                <span>${t.chartPeriods[p]}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div style="background:var(--card-bg-alt); border:1px solid var(--card-border); border-radius:var(--radius-sm); padding:10px; margin-bottom:8px; text-align:center;">
+            <canvas id="enterpriseAnalyticsCanvas" width="460" height="150" style="width:100%; height:140px; display:block;"></canvas>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; flex-shrink:0;">
+            <div style="background:var(--card-bg-alt); border:1px solid var(--card-border); padding:8px; border-radius:var(--radius-xs);">
+              <div style="font-size:9px; color:var(--text-muted); font-weight:700;">${t.avgKcalStat}</div>
+              <div style="font-size:13px; font-weight:900; color:var(--accent); margin-top:2px;">${state.caloriesGoal} ${t.kcalUnit}</div>
+            </div>
+            <div style="background:var(--card-bg-alt); border:1px solid var(--card-border); padding:8px; border-radius:var(--radius-xs);">
+              <div style="font-size:9px; color:var(--text-muted); font-weight:700;">${t.weightDeltaStat}</div>
+              <div style="font-size:13px; font-weight:900; color:${totalWChange <= 0 ? 'var(--success)' : 'var(--danger)'}; margin-top:2px;">
+                ${totalWChange > 0 ? '+' : ''}${totalWChange} ${t.kgUnit}
+              </div>
+            </div>
+            <div style="background:var(--card-bg-alt); border:1px solid var(--card-border); padding:8px; border-radius:var(--radius-xs);">
+              <div style="font-size:9px; color:var(--text-muted); font-weight:700;">${t.waterGoalStat}</div>
+              <div style="font-size:13px; font-weight:900; color:var(--accent); margin-top:2px;">${waterPct}%</div>
+            </div>
+            <div style="background:var(--card-bg-alt); border:1px solid var(--card-border); padding:8px; border-radius:var(--radius-xs);">
+              <div style="font-size:9px; color:var(--text-muted); font-weight:700;">${t.bmiCurrentStat}</div>
+              <div style="font-size:13px; font-weight:900; color:var(--success); margin-top:2px;">${bmiVal}</div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function drawAnalyticsCanvas(mode) {
+      const canvas = document.getElementById("enterpriseAnalyticsCanvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const history = state.weightHistory || [];
+      if (history.length === 0) {
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "11px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Недостаточно данных для графика", w / 2, h / 2);
+        return;
+      }
+
+      const weights = history.map(h => h.weight);
+      const minW = Math.min(...weights) - 1;
+      const maxW = Math.max(...weights) + 1;
+      const pad = 30;
+      const cW = w - pad * 2;
+      const cH = h - pad * 2;
+
+      // Draw background grid lines
+      ctx.strokeStyle = state.theme === "dark" ? "#263354" : "#cbd5e1";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i <= 3; i++) {
+        let yPos = pad + (cH / 3) * i;
+        ctx.moveTo(pad, yPos);
+        ctx.lineTo(w - pad, yPos);
+      }
+      ctx.stroke();
+
+      // Compute points coordinates
+      const points = history.map((item, idx) => {
+        const x = history.length === 1 ? w / 2 : pad + (cW / (history.length - 1)) * idx;
+        const y = pad + cH - ((item.weight - minW) / (maxW - minW || 1)) * cH;
+        return { x, y, weight: item.weight, date: item.date };
+      });
+
+      // Draw smooth gradient fill under curve
+      const grad = ctx.createLinearGradient(0, pad, 0, pad + cH);
+      grad.addColorStop(0, "rgba(59, 130, 246, 0.35)");
+      grad.addColorStop(1, "rgba(59, 130, 246, 0.0)");
+
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      points.forEach((pt, idx) => {
+        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      });
+      if (points.length > 0) {
+        ctx.lineTo(points[points.length - 1].x, pad + cH);
+        ctx.lineTo(points[0].x, pad + cH);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Draw trend line
+      ctx.strokeStyle = "#3b82f6";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      points.forEach((pt, idx) => {
+        if (idx === 0) ctx.moveTo(pt.x, pt.y);
+        else ctx.lineTo(pt.x, pt.y);
+      });
+      ctx.stroke();
+
+      // Draw point circles & labels
+      points.forEach(pt => {
+        ctx.fillStyle = state.theme === "dark" ? "#131b2e" : "#ffffff";
+        ctx.strokeStyle = "#3b82f6";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = state.theme === "dark" ? "#f8fafc" : "#0f172a";
+        ctx.font = "bold 10px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(pt.weight + "kg", pt.x, pt.y - 10);
+      });
+    }
+
+    /* ========================================================================== */
+    /* PROFILE & SETTINGS STAGE RENDERER                                          */
+    /* ========================================================================== */
+    function switchProfileSubTab(subKey) {
+      state.profileSubTab = subKey;
+      safeSaveState();
+      renderApp();
+    }
+
+    function handleManualTargetsSave() {
+      const kInp = document.getElementById("manKcal");
+      const wInp = document.getElementById("manWater");
+      const pInp = document.getElementById("manProt");
+      const fInp = document.getElementById("manFat");
+      const cInp = document.getElementById("manCarb");
+      const t = i18n[state.lang] || i18n.ru;
+
+      if (kInp) state.caloriesGoal = parseInt(kInp.value) || state.caloriesGoal;
+      if (wInp) state.waterGoal = parseInt(wInp.value) || state.waterGoal;
+      if (pInp) state.proteinGoal = parseInt(pInp.value) || state.proteinGoal;
+      if (fInp) state.fatGoal = parseInt(fInp.value) || state.fatGoal;
+      if (cInp) state.carbGoal = parseInt(cInp.value) || state.carbGoal;
+
+      safeSaveState();
+      renderApp();
+      alert(t.savedAlert);
+    }
+
+    function handleApiKeySave() {
+      const kInput = document.getElementById("apiKeyInputField");
+      const t = i18n[state.lang] || i18n.ru;
+      if (kInput) {
+        state.apiKey = kInput.value.trim();
+        safeSaveState();
+        alert(t.successApiKeySaved);
+      }
+    }
+
+    function clearCurrentDayMeals() {
+      const t = i18n[state.lang] || i18n.ru;
+      if (confirm(state.lang === "ru" ? "Очистить весь дневник за сегодня?" : "Clear today's diary?")) {
+        state.meals = { breakfast: [], lunch: [], dinner: [], snacks: [] };
+        state.water = 0;
+        state.activityKcal = 0;
+        safeSaveState();
+        renderApp();
+        alert(t.savedAlert);
+      }
+    }
+
+    function exportJsonBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const dlAnchor = document.createElement("a");
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", `dietapro_backup_${new Date().toISOString().split("T")[0]}.json`);
+      document.body.appendChild(dlAnchor);
+      dlAnchor.click();
+      dlAnchor.remove();
+    }
+
+    function performFactoryReset() {
+      if (confirm(state.lang === "ru" ? "Сбросить все данные приложения?" : "Reset all data?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        window.location.reload();
+      }
+    }
+
+    function renderProfileStage(t) {
+      const subKeys = ["bio", "targets", "ai"];
+
+      let subHtml = "";
+      if (state.profileSubTab === "bio") {
+        subHtml = `
+          <div style="display:flex; flex-direction:column; gap:6px; overflow-y:auto; flex:1; padding-right:2px;">
+            <div>
+              <label class="Form-label">${t.genderLbl}</label>
+              <select id="profGender" class="Form-select" onchange="state.gender=this.value; safeSaveState();">
+                <option value="male" ${state.gender === "male" ? "selected" : ""}>${t.genderMale}</option>
+                <option value="female" ${state.gender === "female" ? "selected" : ""}>${t.genderFemale}</option>
+              </select>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <div>
+                <label class="Form-label">${t.ageLbl}</label>
+                <input type="number" class="Form-input" value="${state.age}" onchange="state.age=parseInt(this.value)||41; safeSaveState();">
+              </div>
+              <div>
+                <label class="Form-label">${t.heightManualLbl}</label>
+                <input type="number" class="Form-input" value="${state.height}" onchange="state.height=parseInt(this.value)||185; safeSaveState();">
+              </div>
+            </div>
+
+            <div>
+              <label class="Form-label">${t.actLevelLbl}</label>
+              <select id="profAct" class="Form-select" onchange="state.activityMultiplier=parseFloat(this.value); safeSaveState();">
+                <option value="1.2" ${state.activityMultiplier === 1.2 ? "selected" : ""}>${t.actLevels.low}</option>
+                <option value="1.375" ${state.activityMultiplier === 1.375 ? "selected" : ""}>${t.actLevels.light}</option>
+                <option value="1.55" ${state.activityMultiplier === 1.55 ? "selected" : ""}>${t.actLevels.med}</option>
+                <option value="1.725" ${state.activityMultiplier === 1.725 ? "selected" : ""}>${t.actLevels.high}</option>
+              </select>
+            </div>
+
+            <button class="btn-main" style="width:100%; margin-top:8px;" onclick="recalculateMetabolicTargets(false)">
+              ${t.calcAutoBtn}
+            </button>
+          </div>
+        `;
+      } else if (state.profileSubTab === "targets") {
+        subHtml = `
+          <div style="display:flex; flex-direction:column; gap:6px; overflow-y:auto; flex:1; padding-right:2px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+              <div>
+                <label class="Form-label">${t.manualKcalLbl}</label>
+                <input type="number" id="manKcal" class="Form-input" value="${state.caloriesGoal}">
+              </div>
+              <div>
+                <label class="Form-label">${t.manualWaterLbl}</label>
+                <input type="number" id="manWater" class="Form-input" value="${state.waterGoal}">
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+              <div>
+                <label class="Form-label">${t.manualProtLbl}</label>
+                <input type="number" id="manProt" class="Form-input" value="${state.proteinGoal}">
+              </div>
+              <div>
+                <label class="Form-label">${t.manualFatLbl}</label>
+                <input type="number" id="manFat" class="Form-input" value="${state.fatGoal}">
+              </div>
+              <div>
+                <label class="Form-label">${t.manualCarbLbl}</label>
+                <input type="number" id="manCarb" class="Form-input" value="${state.carbGoal}">
+              </div>
+            </div>
+
+            <button class="btn-main" style="width:100%; margin-top:8px;" onclick="handleManualTargetsSave()">
+              ${t.saveManualTargetsBtn}
+            </button>
+          </div>
+        `;
+      } else if (state.profileSubTab === "ai") {
+        subHtml = `
+          <div style="display:flex; flex-direction:column; gap:6px; overflow-y:auto; flex:1; padding-right:2px;">
+            <div>
+              <label class="Form-label">${t.apiKeyLbl}</label>
+              <div style="display:flex; gap:6px;">
+                <input type="password" id="apiKeyInputField" class="Form-input" value="${state.apiKey}" placeholder="AIzaSy..." style="margin:0;">
+                <button class="btn-main" style="padding:0 12px; white-space:nowrap;" onclick="handleApiKeySave()">${t.saveKeyBtn}</button>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:6px; margin-top:6px;">
+              <button class="btn-main" style="background:var(--card-bg-alt); color:var(--text-color); border:1px solid var(--card-border);" onclick="clearCurrentDayMeals()">
+                ${t.clearDayBtn}
+              </button>
+              <button class="btn-main" style="background:var(--card-bg-alt); color:var(--text-color); border:1px solid var(--card-border);" onclick="exportJsonBackup()">
+                ${t.exportJsonBtn}
+              </button>
+              <button class="btn-main" style="background:var(--danger-soft); color:var(--danger); border:1px solid rgba(239,68,68,0.3);" onclick="performFactoryReset()">
+                ${t.resetAppBtn}
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      return `
+        <section class="card card-fill">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-shrink:0;">
+            <h2 style="font-size:14px; font-weight:800; color:var(--text-color);">${t.profileTitle}</h2>
+          </div>
+
+          <div class="sub-tabs-3" style="margin-bottom:8px; flex-shrink:0;">
+            ${subKeys.map(k => `
+              <button class="meal-tab-btn ${state.profileSubTab === k ? 'active' : ''}" onclick="switchProfileSubTab('${k}')">
+                <span>${t.profileTabs[k]}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div style="flex:1; min-height:0; display:flex; flex-direction:column; overflow:hidden;">
+            ${subHtml}
+          </div>
+        </section>
+      `;
+    }
+    /* ========================================================================== */
+    /*               DIETA PRO - FIXED VIEWPORT ENTERPRISE EDITION                */
+    /*         PART 6 OF 6: ADVANCED MODALS, AI SCANNER & MASTER ENGINE           */
+    /* ========================================================================== */
+
+    /* 1. ENTERPRISE FOOD DATABASE SELECTION MODAL SYSTEM */
+    let tempCustomFoodMode = false;
+
+    function openFoodModal() {
+      const t = i18n[state.lang] || i18n.ru;
+      const backdrop = document.createElement("div");
+      backdrop.className = "modal-backdrop";
+      backdrop.id = "enterpriseFoodModal";
+
+      backdrop.innerHTML = `
+        <div class="modal-window">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+            <h3 style="font-size:13px; font-weight:800;">${t.foodModalTitle} ${t.meals[state.activeMeal]}</h3>
+            <button class="sq-btn" onclick="document.getElementById('enterpriseFoodModal').remove()">✕</button>
+          </div>
+
+          <input type="text" id="foodSearchInput" class="Form-input" placeholder="${t.searchPlaceholder}" oninput="filterFoodDatabaseModal(this.value)">
+
+          <div id="foodDbResultsList" style="flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:4px; padding-right:2px;">
+            ${renderFoodDbOptionsHtml("")}
+          </div>
+
+          <div style="border-top:1px solid var(--card-border); padding-top:6px; flex-shrink:0;">
+            <button style="background:none; border:none; color:var(--accent); font-size:10px; font-weight:700; cursor:pointer; margin-bottom:6px;" onclick="toggleCustomFoodInputMode()">
+              ${t.customFoodToggle}
+            </button>
+
+            <div id="customFoodFieldsBox" class="hidden" style="display:flex; flex-direction:column; gap:4px;">
+              <input type="text" id="customFoodName" class="Form-input" placeholder="${t.customNamePlc}" style="margin:0;">
+              <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:4px;">
+                <input type="number" id="customFoodKcal" class="Form-input" placeholder="Ккал" style="margin:0;">
+                <input type="number" id="customFoodP" class="Form-input" placeholder="Б (г)" style="margin:0;">
+                <input type="number" id="customFoodF" class="Form-input" placeholder="Ж (г)" style="margin:0;">
+                <input type="number" id="customFoodC" class="Form-input" placeholder="У (г)" style="margin:0;">
+              </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+              <span style="font-size:10px; font-weight:700; color:var(--text-muted); white-space:nowrap;">${t.portionGramsLbl}</span>
+              <input type="number" id="modalPortionGrams" class="Form-input" value="200" step="10" style="margin:0; text-align:center;">
+            </div>
+          </div>
+
+          <div style="display:flex; gap:6px; flex-shrink:0; margin-top:4px;">
+            <button class="btn-main" style="background:var(--card-bg-alt); color:var(--text-color); border:1px solid var(--card-border); flex:1;" onclick="document.getElementById('enterpriseFoodModal').remove()">
+              ${t.cancelBtn}
+            </button>
+            <button class="btn-main" style="flex:1;" onclick="confirmAddFoodToMeal()">
+              ${t.addSelectedBtn}
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(backdrop);
+      if (FOOD_DB.length > 0) {
+        window.selectedModalFoodId = FOOD_DB[0].id;
+      }
+      tempCustomFoodMode = false;
+    }
+
+    function renderFoodDbOptionsHtml(query) {
+      const q = query.toLowerCase().trim();
+      const filtered = FOOD_DB.filter(f => {
+        const localized = (f.name[state.lang] || f.name.ru).toLowerCase();
+        return localized.includes(q);
+      });
+
+      if (filtered.length === 0) {
+        return `<div style="text-align:center; color:var(--text-muted); padding:16px; font-size:11px;">Ничего не найдено в базе данных</div>`;
+      }
+
+      return filtered.map(f => {
+        const title = f.name[state.lang] || f.name.ru;
+        const isSel = window.selectedModalFoodId === f.id;
+        return `
+          <div onclick="window.selectedModalFoodId='${f.id}'; highlightSelectedFoodCard(this);" style="background:${isSel ? 'var(--accent-soft)' : 'var(--card-bg-alt)'}; border:1px solid ${isSel ? 'var(--accent)' : 'var(--card-border)'}; border-radius:var(--radius-xs); padding:7px 10px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:var(--transition);">
+            <div>
+              <div style="font-weight:700; font-size:11px; color:var(--text-color);">${title}</div>
+              <div style="font-size:9px; color:var(--text-muted);">100${i18n[state.lang].gramUnit} &bull; Б:${f.p} &bull; Ж:${f.f} &bull; У:${f.c}</div>
+            </div>
+            <div style="font-weight:900; color:var(--accent); font-size:11px; white-space:nowrap;">${f.kcal} ${i18n[state.lang].kcalUnit}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function filterFoodDatabaseModal(q) {
+      const listContainer = document.getElementById("foodDbResultsList");
+      if (listContainer) {
+        listContainer.innerHTML = renderFoodDbOptionsHtml(q);
+      }
+    }
+
+    function highlightSelectedFoodCard(cardEl) {
+      const parent = cardEl.parentElement;
+      if (!parent) return;
+      Array.from(parent.children).forEach(c => {
+        c.style.background = "var(--card-bg-alt)";
+        c.style.borderColor = "var(--card-border)";
+      });
+      cardEl.style.background = "var(--accent-soft)";
+      cardEl.style.borderColor = "var(--accent)";
+    }
+
+    function toggleCustomFoodInputMode() {
+      tempCustomFoodMode = !tempCustomFoodMode;
+      const box = document.getElementById("customFoodFieldsBox");
+      if (box) {
+        if (tempCustomFoodMode) box.classList.remove("hidden");
+        else box.classList.add("hidden");
+      }
+    }
+
+    function confirmAddFoodToMeal() {
+      const pInput = document.getElementById("modalPortionGrams");
+      const grams = pInput ? Math.max(10, parseFloat(pInput.value) || 150) : 150;
+      const factor = grams / 100;
+
+      let newItem = null;
+
+      if (tempCustomFoodMode) {
+        const nameInp = document.getElementById("customFoodName");
+        const kInp = document.getElementById("customFoodKcal");
+        const pInp = document.getElementById("customFoodP");
+        const fInp = document.getElementById("customFoodF");
+        const cInp = document.getElementById("customFoodC");
+
+        const cName = nameInp ? nameInp.value.trim() : "Блюдо";
+        const baseK = kInp ? parseFloat(kInp.value) || 200 : 200;
+        const baseP = pInp ? parseFloat(pInp.value) || 10 : 10;
+        const baseF = fInp ? parseFloat(fInp.value) || 10 : 10;
+        const baseC = cInp ? parseFloat(cInp.value) || 20 : 20;
+
+        newItem = {
+          id: Date.now(),
+          name: { ru: cName, en: cName, nl: cName },
+          grams: grams,
+          kcal: Math.round(baseK * factor),
+          p: Math.round((baseP * factor) * 10) / 10,
+          f: Math.round((baseF * factor) * 10) / 10,
+          c: Math.round((baseC * factor) * 10) / 10,
+          cu: Math.round(((baseC * factor) / 12) * 10) / 10
+        };
+      } else {
+        const foodDef = FOOD_DB.find(f => f.id === window.selectedModalFoodId) || FOOD_DB[0];
+        newItem = {
+          id: Date.now(),
+          foodId: foodDef.id,
+          name: foodDef.name,
+          grams: grams,
+          kcal: Math.round(foodDef.kcal * factor),
+          p: Math.round((foodDef.p * factor) * 10) / 10,
+          f: Math.round((foodDef.f * factor) * 10) / 10,
+          c: Math.round((foodDef.c * factor) * 10) / 10,
+          cu: Math.round((foodDef.cu * factor) * 10) / 10
+        };
+      }
+
+      if (!state.meals[state.activeMeal]) state.meals[state.activeMeal] = [];
+      state.meals[state.activeMeal].push(newItem);
+
+      safeSaveState();
+      const modal = document.getElementById("enterpriseFoodModal");
+      if (modal) modal.remove();
+      renderApp();
+    }
+
+    /* 2. PHYSICAL ACTIVITY CATALOG MODAL SYSTEM */
+    function openActivityModal() {
+      const t = i18n[state.lang] || i18n.ru;
+      const backdrop = document.createElement("div");
+      backdrop.className = "modal-backdrop";
+      backdrop.id = "enterpriseActModal";
+
+      backdrop.innerHTML = `
+        <div class="modal-window">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+            <h3 style="font-size:13px; font-weight:800;">${t.activityModalTitle}</h3>
+            <button class="sq-btn" onclick="document.getElementById('enterpriseActModal').remove()">✕</button>
+          </div>
+
+          <div style="flex:1; min-height:0; overflow-y:auto; display:flex; flex-direction:column; gap:4px; padding-right:2px;">
+            ${ACTIVITIES_DB.map(act => {
+              const aName = act.name[state.lang] || act.name.ru;
+              return `
+                <div onclick="applyActivityKcal(${act.kcal})" style="background:var(--card-bg-alt); border:1px solid var(--card-border); border-radius:var(--radius-xs); padding:8px 10px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:var(--transition);">
+                  <span style="font-weight:700; font-size:11px; color:var(--text-color);">${aName}</span>
+                  <span style="font-weight:900; color:var(--warning); font-size:11px; white-space:nowrap;">+${act.kcal}${t.kcalUnit}</span>
+                </div>
+              `;
+            }).join("")}
+          </div>
+
+          <div style="border-top:1px solid var(--card-border); padding-top:6px; flex-shrink:0;">
+            <label class="Form-label">${t.customActKcalLbl}</label>
+            <div style="display:flex; gap:6px;">
+              <input type="number" id="customActInput" class="Form-input" placeholder="300" style="margin:0;">
+              <button class="btn-main" style="background:var(--warning); color:#fff; white-space:nowrap; padding:0 12px;" onclick="applyCustomActivity()">
+                ${t.addActBtn}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(backdrop);
+    }
+
+    function applyActivityKcal(kcalVal) {
+      state.activityKcal = (Number(state.activityKcal) || 0) + kcalVal;
+      safeSaveState();
+      const modal = document.getElementById("enterpriseActModal");
+      if (modal) modal.remove();
+      renderApp();
+    }
+
+    function applyCustomActivity() {
+      const inp = document.getElementById("customActInput");
+      if (inp) {
+        const val = parseInt(inp.value);
+        if (!isNaN(val) && val > 0) {
+          applyActivityKcal(val);
+        }
+      }
+    }
+
+    /* 3. ONLINE GEMINI AI FOOD SCANNER MODAL SYSTEM */
+    let tempAiParsedResult = null;
+
+    function openAiFoodScannerModal() {
+      const t = i18n[state.lang] || i18n.ru;
+      const backdrop = document.createElement("div");
+      backdrop.className = "modal-backdrop";
+      backdrop.id = "enterpriseAiModal";
+
+      backdrop.innerHTML = `
+        <div class="modal-window">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-shrink:0;">
+            <h3 style="font-size:13px; font-weight:800;">${t.aiModalTitle}</h3>
+            <button class="sq-btn" onclick="document.getElementById('enterpriseAiModal').remove()">✕</button>
+          </div>
+
+          <div>
+            <label class="Form-label">${t.apiKeyLbl}</label>
+            <div style="display:flex; gap:4px;">
+              <input type="password" id="modalAiKey" class="Form-input" value="${state.apiKey}" placeholder="AIzaSy..." style="margin:0;">
+              <button class="btn-main" style="padding:0 10px; white-space:nowrap;" onclick="state.apiKey=document.getElementById('modalAiKey').value.trim(); safeSaveState(); alert('${t.savedAlert}');">
+                ${t.saveKeyBtn}
+              </button>
+            </div>
+          </div>
+
+          <div style="border:2px dashed var(--card-border); border-radius:var(--radius-sm); padding:14px; text-align:center; background:var(--card-bg-alt);">
+            <p style="font-size:10px; color:var(--text-muted); margin-bottom:8px;">${t.aiTakePhotoBtn}</p>
+            <input type="file" accept="image/*" capture="environment" id="aiImageFileInput" onchange="executeGeminiAiScan(this)" style="font-size:10px; width:100%;">
+          </div>
+
+          <div id="aiLoadingIndicator" class="hidden" style="text-align:center; padding:10px; font-size:11px; color:var(--accent); font-weight:700;">
+            ${t.aiAnalyzingText}
+          </div>
+
+          <div id="aiResultContainer" class="hidden" style="background:var(--card-bg-alt); border:1px solid var(--card-border); border-radius:var(--radius-xs); padding:8px; font-size:11px;">
+            <div style="font-weight:800; color:var(--success); margin-bottom:4px;" id="aiResDishName"></div>
+            <div style="color:var(--text-muted); margin-bottom:6px;" id="aiResNutrients"></div>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <span style="font-weight:700;">Порция (г):</span>
+              <input type="number" id="aiResGramsInput" class="Form-input" value="250" oninput="recalcAiParsedItemGrams(this.value)" style="margin:0; text-align:center;">
+            </div>
+          </div>
+
+          <div style="display:flex; gap:6px; flex-shrink:0;">
+            <button class="btn-main" style="background:var(--card-bg-alt); color:var(--text-color); border:1px solid var(--card-border); flex:1;" onclick="document.getElementById('enterpriseAiModal').remove()">
+              ${t.cancelBtn}
+            </button>
+            <button id="aiConfirmAddBtn" class="btn-ai-scan hidden" style="flex:1;" onclick="confirmAddAiFoodItem()">
+              ${t.aiAddBtn}
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(backdrop);
+      tempAiParsedResult = null;
+    }
+
+    async function executeGeminiAiScan(fileInputElem) {
+      if (!fileInputElem.files || !fileInputElem.files[0]) return;
+      const keyInput = document.getElementById("modalAiKey");
+      const currentKey = keyInput ? keyInput.value.trim() : state.apiKey;
+
+      if (!currentKey) {
+        alert("Пожалуйста, введите ваш Google Gemini API Key!");
+        return;
+      }
+
+      state.apiKey = currentKey;
+      safeSaveState();
+
+      const loadBox = document.getElementById("aiLoadingIndicator");
+      const resBox = document.getElementById("aiResultContainer");
+      const confirmBtn = document.getElementById("aiConfirmAddBtn");
+
+      if (loadBox) loadBox.classList.remove("hidden");
+      if (resBox) resBox.classList.add("hidden");
+      if (confirmBtn) confirmBtn.classList.add("hidden");
+
+      try {
+        const compressedBase64 = await compressImageFile(fileInputElem.files[0], 640, 640, 0.75);
+        const base64Bytes = compressedBase64.split(",")[1];
+
+        const promptText = `Analyze this food image. Return STRICT JSON format only (no markdown, no backticks) with keys:
+        - "name": string (descriptive dish name in ${state.lang})
+        - "weight_g": number (estimated grams)
+        - "calories": number (total kcal)
+        - "proteins": number (grams)
+        - "fats": number (grams)
+        - "carbs": number (grams)
+        - "carb_units": number (bread units CU)`;
+
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${currentKey}`;
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { text: promptText },
+                { inline_data: { mime_type: "image/jpeg", data: base64Bytes } }
+              ]
+            }],
+            generationConfig: { temperature: 0.2, maxOutputTokens: 512 }
+          })
+        });
+
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+        const data = await response.json();
+
+        if (loadBox) loadBox.classList.add("hidden");
+
+        if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+          throw new Error("Пустой ответ от Gemini API");
+        }
+
+        const rawText = data.candidates[0].content.parts[0].text
+          .replace(/```json/g, "")
+          .replace(/```/g, "")
+          .trim();
+
+        const parsed = JSON.parse(rawText);
+
+        tempAiParsedResult = {
+          baseName: parsed.name || "AI Food Dish",
+          baseGrams: Number(parsed.weight_g) || 250,
+          baseKcal: Number(parsed.calories) || 350,
+          baseP: Number(parsed.proteins) || 15,
+          baseF: Number(parsed.fats) || 12,
+          baseC: Number(parsed.carbs) || 30,
+          baseCU: Number(parsed.carb_units) || 2.5
+        };
+
+        const gInp = document.getElementById("aiResGramsInput");
+        if (gInp) gInp.value = tempAiParsedResult.baseGrams;
+
+        updateAiResultDisplay(tempAiParsedResult, tempAiParsedResult.baseGrams);
+
+        if (resBox) resBox.classList.remove("hidden");
+        if (confirmBtn) confirmBtn.classList.remove("hidden");
+
+      } catch (err) {
+        if (loadBox) loadBox.classList.add("hidden");
+        console.error("Gemini AI error:", err);
+        alert("Ошибка при обращении к Gemini API: " + err.message);
+      }
+    }
+
+    function recalcAiParsedItemGrams(newGramsVal) {
+      if (!tempAiParsedResult) return;
+      const g = Math.max(10, parseFloat(newGramsVal) || 250);
+      updateAiResultDisplay(tempAiParsedResult, g);
+    }
+
+    function updateAiResultDisplay(baseObj, currentGrams) {
+      const factor = currentGrams / baseObj.baseGrams;
+      const curKcal = Math.round(baseObj.baseKcal * factor);
+      const curP = Math.round((baseObj.baseP * factor) * 10) / 10;
+      const curF = Math.round((baseObj.baseF * factor) * 10) / 10;
+      const curC = Math.round((baseObj.baseC * factor) * 10) / 10;
+      const curCU = Math.round((baseObj.baseCU * factor) * 10) / 10;
+
+      window.activeAiCalculatedItem = {
+        name: { ru: baseObj.baseName, en: baseObj.baseName, nl: baseObj.baseName },
+        grams: currentGrams,
+        kcal: curKcal,
+        p: curP,
+        f: curF,
+        c: curC,
+        cu: curCU
+      };
+
+      const nameEl = document.getElementById("aiResDishName");
+      const nutEl = document.getElementById("aiResNutrients");
+      if (nameEl) nameEl.innerText = baseObj.baseName;
+      if (nutEl) {
+        const t = i18n[state.lang] || i18n.ru;
+        nutEl.innerHTML = `${currentGrams}${t.gramUnit} &bull; ${curKcal} ${t.kcalUnit} &bull; Б:${curP} Ж:${curF} У:${curC} &bull; ${curCU} ${t.cuUnit}`;
+      }
+    }
+
+    function confirmAddAiFoodItem() {
+      if (!window.activeAiCalculatedItem) return;
+      if (!state.meals[state.activeMeal]) state.meals[state.activeMeal] = [];
+
+      state.meals[state.activeMeal].push({
+        id: Date.now(),
+        ...window.activeAiCalculatedItem
+      });
+
+      safeSaveState();
+      window.activeAiCalculatedItem = null;
+      tempAiParsedResult = null;
+
+      const modal = document.getElementById("enterpriseAiModal");
+      if (modal) modal.remove();
+      renderApp();
+    }
+
+    /* ========================================================================== */
+    /* MASTER APPLICATION RENDER ENGINE & BOOTSTRAP INITIALIZATION                */
+    /* ========================================================================== */
+    function renderApp() {
+      const t = i18n[state.lang] || i18n.ru;
+
+      // 1. Sync Bottom Navigation Labels
+      document.getElementById("navLblDiary").innerText = t.nav.diary;
+      document.getElementById("navLblRation").innerText = t.nav.ration;
+      document.getElementById("navLblForm").innerText = t.nav.form;
+      document.getElementById("navLblCharts").innerText = t.nav.charts;
+      document.getElementById("navLblProfile").innerText = t.nav.profile;
+
+      // 2. Sync Active Class on Bottom Navigation Tabs
+      const tabKeys = ["diary", "ration", "form", "charts", "profile"];
+      document.querySelectorAll(".bottom-nav .nav-tab").forEach((btnEl, idx) => {
+        if (tabKeys[idx] === state.activeTab) btnEl.classList.add("active");
+        else btnEl.classList.remove("active");
+      });
+
+      // 3. Render Top Header Bar
+      const headerElem = document.getElementById("topHeaderBar");
+      if (headerElem) headerElem.innerHTML = renderTopHeader(t);
+
+      // 4. Render Center Stage based on active tab
+      const stageElem = document.getElementById("mainStage");
+      if (stageElem) {
+        if (state.activeTab === "diary") stageElem.innerHTML = renderDiaryStage(t);
+        else if (state.activeTab === "ration") stageElem.innerHTML = renderRationStage(t);
+        else if (state.activeTab === "form") stageElem.innerHTML = renderFormStage(t);
+        else if (state.activeTab === "charts") stageElem.innerHTML = renderChartsStage(t);
+        else if (state.activeTab === "profile") stageElem.innerHTML = renderProfileStage(t);
+      }
+
+      // 5. Apply Theme to Root DOM
+      if (state.theme === "light") {
+        document.documentElement.setAttribute("data-theme", "light");
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+      }
+    }
+
+    /* Global DOMContentLoaded Bootstrapper */
+    window.addEventListener("DOMContentLoaded", () => {
+      recalculateMetabolicTargets(true);
+      renderApp();
+
+      // Escape key closes any active modal window
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          document.querySelectorAll(".modal-backdrop").forEach(m => m.remove());
+        }
+      });
+    });
+
+    // Expose necessary global hooks for inline onclick handlers
+    window.switchMainTab = switchMainTab;
+    window.selectMealTab = selectMealTab;
+    window.updateWaterAmount = updateWaterAmount;
+    window.deleteFoodFromMeal = deleteFoodFromMeal;
+    window.cycleGoalMode = cycleGoalMode;
+    window.toggleThemeMode = toggleThemeMode;
+    window.cycleLanguage = cycleLanguage;
+    window.switchRationSubTab = switchRationSubTab;
+    window.loadRationIntoDiary = loadRationIntoDiary;
+    window.switchFormSubTab = switchFormSubTab;
+    window.handleManualWeightSave = handleManualWeightSave;
+    window.handleManualMeasuresSave = handleManualMeasuresSave;
+    window.handleBodyPhotoCapture = handleBodyPhotoCapture;
+    window.deleteProgressPhoto = deleteProgressPhoto;
+    window.switchChartPeriod = switchChartPeriod;
+    window.switchProfileSubTab = switchProfileSubTab;
+    window.handleManualTargetsSave = handleManualTargetsSave;
+    window.handleApiKeySave = handleApiKeySave;
+    window.clearCurrentDayMeals = clearCurrentDayMeals;
+    window.exportJsonBackup = exportJsonBackup;
+    window.performFactoryReset = performFactoryReset;
+    window.openFoodModal = openFoodModal;
+    window.filterFoodDatabaseModal = filterFoodDatabaseModal;
+    window.highlightSelectedFoodCard = highlightSelectedFoodCard;
+    window.toggleCustomFoodInputMode = toggleCustomFoodInputMode;
+    window.confirmAddFoodToMeal = confirmAddFoodToMeal;
+    window.openActivityModal = openActivityModal;
+    window.applyActivityKcal = applyActivityKcal;
+    window.applyCustomActivity = applyCustomActivity;
+    window.openAiFoodScannerModal = openAiFoodScannerModal;
+    window.executeGeminiAiScan = executeGeminiAiScan;
+    window.recalcAiParsedItemGrams = recalcAiParsedItemGrams;
+    window.confirmAddAiFoodItem = confirmAddAiFoodItem;
+    window.recalculateMetabolicTargets = recalculateMetabolicTargets;
+  </script>
+</body>
+</html>
