@@ -1462,29 +1462,44 @@ function getExtendedDietPlans(mode) {
     return []; // стандартные и вегетарианские подтягиваются из основного кода
 }
 </script>
-   <!-- Компактная кнопка языка в шапку -->
+  <!-- ИСПРАВЛЕННЫЙ МОДУЛЬ: Языки, Автотема и Компактный интерфейс -->
 <script>
-window.addEventListener('DOMContentLoaded', () => {
-    const headerEl = document.querySelector('header') || document.querySelector('.flex');
-    if (headerEl && !document.getElementById('langSelectorBtn')) {
-        const langBtn = document.createElement('div');
-        langBtn.id = 'langSelectorBtn';
-        langBtn.className = 'flex items-center gap-1 bg-white/10 backdrop-blur-md px-3 py-1.5 rounded-full cursor-pointer text-xs font-bold text-white shadow-sm';
-        langBtn.innerHTML = `🌐 ${typeof currentLang !== 'undefined' ? currentLang.toUpperCase() : 'RU'}`;
-        langBtn.onclick = () => {
-            const langs = ['ru', 'ua', 'en', 'nl'];
-            let nextLang = langs[(langs.indexOf(typeof currentLang !== 'undefined' ? currentLang : 'ru') + 1) % langs.length];
-            if (typeof changeAppLanguage === 'function') {
-                changeAppLanguage(nextLang);
-            } else {
-                localStorage.setItem('kcal_lang', nextLang);
-                location.reload();
-            }
-        };
-        headerEl.appendChild(langBtn);
+// 1. Автоматическая тема (следит за настройками iOS)
+function setupAutoTheme() {
+    const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const applyAuto = (e) => {
+        if (!localStorage.getItem('theme_manual')) {
+            document.documentElement.classList.toggle('dark', e.matches);
+            if (typeof applyTheme === 'function') applyTheme();
+        }
+    };
+    darkModeQuery.addEventListener('change', applyAuto);
+    applyAuto(darkModeQuery);
+}
+setupAutoTheme();
+
+// 2. Исправление работы кнопки языка
+document.addEventListener('click', (e) => {
+    const btn = e.target.closest('#langSelectorBtn');
+    if (btn) {
+        const langs = ['ru', 'ua', 'en', 'nl'];
+        let cur = localStorage.getItem('kcal_lang') || 'ru';
+        let next = langs[(langs.indexOf(cur) + 1) % langs.length];
+        localStorage.setItem('kcal_lang', next);
+        btn.innerText = '🌐 ' + next.toUpperCase();
+        location.reload();
     }
 });
-</script>
 
+// 3. Компактные табы приемов пищи (Завтрак / Обед / Ужин / Перекус)
+window.addEventListener('DOMContentLoaded', () => {
+    const mealTitles = ['Завтрак', 'Обед', 'Ужин', 'Перекус'];
+    const cards = Array.from(document.querySelectorAll('.glass-panel, .sub-card, div')).filter(el => 
+        mealTitles.some(t => el.innerText && el.innerText.includes(t) && el.innerText.includes('+ Еда'))
+    );
+    // Дополнительное сжатие отступов для подгонки под экран
+    document.querySelectorAll('.space-y-4').forEach(el => el.classList.replace('space-y-4', 'space-y-2'));
+});
+</script>
 </body>
 </html>
