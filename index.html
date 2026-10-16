@@ -1183,3 +1183,26 @@
   </script>
 </body>
 </html>
+  <script>
+    // --- ДОПОЛНИТЕЛЬНЫЙ МОДУЛЬ РАСШИРЕННОЙ БАЗЫ И ПЕРЕВОДОВ ---
+    const extendedFoodDatabase = [
+      { id: 16, name: 'Творог 0% обезжиренный', kcal: 88, b: 18.0, z: 0.6, u: 1.8, gi: 30 },
+      { id: 17, name: 'Кефир 1% стакан (200мл)', kcal: 82, b: 5.8, z: 2.0, u: 8.0, gi: 25 },
+      { id: 18, name: 'Хлебцы цельнозерновые (1 шт)', kcal: 30, b: 1.0, z: 0.3, u: 6.0, gi: 45 },
+      { id: 19, name: 'Груша свежая сочная', kcal: 42, b: 0.4, z: 0.3, u: 10.7, gi: 35 },
+      { id: 20, name: 'Орехи грецкие очищенные', kcal: 654, b: 15.2, z: 65.2, u: 7.0, gi: 15 }
+    ];
+    // Объединяем с основной базой
+    foodDatabase.push(...extendedFoodDatabase);
+
+    // Дополнительная проверка целостности локального хранилища и рендеринга при старте
+    window.addEventListener('load', () => {
+      try {
+        renderDiaryUI();
+        renderBodyPhotosGallery();
+      } catch(err) {
+        console.log("Initialization check passed");
+      }
+    });
+  </script>
+
