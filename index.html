@@ -21,17 +21,25 @@
       font-size: 15px; background-color: #020617; color: #f1f5f9;
       display: flex; justify-content: center; align-items: center;
     }
+    html.light body { background-color: #f1f5f9; color: #0f172a; }
+
     .app-wrapper {
-      width: 100%; max-width: 420px; height: 100dvh; max-height: 915px;
+      width: 100%; max-width: 420px; height: 100dvh;
       display: flex; flex-direction: column; overflow: hidden; position: relative;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); background-color: #090d16;
-      padding-top: env(safe-area-inset-top, 16px);
-      padding-bottom: env(safe-area-inset-bottom, 16px);
+      padding-top: max(env(safe-area-inset-top, 12px), 12px);
     }
+    html.light .app-wrapper { background-color: #ffffff; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); }
+
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
     .glass-panel { background: rgba(17, 24, 39, 0.92); border: 1px solid rgba(31, 41, 55, 0.85); backdrop-filter: blur(12px); }
+    html.light .glass-panel { background: rgba(248, 250, 252, 0.95); border: 1px solid rgba(226, 232, 240, 0.9); }
+
     .sub-card { background: rgba(30, 41, 59, 0.65); border: 1px solid rgba(51, 65, 85, 0.5); }
+    html.light .sub-card { background: rgba(241, 245, 249, 0.8); border: 1px solid rgba(226, 232, 240, 0.8); color: #1e293b; }
+
     .tab-screen { display: none; height: 100%; flex-direction: column; overflow: hidden; }
     .tab-screen.active { display: flex; }
     
@@ -50,7 +58,7 @@
 <div class="app-wrapper">
 
   <!-- ШАПКА -->
-  <header class="glass-panel px-3.5 py-2.5 flex items-center justify-between shrink-0 z-30 border-b border-slate-800">
+  <header class="glass-panel px-3.5 py-2.5 flex items-center justify-between shrink-0 z-30 border-b border-slate-800 html-light:border-slate-200">
     <div class="flex items-center space-x-2">
       <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-lg shadow-md shrink-0">🔥</div>
       <div>
@@ -61,7 +69,7 @@
     <div class="flex items-center space-x-1.5">
       <button type="button" onclick="cycleGoalQuick()" class="sub-card px-2.5 py-1.5 rounded-xl text-[11px] font-extrabold text-emerald-400 flex items-center gap-1 active:scale-95 transition">
         <span id="headerGoalIcon">🔥</span>
-        <span id="headerGoalType">Fat Loss</span>
+        <span id="headerGoalType">Похудение</span>
       </button>
       <button type="button" onclick="toggleThemeMode()" id="themeBtn" class="sub-card px-2 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 active:scale-95 transition">
         <span id="themeIcon">🌙</span>
@@ -81,14 +89,14 @@
           <div>
             <div class="flex items-baseline gap-1.5">
               <span id="eatenKcal" class="text-3xl font-black tracking-tight">0</span>
-              <span class="text-xs text-slate-400 font-bold">/ <span id="normKcal">2000</span> <span id="unitKcal">kcal</span></span>
+              <span class="text-xs text-slate-400 font-bold">/ <span id="normKcal">2000</span> <span id="unitKcal">ккал</span></span>
             </div>
-            <span id="remainBadge" class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 inline-block mt-1">Remaining: 2000</span>
+            <span id="remainBadge" class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 inline-block mt-1">Осталось: 2000 ккал</span>
           </div>
           <!-- Кольцо калорий -->
           <div class="relative w-16 h-16 flex items-center justify-center shrink-0">
             <svg class="w-full h-full progress-ring" width="64" height="64" viewBox="0 0 64 64">
-              <circle cx="32" cy="32" r="26" stroke="currentColor" stroke-width="5" class="text-slate-800" fill="transparent"/>
+              <circle cx="32" cy="32" r="26" stroke="currentColor" stroke-width="5" class="text-slate-800 html-light:text-slate-200" fill="transparent"/>
               <circle id="ringKcal" cx="32" cy="32" r="26" stroke="url(#gradientKcal)" stroke-width="5" stroke-dasharray="163.36" stroke-dashoffset="163.36" stroke-linecap="round" fill="transparent" class="progress-ring-circle"/>
               <defs>
                 <linearGradient id="gradientKcal" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -102,44 +110,44 @@
         </div>
 
         <!-- Кольца БЖУ -->
-        <div class="grid grid-cols-4 gap-1.5 text-center pt-2.5 border-t border-slate-800">
+        <div class="grid grid-cols-4 gap-1.5 text-center pt-2.5 border-t border-slate-800 html-light:border-slate-200">
           <div class="flex flex-col items-center">
             <div class="relative w-11 h-11 flex items-center justify-center mb-1">
               <svg class="w-full h-full progress-ring" width="44" height="44" viewBox="0 0 44 44">
-                <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3.5" class="text-slate-800" fill="transparent"/>
+                <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3.5" class="text-slate-800 html-light:text-slate-200" fill="transparent"/>
                 <circle id="ringProt" cx="22" cy="22" r="18" stroke="#3b82f6" stroke-width="3.5" stroke-dasharray="113.1" stroke-dashoffset="113.1" stroke-linecap="round" fill="transparent" class="progress-ring-circle"/>
               </svg>
               <span id="protPercentText" class="absolute text-[10px] font-black text-blue-400">0%</span>
             </div>
-            <span id="lblProteins" class="text-[11px] font-bold text-slate-400">Proteins</span>
-            <span id="valProteins" class="text-xs font-black">0/130g</span>
+            <span id="lblProteins" class="text-[11px] font-bold text-slate-400">Белки</span>
+            <span id="valProteins" class="text-xs font-black">0/130г</span>
           </div>
           <div class="flex flex-col items-center">
             <div class="relative w-11 h-11 flex items-center justify-center mb-1">
               <svg class="w-full h-full progress-ring" width="44" height="44" viewBox="0 0 44 44">
-                <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3.5" class="text-slate-800" fill="transparent"/>
+                <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3.5" class="text-slate-800 html-light:text-slate-200" fill="transparent"/>
                 <circle id="ringFats" cx="22" cy="22" r="18" stroke="#f59e0b" stroke-width="3.5" stroke-dasharray="113.1" stroke-dashoffset="113.1" stroke-linecap="round" fill="transparent" class="progress-ring-circle"/>
               </svg>
               <span id="fatsPercentText" class="absolute text-[10px] font-black text-amber-400">0%</span>
             </div>
-            <span id="lblFats" class="text-[11px] font-bold text-slate-400">Fats</span>
-            <span id="valFats" class="text-xs font-black">0/65g</span>
+            <span id="lblFats" class="text-[11px] font-bold text-slate-400">Жиры</span>
+            <span id="valFats" class="text-xs font-black">0/65г</span>
           </div>
           <div class="flex flex-col items-center">
             <div class="relative w-11 h-11 flex items-center justify-center mb-1">
               <svg class="w-full h-full progress-ring" width="44" height="44" viewBox="0 0 44 44">
-                <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3.5" class="text-slate-800" fill="transparent"/>
+                <circle cx="22" cy="22" r="18" stroke="currentColor" stroke-width="3.5" class="text-slate-800 html-light:text-slate-200" fill="transparent"/>
                 <circle id="ringCarbs" cx="22" cy="22" r="18" stroke="#10b981" stroke-width="3.5" stroke-dasharray="113.1" stroke-dashoffset="113.1" stroke-linecap="round" fill="transparent" class="progress-ring-circle"/>
               </svg>
               <span id="carbsPercentText" class="absolute text-[10px] font-black text-emerald-400">0%</span>
             </div>
-            <span id="lblCarbs" class="text-[11px] font-bold text-slate-400">Carbs</span>
-            <span id="valCarbs" class="text-xs font-black">0/200g</span>
+            <span id="lblCarbs" class="text-[11px] font-bold text-slate-400">Углеводы</span>
+            <span id="valCarbs" class="text-xs font-black">0/200г</span>
           </div>
           <div id="activityCardBadge" class="flex flex-col items-center justify-center bg-rose-500/10 rounded-xl p-1 border border-rose-500/20 transition-all">
             <span class="text-base font-black text-rose-400 mb-0.5">🩸</span>
-            <span id="lblXE" class="text-[10px] font-bold text-rose-400">Sugar / CU</span>
-            <span id="valXE" class="text-xs font-black">0.0 CU</span>
+            <span id="lblXE" class="text-[10px] font-bold text-rose-400">Сахар / ХЕ</span>
+            <span id="valXE" class="text-xs font-black">0.0 ХЕ</span>
           </div>
         </div>
       </div>
@@ -147,8 +155,8 @@
       <div class="grid grid-cols-2 gap-2 shrink-0">
         <div class="glass-panel rounded-2xl px-3 py-2.5 flex items-center justify-between">
           <div>
-            <span id="lblWaterTitle" class="text-[11px] font-bold text-slate-400 uppercase block">💧 Water</span>
-            <span id="waterCountText" class="text-xs font-black text-blue-400">0 / 2000 ml</span>
+            <span id="lblWaterTitle" class="text-[11px] font-bold text-slate-400 uppercase block">💧 Вода</span>
+            <span id="waterCountText" class="text-xs font-black text-blue-400">1000 / 2000 ml</span>
           </div>
           <div class="flex gap-1.5">
             <button type="button" onclick="addWater(-250)" class="sub-card w-7 h-7 rounded-lg font-black text-xs active:scale-90">-</button>
@@ -157,50 +165,50 @@
         </div>
         <div id="activityBoxWrapper" class="glass-panel rounded-2xl px-3 py-2.5 flex items-center justify-between transition-all">
           <div>
-            <span id="lblBurnTitle" class="text-[11px] font-bold text-slate-400 uppercase block">🏃 Activity</span>
-            <span id="burnedKcalText" class="text-xs font-black text-orange-400">+0 kcal</span>
+            <span id="lblBurnTitle" class="text-[11px] font-bold text-slate-400 uppercase block">🏃 Активность</span>
+            <span id="burnedKcalText" class="text-xs font-black text-orange-400">+0 ккал</span>
           </div>
-          <button type="button" onclick="openActivityModal()" id="btnAddAct" class="bg-orange-500 text-white px-2.5 py-1.5 rounded-xl font-black text-xs active:scale-95">+ Select</button>
+          <button type="button" onclick="openActivityModal()" id="btnAddAct" class="bg-orange-500 text-white px-2.5 py-1.5 rounded-xl font-black text-[11px] whitespace-nowrap active:scale-95">+ Выбрать</button>
         </div>
       </div>
 
       <div class="glass-panel rounded-2xl p-3 flex-1 flex flex-col overflow-hidden">
         <div class="grid grid-cols-4 gap-1 p-0.5 sub-card rounded-xl shrink-0 mb-2">
-          <button type="button" onclick="selectMealSubTab('breakfast')" id="subTab-breakfast" class="py-2 rounded-lg text-xs font-black bg-blue-600 text-white shadow transition">🌅 <span id="tabNameBreakfast">Breakfast</span></button>
-          <button type="button" onclick="selectMealSubTab('lunch')" id="subTab-lunch" class="py-2 rounded-lg text-xs font-bold text-slate-400 transition">☀️ <span id="tabNameLunch">Lunch</span></button>
-          <button type="button" onclick="selectMealSubTab('dinner')" id="subTab-dinner" class="py-2 rounded-lg text-xs font-bold text-slate-400 transition">🌙 <span id="tabNameDinner">Dinner</span></button>
-          <button type="button" onclick="selectMealSubTab('snack')" id="subTab-snack" class="py-2 rounded-lg text-xs font-bold text-slate-400 transition">🍎 <span id="tabNameSnack">Snack</span></button>
+          <button type="button" onclick="selectMealSubTab('breakfast')" id="subTab-breakfast" class="py-2 rounded-lg text-xs font-black bg-blue-600 text-white shadow transition">🌅 <span id="tabNameBreakfast">Завтрак</span></button>
+          <button type="button" onclick="selectMealSubTab('lunch')" id="subTab-lunch" class="py-2 rounded-lg text-xs font-bold text-slate-400 transition">☀️ <span id="tabNameLunch">Обед</span></button>
+          <button type="button" onclick="selectMealSubTab('dinner')" id="subTab-dinner" class="py-2 rounded-lg text-xs font-bold text-slate-400 transition">🌙 <span id="tabNameDinner">Ужин</span></button>
+          <button type="button" onclick="selectMealSubTab('snack')" id="subTab-snack" class="py-2 rounded-lg text-xs font-bold text-slate-400 transition">🍎 <span id="tabNameSnack">Перекус</span></button>
         </div>
         <div class="flex justify-between items-center px-1 mb-1.5 shrink-0">
-          <span id="currentMealHeader" class="text-xs font-black text-slate-300">🌅 Breakfast</span>
-          <span id="currentMealKcal" class="text-xs font-black text-blue-400">0 kcal • 0 CU</span>
+          <span id="currentMealHeader" class="text-xs font-black text-slate-300">🌅 Завтрак</span>
+          <span id="currentMealKcal" class="text-xs font-black text-blue-400">310 ккал • 0.4 ХЕ</span>
         </div>
         <div id="mealItemsList" class="flex-1 overflow-y-auto no-scrollbar space-y-2 pr-0.5"></div>
-        <div class="grid grid-cols-3 gap-2 mt-2 pt-2 border-t border-slate-800 shrink-0">
-          <button type="button" onclick="openFoodModal()" class="col-span-2 py-3 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md"><span>+</span> <span id="btnAddFoodTxt">Add Food</span></button>
-          <button type="button" onclick="triggerAiCamera()" class="py-3 bg-gradient-to-r from-indigo-600 to-purple-600 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1 shadow-md">📸 <span id="btnAiPhotoTxt">AI Photo</span></button>
+        <div class="grid grid-cols-3 gap-2 mt-2 pt-2 border-t border-slate-800 html-light:border-slate-200 shrink-0">
+          <button type="button" onclick="openFoodModal()" class="col-span-2 py-3 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md"><span>+</span> <span id="btnAddFoodTxt">Добавить еду</span></button>
+          <button type="button" onclick="triggerAiCamera()" class="py-3 bg-gradient-to-r from-indigo-600 to-purple-600 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center gap-1 shadow-md">📸 <span id="btnAiPhotoTxt">ИИ Фото</span></button>
         </div>
       </div>
     </div>
-    <!-- ВКЛАДКА 2: РАЦИОН -->
+        <!-- ВКЛАДКА 2: РАЦИОН -->
     <div id="tab-diet" class="tab-screen space-y-2.5">
       <div class="glass-panel rounded-2xl p-3.5 shrink-0">
         <div class="flex items-center justify-between mb-2">
-          <h2 id="dietTitle" class="font-black text-sm">Meal Plans</h2>
-          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-blue-500/15 text-blue-400" id="dietSubBadge">Balanced</span>
+          <h2 id="dietTitle" class="font-black text-sm">Планы питания</h2>
+          <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-md bg-blue-500/15 text-blue-400" id="dietSubBadge">Сбалансированное</span>
         </div>
         <div class="grid grid-cols-3 gap-1 p-1 sub-card rounded-xl text-xs font-black">
-          <button type="button" onclick="switchDietCategory('diabetic')" id="dietBtn-diabetic" class="py-2 rounded-lg bg-rose-600 text-white shadow transition">🩸 Diabetic (CU)</button>
-          <button type="button" onclick="switchDietCategory('standard')" id="dietBtn-standard" class="py-2 rounded-lg text-slate-400 transition">🍗 Classic</button>
-          <button type="button" onclick="switchDietCategory('veg')" id="dietBtn-veg" class="py-2 rounded-lg text-slate-400 transition">🥑 Vegan / Veg</button>
+          <button type="button" onclick="switchDietCategory('diabetic')" id="dietBtn-diabetic" class="py-2 rounded-lg bg-rose-600 text-white shadow transition">🩸 Диабетический (ХЕ)</button>
+          <button type="button" onclick="switchDietCategory('standard')" id="dietBtn-standard" class="py-2 rounded-lg text-slate-400 transition">🍗 Классический</button>
+          <button type="button" onclick="switchDietCategory('veg')" id="dietBtn-veg" class="py-2 rounded-lg text-slate-400 transition">🥑 Веган / Пост</button>
         </div>
       </div>
       <div id="diabeticAlertBox" class="glass-panel rounded-2xl p-3.5 border-l-4 border-l-rose-500 shrink-0">
         <div class="flex justify-between items-center mb-1">
-          <span id="diabBoxTitle" class="text-xs font-black text-rose-400">🩸 Diet #9 / Low GI (Low-Carb)</span>
+          <span id="diabBoxTitle" class="text-xs font-black text-rose-400">Диабетический стол №9 / Низкий ГИ</span>
           <span class="text-[10px] font-extrabold bg-rose-500/15 text-rose-400 px-2.5 py-0.5 rounded-full">GI &lt; 45</span>
         </div>
-        <p id="diabBoxDesc" class="text-xs text-slate-400 leading-tight">Eliminates simple sugars. Carb Units calculated with low glycemic index.</p>
+        <p id="diabBoxDesc" class="text-xs text-slate-400 leading-tight">Исключает быстрые углеводы. ХЕ рассчитаны с учетом низкого гликемического индекса.</p>
       </div>
       <div id="dietCardsContainer" class="flex-1 overflow-y-auto no-scrollbar space-y-2.5 pb-1"></div>
     </div>
@@ -209,29 +217,29 @@
     <div id="tab-body" class="tab-screen space-y-3 overflow-y-auto no-scrollbar">
       <div class="glass-panel rounded-2xl p-3.5 shrink-0">
         <div class="flex justify-between items-center mb-2">
-          <div><h2 id="bodyTitle" class="font-black text-sm">Weight & BMI Tracker</h2><p id="bodySub" class="text-xs text-slate-400">Compare results with photos & weight</p></div>
-          <span id="bmiBadge" class="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400">BMI: 23.4</span>
+          <div><h2 id="bodyTitle" class="font-black text-sm">Трекер веса и ИМТ</h2><p id="bodySub" class="text-xs text-slate-400">Сравнение результатов по фото и весу</p></div>
+          <span id="bmiBadge" class="text-xs font-black px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-400">ИМТ: 23.4</span>
         </div>
         <div class="grid grid-cols-3 gap-2 text-center my-3">
           <div class="sub-card p-2.5 rounded-xl flex flex-col justify-center">
-            <span id="lblStartW" class="text-[11px] text-slate-400 block mb-1">Start</span>
+            <span id="lblStartW" class="text-[11px] text-slate-400 block mb-1">Старт</span>
             <input type="number" id="inpStartWeight" step="0.1" value="82.0" onchange="updateStartWeight(this.value)" class="w-full bg-transparent text-center text-xs font-black outline-none border-b border-slate-500/40 text-slate-200 pb-0.5">
           </div>
-          <div class="sub-card p-2.5 rounded-xl border border-blue-500/40 flex flex-col justify-center"><span id="lblCurrW" class="text-[11px] text-blue-400 font-bold block mb-1">Current</span><span id="valCurrW" class="text-xs font-black text-blue-400">78.5 kg</span></div>
-          <div class="sub-card p-2.5 rounded-xl flex flex-col justify-center"><span id="lblGoalW" class="text-[11px] text-emerald-400 block mb-1">Goal</span><span id="valGoalW" class="text-xs font-black text-emerald-400">74.0 kg</span></div>
+          <div class="sub-card p-2.5 rounded-xl border border-blue-500/40 flex flex-col justify-center"><span id="lblCurrW" class="text-[11px] text-blue-400 font-bold block mb-1">Текущий</span><span id="valCurrW" class="text-xs font-black text-blue-400">78.5 кг</span></div>
+          <div class="sub-card p-2.5 rounded-xl flex flex-col justify-center"><span id="lblGoalW" class="text-[11px] text-emerald-400 block mb-1">Цель</span><span id="valGoalW" class="text-xs font-black text-emerald-400">74.0 кг</span></div>
         </div>
         <div class="flex gap-2 mt-2">
-          <input type="number" id="quickWeightInput" step="0.1" placeholder="New weight (kg)..." class="flex-1 sub-card rounded-xl px-3.5 py-2.5 text-xs font-bold outline-none">
-          <button type="button" onclick="logNewWeight()" id="btnLogWeight" class="px-4 py-2.5 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs shadow">Log Weight</button>
+          <input type="number" id="quickWeightInput" step="0.1" placeholder="Новый вес (кг)..." class="flex-1 sub-card rounded-xl px-3.5 py-2.5 text-xs font-bold outline-none">
+          <button type="button" onclick="logNewWeight()" id="btnLogWeight" class="px-4 py-2.5 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs shadow">Записать вес</button>
         </div>
 
-        <div class="mt-3.5 pt-3.5 border-t border-slate-800 space-y-2.5">
+        <div class="mt-3.5 pt-3.5 border-t border-slate-800 html-light:border-slate-200 space-y-2.5">
           <input type="file" id="bodyPhotoInput" accept="image/*" capture="user" class="hidden" onchange="saveBodyProgressPhoto(this)">
           <button type="button" onclick="document.getElementById('bodyPhotoInput').click()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-md">
-            <span>📸</span> <span id="btnPhotoProgressTxt">Take body progress photo today</span>
+            <span>📸</span> <span id="btnPhotoProgressTxt">Сделать фото прогресса сегодня</span>
           </button>
           <div>
-            <p class="text-xs font-bold text-slate-400 mb-2" id="lblPhotoGalleryTitle">Results history & comparison:</p>
+            <p class="text-xs font-bold text-slate-400 mb-2" id="lblPhotoGalleryTitle">История результатов и сравнение:</p>
             <div id="bodyPhotoGallery" class="grid grid-cols-3 gap-2 pt-0.5"></div>
           </div>
         </div>
@@ -240,30 +248,30 @@
       <!-- Объемы тела -->
       <div class="glass-panel rounded-2xl p-3.5 shrink-0">
         <div class="flex justify-between items-center mb-2.5">
-          <h3 id="measTitle" class="font-black text-xs uppercase tracking-wider text-slate-400">📏 Body Measurements (cm)</h3>
-          <button type="button" onclick="saveBodyMeasurements()" id="btnSaveMeas" class="text-xs font-black text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg active:scale-95">💾 Save</button>
+          <h3 id="measTitle" class="font-black text-xs uppercase tracking-wider text-slate-400">📏 Замеры тела (см)</h3>
+          <button type="button" onclick="saveBodyMeasurements()" id="btnSaveMeas" class="text-xs font-black text-blue-400 bg-blue-500/10 px-3 py-1.5 rounded-lg active:scale-95">💾 Сохранить</button>
         </div>
         <div class="grid grid-cols-2 gap-2.5 text-xs">
-          <div class="sub-card px-3 py-2 rounded-xl flex items-center justify-between"><span id="lblWaist" class="text-xs font-bold text-slate-400">Waist:</span><input type="number" id="measWaist" value="84" class="w-16 bg-transparent text-right font-black outline-none border-b border-slate-600 text-slate-200"></div>
-          <div class="sub-card px-3 py-2 rounded-xl flex items-center justify-between"><span id="lblChest" class="text-xs font-bold text-slate-400">Chest:</span><input type="number" id="measChest" value="102" class="w-16 bg-transparent text-right font-black outline-none border-b border-slate-600 text-slate-200"></div>
-          <div class="sub-card px-3 py-2 rounded-xl flex items-center justify-between"><span id="lblHips" class="text-xs font-bold text-slate-400">Hips:</span><input type="number" id="measHips" value="98" class="w-16 bg-transparent text-right font-black outline-none border-b border-slate-600 text-slate-200"></div>
-          <div class="sub-card px-3 py-2 rounded-xl flex items-center justify-between"><span id="lblNeck" class="text-xs font-bold text-slate-400">Bicep:</span><input type="number" id="measBicep" value="38" class="w-16 bg-transparent text-right font-black outline-none border-b border-slate-600 text-slate-200"></div>
+          <div class="sub-card px-3 py-2 rounded-xl flex items-center justify-between"><span id="lblWaist" class="text-xs font-bold text-slate-400">Талия:</span><input type="number" id="measWaist" value="84" class="w-16 bg-transparent text-right font-black outline-none border-b border-slate-600 text-slate-200"></div>
+          <div class="sub-card px-3 py-2 rounded-xl flex items-center justify-between"><span id="lblChest" class="text-xs font-bold text-slate-400">Грудь:</span><input type="number" id="measChest" value="102" class="w-16 bg-transparent text-right font-black outline-none border-b border-slate-600 text-slate-200"></div>
+          <div class="sub-card px-3 py-2 rounded-xl flex items-center justify-between"><span id="lblHips" class="text-xs font-bold text-slate-400">Бедра:</span><input type="number" id="measHips" value="98" class="w-16 bg-transparent text-right font-black outline-none border-b border-slate-600 text-slate-200"></div>
+          <div class="sub-card px-3 py-2 rounded-xl flex items-center justify-between"><span id="lblNeck" class="text-xs font-bold text-slate-400">Бицепс:</span><input type="number" id="measBicep" value="38" class="w-16 bg-transparent text-right font-black outline-none border-b border-slate-600 text-slate-200"></div>
         </div>
       </div>
-      <div class="glass-panel rounded-2xl p-3.5 shrink-0 max-h-[130px] flex flex-col overflow-hidden">
-        <h3 id="weightHistTitle" class="font-black text-xs mb-2 text-slate-400 uppercase">Weight History Log</h3>
-        <div id="weightHistoryList" class="flex-1 overflow-y-auto no-scrollbar space-y-1.5 text-xs"></div>
+      <div class="glass-panel rounded-2xl p-3.5 shrink-0 flex flex-col">
+        <h3 id="weightHistTitle" class="font-black text-xs mb-2 text-slate-400 uppercase">История изменения веса</h3>
+        <div id="weightHistoryList" class="space-y-1.5 text-xs max-h-36 overflow-y-auto no-scrollbar"></div>
       </div>
     </div>
 
     <!-- ВКЛАДКА 4: ГРАФИКИ -->
     <div id="tab-charts" class="tab-screen space-y-3 overflow-y-auto no-scrollbar">
       <div class="glass-panel rounded-2xl p-4">
-        <div class="flex justify-between items-center mb-2.5"><h3 id="chartKcalHeader" class="font-black text-xs uppercase text-slate-400">📊 7-Day Calories</h3><span id="avgKcalBadge" class="text-xs font-extrabold text-blue-400">Avg: 1850 kcal</span></div>
+        <div class="flex justify-between items-center mb-2.5"><h3 id="chartKcalHeader" class="font-black text-xs uppercase text-slate-400">📊 Калории за 7 дней</h3><span id="avgKcalBadge" class="text-xs font-extrabold text-blue-400">Avg: 1850 ккал</span></div>
         <div class="h-40 w-full relative"><canvas id="caloriesChartCanvas"></canvas></div>
       </div>
       <div class="glass-panel rounded-2xl p-4">
-        <div class="flex justify-between items-center mb-2.5"><h3 id="chartWeightHeader" class="font-black text-xs uppercase text-slate-400">📉 Weight Trend</h3><span id="weightDiffBadge" class="text-xs font-extrabold text-emerald-400">-3.5 kg</span></div>
+        <div class="flex justify-between items-center mb-2.5"><h3 id="chartWeightHeader" class="font-black text-xs uppercase text-slate-400">📉 Динамика веса</h3><span id="weightDiffBadge" class="text-xs font-extrabold text-emerald-400">-3.5 кг</span></div>
         <div class="h-40 w-full relative"><canvas id="weightChartCanvas"></canvas></div>
       </div>
     </div>
@@ -271,95 +279,96 @@
     <!-- ВКЛАДКА 5: ПРОФИЛЬ -->
     <div id="tab-profile" class="tab-screen space-y-3 overflow-y-auto no-scrollbar">
       <div class="glass-panel rounded-2xl p-4 space-y-3 text-xs">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-2.5">
-          <div><h2 id="profHeader" class="font-black text-sm">Personal Settings</h2><p id="profSub" class="text-[11px] text-slate-400">Auto-calculation using Mifflin-St Jeor formula</p></div>
+        <div class="flex items-center justify-between border-b border-slate-800 html-light:border-slate-200 pb-2.5">
+          <div><h2 id="profHeader" class="font-black text-sm">Личные настройки</h2><p id="profSub" class="text-[11px] text-slate-400">Авторасчет по формуле Миффлина — Сан-Жеора</p></div>
           <span class="text-2xl">⚙️</span>
         </div>
         <div class="grid grid-cols-2 gap-2.5">
-          <div><label id="lblGender" class="block text-slate-400 font-bold mb-1 text-[11px]">Gender</label><select id="profGender" class="w-full sub-card rounded-xl px-3 py-2.5 font-bold text-xs outline-none text-slate-200"><option value="male" id="optMale">Male</option><option value="female" id="optFemale">Female</option></select></div>
-          <div><label id="lblAge" class="block text-slate-400 font-bold mb-1 text-[11px]">Age</label><input type="number" id="profAge" value="41" class="w-full sub-card rounded-xl px-3 py-2.5 font-black text-xs outline-none text-slate-200"></div>
-          <div><label id="lblHeight" class="block text-slate-400 font-bold mb-1 text-[11px]">Height (cm)</label><input type="number" id="profHeight" value="178" class="w-full sub-card rounded-xl px-3 py-2.5 font-black text-xs outline-none text-slate-200"></div>
-          <div><label id="lblGoalWeight" class="block text-slate-400 font-bold mb-1 text-[11px]">Goal Weight (kg)</label><input type="number" id="profGoalWeight" value="74" step="0.5" class="w-full sub-card rounded-xl px-3 py-2.5 font-black text-xs outline-none text-slate-200"></div>
-        </div>
-        <div>
-          <label id="lblActivityLvl" class="block text-slate-400 font-bold mb-1 text-[11px]">Physical Activity Level</label>
-          <select id="profActivity" class="w-full sub-card rounded-xl px-3 py-2.5 font-bold text-xs outline-none text-slate-200">
-            <option value="1.2" id="act1">Sedentary (1.2)</option>
-            <option value="1.375" id="act2" selected>Light activity (1.375)</option>
-            <option value="1.55" id="act3">Moderate activity (1.55)</option>
-            <option value="1.725" id="act4">High load (1.725)</option>
-          </select>
+          <div><label id="lblGender" class="block text-slate-400 font-bold mb-1 text-[11px]">Пол</label><select id="profGender" class="w-full sub-card rounded-xl px-3 py-2.5 font-bold text-xs outline-none text-slate-200 html-light:text-slate-800"><option value="male" id="optMale">Мужской</option><option value="female" id="optFemale">Женский</option></select></div>
+          <div><label id="lblAge" class="block text-slate-400 font-bold mb-1 text-[11px]">Возраст</label><input type="number" id="profAge" value="41" class="w-full sub-card rounded-xl px-3 py-2.5 font-black text-xs outline-none text-slate-200 html-light:text-slate-800"></div>
+          <div><label id="lblHeight" class="block text-slate-400 font-bold mb-1 text-[11px]">Рост (см)</label><input type="number" id="profHeight" value="178" class="w-full sub-card rounded-xl px-3 py-2.5 font-black text-xs outline-none text-slate-200 html-light:text-slate-800"></div>
+          <div><label id="lblCurrWeightProf" class="block text-slate-400 font-bold mb-1 text-[11px]">Текущий вес (кг)</label><input type="number" id="profCurrWeight" step="0.1" value="78.5" class="w-full sub-card rounded-xl px-3 py-2.5 font-black text-xs outline-none text-slate-200 html-light:text-slate-800"></div>
+          <div><label id="lblGoalWeight" class="block text-slate-400 font-bold mb-1 text-[11px]">Целевой вес (кг)</label><input type="number" id="profGoalWeight" value="74" step="0.5" class="w-full sub-card rounded-xl px-3 py-2.5 font-black text-xs outline-none text-slate-200 html-light:text-slate-800"></div>
+          <div>
+            <label id="lblActivityLvl" class="block text-slate-400 font-bold mb-1 text-[11px]">Уровень физ. активности</label>
+            <select id="profActivity" class="w-full sub-card rounded-xl px-2 py-2.5 font-bold text-[11px] outline-none text-slate-200 html-light:text-slate-800">
+              <option value="1.2" id="act1">Сидячий (1.2)</option>
+              <option value="1.375" id="act2" selected>Лёгкая активность (1.375)</option>
+              <option value="1.55" id="act3">Умеренная нагрузка (1.55)</option>
+              <option value="1.725" id="act4">Высокая нагрузка (1.725)</option>
+            </select>
+          </div>
         </div>
         <div class="grid grid-cols-2 gap-2.5 pt-1">
-          <button type="button" onclick="recalcAndSaveProfile()" id="btnCalcNorm" class="py-3 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs shadow">Calculate</button>
-          <button type="button" onclick="resetTodayDiary()" id="btnClearDay" class="py-3 bg-rose-500/15 text-rose-400 font-black rounded-xl text-xs border border-rose-500/30">Clear Today</button>
+          <button type="button" onclick="recalcAndSaveProfile()" id="btnCalcNorm" class="py-3 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs shadow">Рассчитать</button>
+          <button type="button" onclick="resetTodayDiary()" id="btnClearDay" class="py-3 bg-rose-500/15 text-rose-400 font-black rounded-xl text-xs border border-rose-500/30">Очистить день</button>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- НИЖНЯЯ НАВИГАЦИЯ -->
-  <nav class="glass-panel px-3 py-2.5 border-t border-slate-800 flex justify-around items-center shrink-0 z-30 text-xs font-extrabold">
-    <button type="button" onclick="switchMainTab('diary')" id="navBtn-diary" class="flex flex-col items-center gap-1 text-blue-400 transition"><span class="text-xl leading-none">🍏</span><span id="navTxtDiary">Diary</span></button>
-    <button type="button" onclick="switchMainTab('diet')" id="navBtn-diet" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">🥗</span><span id="navTxtDiet">Diet</span></button>
-    <button type="button" onclick="switchMainTab('body')" id="navBtn-body" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">📏</span><span id="navTxtBody">Body</span></button>
-    <button type="button" onclick="switchMainTab('charts')" id="navBtn-charts" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">📊</span><span id="navTxtCharts">Charts</span></button>
-    <button type="button" onclick="switchMainTab('profile')" id="navBtn-profile" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">⚙️</span><span id="navTxtProfile">Profile</span></button>
+  <!-- НИЖНЯЯ НАВИГАЦИЯ (ИДЕАЛЬНО ПРИЖАТА К НИЗУ ЭКРАНА) -->
+  <nav class="glass-panel px-3 pt-2.5 pb-[max(env(safe-area-inset-bottom,12px),12px)] border-t border-slate-800 html-light:border-slate-200 flex justify-around items-center shrink-0 z-30 text-xs font-extrabold">
+    <button type="button" onclick="switchMainTab('diary')" id="navBtn-diary" class="flex flex-col items-center gap-1 text-blue-400 transition"><span class="text-xl leading-none">🍏</span><span id="navTxtDiary">Дневник</span></button>
+    <button type="button" onclick="switchMainTab('diet')" id="navBtn-diet" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">🥗</span><span id="navTxtDiet">Рацион</span></button>
+    <button type="button" onclick="switchMainTab('body')" id="navBtn-body" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">📏</span><span id="navTxtBody">Форма</span></button>
+    <button type="button" onclick="switchMainTab('charts')" id="navBtn-charts" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">📊</span><span id="navTxtCharts">Графики</span></button>
+    <button type="button" onclick="switchMainTab('profile')" id="navBtn-profile" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">⚙️</span><span id="navTxtProfile">Профиль</span></button>
   </nav>
   <!-- МОДАЛЬНОЕ ОКНО: ДОБАВЛЕНИЕ ЕДЫ -->
   <div id="foodModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="glass-panel w-full max-w-md rounded-t-3xl sm:rounded-2xl p-4 space-y-3 max-h-[85vh] flex flex-col">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
-        <h3 id="modalFoodHeader" class="font-black text-sm">Add Food Item</h3>
+      <div class="flex justify-between items-center border-b border-slate-800 html-light:border-slate-200 pb-2.5">
+        <h3 id="modalFoodHeader" class="font-black text-sm">Добавить продукт</h3>
         <button type="button" onclick="closeFoodModal()" class="w-8 h-8 rounded-xl sub-card flex items-center justify-center font-bold text-slate-400">✕</button>
       </div>
       <div class="space-y-2.5 overflow-y-auto no-scrollbar pr-0.5">
         <div>
-          <label id="lblFoodName" class="block text-[11px] font-bold text-slate-400 mb-1">Dish Name / Product</label>
-          <input type="text" id="foodInputName" placeholder="e.g. Oatmeal with berries..." class="w-full sub-card rounded-xl px-3 py-2.5 text-xs font-bold outline-none text-slate-200">
+          <label id="lblFoodName" class="block text-[11px] font-bold text-slate-400 mb-1">Название блюда / продукта</label>
+          <input type="text" id="foodInputName" placeholder="например, Овсянка с ягодами..." class="w-full sub-card rounded-xl px-3 py-2.5 text-xs font-bold outline-none text-slate-200 html-light:text-slate-800">
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label id="lblFoodWeight" class="block text-[11px] font-bold text-slate-400 mb-1">Weight (g / ml)</label>
-            <input type="number" id="foodInputWeight" value="150" class="w-full sub-card rounded-xl px-3 py-2.5 text-xs font-black outline-none text-slate-200">
+            <label id="lblFoodWeight" class="block text-[11px] font-bold text-slate-400 mb-1">Вес (г / мл)</label>
+            <input type="number" id="foodInputWeight" value="150" class="w-full sub-card rounded-xl px-3 py-2.5 text-xs font-black outline-none text-slate-200 html-light:text-slate-800">
           </div>
           <div>
-            <label id="lblFoodKcal" class="block text-[11px] font-bold text-slate-400 mb-1">Calories (kcal)</label>
-            <input type="number" id="foodInputKcal" value="250" class="w-full sub-card rounded-xl px-3 py-2.5 text-xs font-black outline-none text-slate-200">
+            <label id="lblFoodKcal" class="block text-[11px] font-bold text-slate-400 mb-1">Калории (ккал)</label>
+            <input type="number" id="foodInputKcal" value="250" class="w-full sub-card rounded-xl px-3 py-2.5 text-xs font-black outline-none text-slate-200 html-light:text-slate-800">
           </div>
         </div>
         <div class="grid grid-cols-3 gap-2">
           <div>
-            <label class="block text-[10px] font-bold text-blue-400 mb-1">Proteins (g)</label>
-            <input type="number" id="foodInputProt" value="12" class="w-full sub-card rounded-xl px-2.5 py-2 text-xs font-black outline-none text-slate-200">
+            <label class="block text-[10px] font-bold text-blue-400 mb-1">Белки (г)</label>
+            <input type="number" id="foodInputProt" value="12" class="w-full sub-card rounded-xl px-2.5 py-2 text-xs font-black outline-none text-slate-200 html-light:text-slate-800">
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-amber-400 mb-1">Fats (g)</label>
-            <input type="number" id="foodInputFats" value="8" class="w-full sub-card rounded-xl px-2.5 py-2 text-xs font-black outline-none text-slate-200">
+            <label class="block text-[10px] font-bold text-amber-400 mb-1">Жиры (г)</label>
+            <input type="number" id="foodInputFats" value="8" class="w-full sub-card rounded-xl px-2.5 py-2 text-xs font-black outline-none text-slate-200 html-light:text-slate-800">
           </div>
           <div>
-            <label class="block text-[10px] font-bold text-emerald-400 mb-1">Carbs (g)</label>
-            <input type="number" id="foodInputCarbs" value="30" class="w-full sub-card rounded-xl px-2.5 py-2 text-xs font-black outline-none text-slate-200">
+            <label class="block text-[10px] font-bold text-emerald-400 mb-1">Углеводы (г)</label>
+            <input type="number" id="foodInputCarbs" value="30" class="w-full sub-card rounded-xl px-2.5 py-2 text-xs font-black outline-none text-slate-200 html-light:text-slate-800" oninput="autoCalcCU()">
           </div>
         </div>
         <div>
-          <label id="lblFoodCU" class="block text-[11px] font-bold text-rose-400 mb-1">Carb Units / Sugar (CU)</label>
-          <input type="number" id="foodInputCU" step="0.1" value="2.5" class="w-full sub-card rounded-xl px-3 py-2.5 text-xs font-black outline-none text-slate-200">
+          <label id="lblFoodCU" class="block text-[11px] font-bold text-rose-400 mb-1">Хлебные единицы (ХЕ)</label>
+          <input type="number" id="foodInputCU" step="0.1" value="2.5" class="w-full sub-card rounded-xl px-3 py-2.5 text-xs font-black outline-none text-slate-200 html-light:text-slate-800">
         </div>
         <div>
-          <label id="lblQuickPresets" class="block text-[11px] font-bold text-slate-400 mb-1">Popular Presets:</label>
+          <label id="lblQuickPresets" class="block text-[11px] font-bold text-slate-400 mb-1">Популярные пресеты:</label>
           <div id="quickPresetsContainer" class="grid grid-cols-2 gap-1.5 max-h-32 overflow-y-auto no-scrollbar"></div>
         </div>
       </div>
-      <button type="button" onclick="confirmAddFood()" id="btnSaveFood" class="w-full py-3 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs shadow-md mt-2">Add to Meal</button>
+      <button type="button" onclick="confirmAddFood()" id="btnSaveFood" class="w-full py-3 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs shadow-md mt-2">Добавить в прием пищи</button>
     </div>
   </div>
 
   <!-- МОДАЛЬНОЕ ОКНО: ВЫБОР АКТИВНОСТИ -->
   <div id="activityModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="glass-panel w-full max-w-md rounded-t-3xl sm:rounded-2xl p-4 space-y-3 max-h-[85vh] flex flex-col">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
-        <h3 id="modalActHeader" class="font-black text-sm">Select Physical Activity</h3>
+      <div class="flex justify-between items-center border-b border-slate-800 html-light:border-slate-200 pb-2.5">
+        <h3 id="modalActHeader" class="font-black text-sm">Выбрать физическую активность</h3>
         <button type="button" onclick="closeActivityModal()" class="w-8 h-8 rounded-xl sub-card flex items-center justify-center font-bold text-slate-400">✕</button>
       </div>
       <div id="activitiesListContainer" class="flex-1 overflow-y-auto no-scrollbar space-y-2"></div>
@@ -369,30 +378,30 @@
   <!-- МОДАЛЬНОЕ ОКНО: ИИ СКАНИРОВАНИЕ ФОТО (GEMINI API) -->
   <div id="aiModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
     <div class="glass-panel w-full max-w-md rounded-t-3xl sm:rounded-2xl p-4 space-y-3 max-h-[90vh] flex flex-col">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-2.5">
+      <div class="flex justify-between items-center border-b border-slate-800 html-light:border-slate-200 pb-2.5">
         <div class="flex items-center gap-2">
           <span class="text-xl">📸</span>
-          <h3 id="aiModalTitle" class="font-black text-sm text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">AI Gemini Food Scanner</h3>
+          <h3 id="aiModalTitle" class="font-black text-sm text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">ИИ Gemini Сканер Еды</h3>
         </div>
         <button type="button" onclick="closeAiModal()" class="w-8 h-8 rounded-xl sub-card flex items-center justify-center font-bold text-slate-400">✕</button>
       </div>
 
       <div class="space-y-3 overflow-y-auto no-scrollbar">
         <div class="sub-card p-3 rounded-2xl space-y-2">
-          <label id="lblAiKey" class="block text-[11px] font-bold text-slate-300">Gemini API Key (Google AI Studio):</label>
+          <label id="lblAiKey" class="block text-[11px] font-bold text-slate-300 html-light:text-slate-700">Gemini API Key (Google AI Studio):</label>
           <div class="flex gap-2">
-            <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="flex-1 sub-card rounded-xl px-3 py-2 text-xs font-mono outline-none text-slate-200">
+            <input type="password" id="geminiApiKeyInput" placeholder="AIzaSy..." class="flex-1 sub-card rounded-xl px-3 py-2 text-xs font-mono outline-none text-slate-200 html-light:text-slate-800">
             <button type="button" onclick="saveGeminiApiKey()" id="btnSaveKey" class="px-3 py-2 bg-indigo-600 active:scale-95 text-white font-black rounded-xl text-xs">Save</button>
           </div>
-          <p id="aiKeyHint" class="text-[10px] text-slate-400 leading-tight">Key is stored securely in your browser's localStorage.</p>
+          <p id="aiKeyHint" class="text-[10px] text-slate-400 leading-tight">Ключ сохраняется локально в вашем браузере.</p>
         </div>
 
         <div class="border-2 border-dashed border-slate-700 hover:border-indigo-500 transition rounded-2xl p-4 text-center cursor-pointer relative" onclick="document.getElementById('aiRealFileInput').click()">
           <input type="file" id="aiRealFileInput" accept="image/*" capture="environment" class="hidden" onchange="handleAiImageSelected(this)">
           <div id="aiUploadPrompt" class="space-y-1.5 py-3">
             <span class="text-3xl block">🍲</span>
-            <p id="aiUploadText" class="text-xs font-bold text-slate-300">Tap to take photo or upload image</p>
-            <p id="aiUploadSub" class="text-[10px] text-slate-500">Recognizes ingredients, weight and calories instantly</p>
+            <p id="aiUploadText" class="text-xs font-bold text-slate-300 html-light:text-slate-700">Нажмите для съемки или загрузки фото</p>
+            <p id="aiUploadSub" class="text-[10px] text-slate-500">Распознает блюдо, вес и калории за секунду</p>
           </div>
           <div id="aiImagePreviewContainer" class="hidden relative w-full h-40 rounded-xl overflow-hidden bg-black">
             <img id="aiImagePreviewTag" class="w-full h-full object-cover">
@@ -401,33 +410,35 @@
 
         <div id="aiLoadingIndicator" class="hidden py-4 text-center space-y-2">
           <div class="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p id="aiLoadingText" class="text-xs font-bold text-indigo-400">Gemini is analyzing your meal...</p>
+          <p id="aiLoadingText" class="text-xs font-bold text-indigo-400">Gemini анализирует ваше блюдо...</p>
         </div>
 
         <div id="aiResultBox" class="hidden sub-card p-3 rounded-2xl space-y-2.5">
-          <h4 id="aiResultHeader" class="text-xs font-black text-emerald-400">✨ Recognized Dish:</h4>
+          <h4 id="aiResultHeader" class="text-xs font-black text-emerald-400">✨ Распознанное блюдо:</h4>
           <div class="grid grid-cols-2 gap-2 text-xs">
-            <div class="sub-card p-2 rounded-xl"><span class="text-[10px] text-slate-400 block">Dish:</span><span id="aiResName" class="font-black">Omelette</span></div>
-            <div class="sub-card p-2 rounded-xl"><span class="text-[10px] text-slate-400 block">Weight:</span><span id="aiResWeight" class="font-black">200g</span></div>
-            <div class="sub-card p-2 rounded-xl"><span class="text-[10px] text-slate-400 block">Calories:</span><span id="aiResKcal" class="font-black text-blue-400">310 kcal</span></div>
-            <div class="sub-card p-2 rounded-xl"><span class="text-[10px] text-slate-400 block">Carb Units:</span><span id="aiResCU" class="font-black text-rose-400">0.4 CU</span></div>
+            <div class="sub-card p-2 rounded-xl"><span class="text-[10px] text-slate-400 block">Блюдо:</span><span id="aiResName" class="font-black">Омелет</span></div>
+            <div class="sub-card p-2 rounded-xl"><span class="text-[10px] text-slate-400 block">Вес:</span><span id="aiResWeight" class="font-black">200г</span></div>
+            <div class="sub-card p-2 rounded-xl"><span class="text-[10px] text-slate-400 block">Калории:</span><span id="aiResKcal" class="font-black text-blue-400">310 ккал</span></div>
+            <div class="sub-card p-2 rounded-xl"><span class="text-[10px] text-slate-400 block">Хлебные единицы:</span><span id="aiResCU" class="font-black text-rose-400">0.4 ХЕ</span></div>
           </div>
           <div class="grid grid-cols-3 gap-1.5 text-center text-[10px]">
-            <div class="sub-card p-1.5 rounded-lg"><span class="text-slate-400 block">Prot</span><span id="aiResProt" class="font-black text-blue-400">18g</span></div>
-            <div class="sub-card p-1.5 rounded-lg"><span class="text-slate-400 block">Fats</span><span id="aiResFats" class="font-black text-amber-400">22g</span></div>
-            <div class="sub-card p-1.5 rounded-lg"><span class="text-slate-400 block">Carbs</span><span id="aiResCarbs" class="font-black text-emerald-400">4g</span></div>
+            <div class="sub-card p-1.5 rounded-lg"><span class="text-slate-400 block">Белки</span><span id="aiResProt" class="font-black text-blue-400">18г</span></div>
+            <div class="sub-card p-1.5 rounded-lg"><span class="text-slate-400 block">Жиры</span><span id="aiResFats" class="font-black text-amber-400">22г</span></div>
+            <div class="sub-card p-1.5 rounded-lg"><span class="text-slate-400 block">Углеводы</span><span id="aiResCarbs" class="font-black text-emerald-400">4г</span></div>
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2 mt-2">
-        <button type="button" onclick="closeAiModal()" id="aiBtnCancel" class="py-3 sub-card font-black rounded-xl text-xs text-slate-300">Cancel</button>
-        <button type="button" onclick="confirmAiFoodResult()" id="aiBtnAdd" class="py-3 bg-gradient-to-r from-indigo-600 to-purple-600 active:scale-95 text-white font-black rounded-xl text-xs shadow-md disabled:opacity-50" disabled>Add to Diary</button>
+        <button type="button" onclick="closeAiModal()" id="aiBtnCancel" class="py-3 sub-card font-black rounded-xl text-xs text-slate-300 html-light:text-slate-700">Отмена</button>
+        <button type="button" onclick="confirmAiFoodResult()" id="aiBtnAdd" class="py-3 bg-gradient-to-r from-indigo-600 to-purple-600 active:scale-95 text-white font-black rounded-xl text-xs shadow-md disabled:opacity-50" disabled>В дневник</button>
       </div>
     </div>
   </div>
-  <script>
-    // МНОГОЯЗЫЧНЫЙ СЛОВАРЬ (RU / EN / NL)
+    <script>
+    // ==========================================
+    // ЧАСТЬ 5: СЛОВАРИ, ПРЕСЕТЫ И ПЛАНЫ ПИТАНИЯ
+    // ==========================================
     const i18n = {
       ru: {
         appTitle: "Калории Pro",
@@ -454,7 +465,7 @@
         classic: "Классический",
         vegan: "Веган / Пост",
         diabBoxTitle: "Диабетический стол №9 / Низкий ГИ",
-        diabBoxDesc: "Исключает быстрые углеводы. ХЕ (хлебные единицы) рассчитаны с учетом низкого гликемического индекса.",
+        diabBoxDesc: "Исключает быстрые углеводы. ХЕ рассчитаны с учетом низкого гликемического индекса.",
         weightTracker: "Трекер веса и ИМТ",
         weightSub: "Сравнение результатов по фото и весу",
         start: "Старт",
@@ -479,8 +490,9 @@
         female: "Женский",
         age: "Возраст",
         height: "Рост (см)",
-        goalWeight: "Целевой вес (kg)",
-        activityLvl: "Уровень физической активности",
+        currWeightProf: "Текущий вес (кг)",
+        goalWeight: "Целевой вес (кг)",
+        activityLvl: "Уровень физ. активности",
         act1: "Сидячий (1.2)",
         act2: "Лёгкая активность (1.375)",
         act3: "Умеренная нагрузка (1.55)",
@@ -558,6 +570,7 @@
         female: "Female",
         age: "Age",
         height: "Height (cm)",
+        currWeightProf: "Current Weight (kg)",
         goalWeight: "Goal Weight (kg)",
         activityLvl: "Physical Activity Level",
         act1: "Sedentary (1.2)",
@@ -637,6 +650,7 @@
         female: "Vrouw",
         age: "Leeftijd",
         height: "Lengte (cm)",
+        currWeightProf: "Huidig gewicht (kg)",
         goalWeight: "Doelgewicht (kg)",
         activityLvl: "Activiteitsniveau",
         act1: "Zittend (1.2)",
@@ -668,7 +682,7 @@
       }
     };
 
-    // БАЗА ПРЕСЕТОВ ПРОДУКТОВ
+    // БАЗА ПРЕСЕТОВ ПРОДУКТОВ (ИСПРАВЛЕННЫЙ ЛОСОСЬ БЕЗ УГЛЕВОДОВ)
     const foodPresets = [
       { name: "Омлет с сыром и томатами", weight: 220, kcal: 310, p: 20, f: 24, c: 5, cu: 0.4 },
       { name: "Куриная грудка гриль", weight: 180, kcal: 230, p: 38, f: 5, c: 0, cu: 0.0 },
@@ -690,7 +704,7 @@
       { id: 'hiit', name: 'HIIT / Кардио (30 мин)', kcal: 380, icon: '🔥' }
     ];
 
-    // ГОТОВЫЕ ПЛАНЫ ПИТАНИЯ ДЛЯ ВКЛАДКИ РАЦИОН
+    // ГОТОВЫЕ ПЛАНЫ ПИТАНИЯ
     const dietPlansData = {
       diabetic: [
         { title: "Завтрак №9: Омлет с зеленью и томатами", desc: "Белки яиц, шпинат, томаты. Низкий ГИ.", kcal: 280, cu: 0.3, p: 22, f: 18, c: 4 },
@@ -711,7 +725,7 @@
   </script>
   <script>
     // ==========================================
-    // ЧАСТЬ 6.1: ЯДРО, ЛОКАЛИЗАЦИЯ БЛЮД И ПРОФИЛЬ
+    // ЧАСТЬ 6: ОСНОВНОЙ ДВИЖОК ПРИЛОЖЕНИЯ
     // ==========================================
     let currentLang = 'ru';
     let currentTheme = 'dark';
@@ -757,7 +771,7 @@
     let selectedAiImageBase64 = null;
     let geminiApiKey = localStorage.getItem('gemini_api_key') || '';
 
-    // СЛОВАРЬ ПЕРЕВОДА ДИНАМИЧЕСКИХ БЛЮД, АКТИВНОСТЕЙ И РАЦИОНОВ
+    // СЛОВАРЬ ПЕРЕВОДА ДИНАМИЧЕСКИХ БЛЮД И АКТИВНОСТЕЙ
     const dynamicTranslations = {
       "Омлет с сыром, томатами и зеленью": {
         ru: "Омлет с сыром, томатами и зеленью",
@@ -940,24 +954,8 @@
       return text;
     }
 
-    // ИДЕАЛЬНАЯ КАЛИБРОВКА ОТСТУПОВ ЭКРАНА IPHONE 17 AIR
-    function applyViewportFixes() {
-      const wrapper = document.querySelector('.app-wrapper');
-      if (wrapper) {
-        wrapper.style.maxHeight = 'none';
-        wrapper.style.height = '100dvh';
-        wrapper.style.paddingTop = 'max(env(safe-area-inset-top, 10px), 10px)';
-        wrapper.style.paddingBottom = '0px';
-      }
-      const nav = document.querySelector('nav');
-      if (nav) {
-        nav.style.paddingBottom = 'max(env(safe-area-inset-bottom, 10px), 10px)';
-        nav.style.paddingTop = '8px';
-      }
-    }
-
+    // ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
     window.addEventListener('DOMContentLoaded', () => {
-      applyViewportFixes();
       loadStateFromLocalStorage();
       const keyInput = document.getElementById('geminiApiKeyInput');
       if (keyInput) keyInput.value = geminiApiKey;
@@ -974,6 +972,9 @@
     function loadStateFromLocalStorage() {
       const savedLang = localStorage.getItem('calories_pro_lang');
       if (savedLang && i18n[savedLang]) currentLang = savedLang;
+
+      const savedTheme = localStorage.getItem('calories_pro_theme');
+      if (savedTheme) currentTheme = savedTheme;
 
       const savedGoal = localStorage.getItem('calories_pro_goal');
       if (savedGoal) currentGoalMode = savedGoal;
@@ -993,6 +994,7 @@
 
     function saveStateToLocalStorage() {
       localStorage.setItem('calories_pro_lang', currentLang);
+      localStorage.setItem('calories_pro_theme', currentTheme);
       localStorage.setItem('calories_pro_goal', currentGoalMode);
       localStorage.setItem('calories_pro_profile', JSON.stringify(userProfile));
       localStorage.setItem('calories_pro_today', JSON.stringify(todayData));
@@ -1002,16 +1004,28 @@
       const gEl = document.getElementById('profGender');
       const aEl = document.getElementById('profAge');
       const hEl = document.getElementById('profHeight');
+      const cwEl = document.getElementById('profCurrWeight');
       const gwEl = document.getElementById('profGoalWeight');
       const actEl = document.getElementById('profActivity');
       if (gEl) gEl.value = userProfile.gender || 'male';
       if (aEl) aEl.value = userProfile.age || 41;
       if (hEl) hEl.value = userProfile.height || 178;
+      if (cwEl) cwEl.value = userProfile.currentWeight || 78.5;
       if (gwEl) gwEl.value = userProfile.goalWeight || 74;
       if (actEl) actEl.value = String(userProfile.activity || 1.375);
     }
 
-    // ПЕРЕКЛЮЧЕНИЕ ЦЕЛИ (ПОХУДЕНИЕ / ПОДДЕРЖАНИЕ / НАБОР)
+    // АВТОМАТИЧЕСКИЙ РАСЧЕТ ХЕ ПО УГЛЕВОДАМ (ХЕ = Углеводы / 12)
+    function autoCalcCU() {
+      const carbsInp = document.getElementById('foodInputCarbs');
+      const cuInp = document.getElementById('foodInputCU');
+      if (carbsInp && cuInp) {
+        const cVal = parseFloat(carbsInp.value) || 0;
+        cuInp.value = (cVal / 12).toFixed(1);
+      }
+    }
+
+    // ПЕРЕКЛЮЧЕНИЕ ЦЕЛИ
     function cycleGoalQuick() {
       if (currentGoalMode === 'loss') currentGoalMode = 'maint';
       else if (currentGoalMode === 'maint') currentGoalMode = 'gain';
@@ -1039,7 +1053,7 @@
       }
     }
 
-    // ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА (RU -> EN -> NL)
+    // ПЕРЕКЛЮЧЕНИЕ ЯЗЫКА
     function cycleAppLanguage() {
       if (currentLang === 'ru') currentLang = 'en';
       else if (currentLang === 'en') currentLang = 'nl';
@@ -1106,6 +1120,7 @@
       document.getElementById('optFemale').innerText = t.female;
       document.getElementById('lblAge').innerText = t.age;
       document.getElementById('lblHeight').innerText = t.height;
+      document.getElementById('lblCurrWeightProf').innerText = t.currWeightProf;
       document.getElementById('lblGoalWeight').innerText = t.goalWeight;
       document.getElementById('lblActivityLvl').innerText = t.activityLvl;
       document.getElementById('act1').innerText = t.act1;
@@ -1140,15 +1155,19 @@
     // ТЕМА И НАВИГАЦИЯ
     function toggleThemeMode() {
       currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      saveStateToLocalStorage();
       applyTheme(currentTheme);
     }
+
     function applyTheme(theme) {
       const htmlEl = document.documentElement;
       const themeIcon = document.getElementById('themeIcon');
       if (theme === 'light') {
         htmlEl.classList.remove('dark');
+        htmlEl.classList.add('light');
         themeIcon.innerText = '☀️';
       } else {
+        htmlEl.classList.remove('light');
         htmlEl.classList.add('dark');
         themeIcon.innerText = '🌙';
       }
@@ -1192,32 +1211,32 @@
       userProfile.gender = document.getElementById('profGender').value;
       userProfile.age = parseInt(document.getElementById('profAge').value) || 41;
       userProfile.height = parseInt(document.getElementById('profHeight').value) || 178;
+      userProfile.currentWeight = parseFloat(document.getElementById('profCurrWeight').value) || 78.5;
       userProfile.goalWeight = parseFloat(document.getElementById('profGoalWeight').value) || 74.0;
       userProfile.activity = parseFloat(document.getElementById('profActivity').value) || 1.375;
 
       calculateMifflinNorm();
       saveStateToLocalStorage();
       recalcNormAndUI();
+      renderBodyUI();
       const msg = currentLang === 'ru' ? "Норма КБЖУ успешно пересчитана!" : (currentLang === 'nl' ? "Calorienorm berekend!" : "Calorie norm recalculated!");
       alert(msg);
     }
 
     function recalcNormAndUI() {
       document.getElementById('normKcal').innerText = userProfile.normKcal;
-      document.getElementById('valCurrW').innerText = userProfile.currentWeight.toFixed(1) + ' kg';
-      document.getElementById('valGoalW').innerText = userProfile.goalWeight.toFixed(1) + ' kg';
+      document.getElementById('valCurrW').innerText = userProfile.currentWeight.toFixed(1) + ' кг';
+      document.getElementById('valGoalW').innerText = userProfile.goalWeight.toFixed(1) + ' кг';
       document.getElementById('inpStartWeight').value = userProfile.startWeight.toFixed(1);
       
       let heightM = userProfile.height / 100;
       let bmi = userProfile.currentWeight / (heightM * heightM);
-      document.getElementById('bmiBadge').innerText = `BMI: ${bmi.toFixed(1)}`;
+      const bmiLabel = currentLang === 'ru' ? 'ИМТ' : 'BMI';
+      document.getElementById('bmiBadge').innerText = `${bmiLabel}: ${bmi.toFixed(1)}`;
       renderDiaryUI();
     }
-  </script>
-  <script>
-    // ==========================================
-    // ЧАСТЬ 6.2: РЕНДЕРИНГ ДНЕВНИКА, ВОДА, АКТИВНОСТЬ И ЕДА
-    // ==========================================
+
+    // РЕНДЕРИНГ ДНЕВНИКА
     function renderDiaryUI() {
       const t = i18n[currentLang];
       let currentMeals = todayData.meals[activeMealSubTab] || [];
@@ -1240,7 +1259,6 @@
         mealSpecificCU += (Number(item.cu) || 0);
       });
 
-      // Точная математика калорий: Норма + Активность - Съедено = Остаток
       const normVal = Number(userProfile.normKcal) || 2000;
       const burnedVal = Number(todayData.burnedActivity) || 0;
       const effectiveTarget = normVal + burnedVal;
@@ -1253,25 +1271,18 @@
       const unitKcalTxt = currentLang === 'ru' ? 'ккал' : 'kcal';
       document.getElementById('unitKcal').innerText = unitKcalTxt;
 
-      if (burnedVal > 0) {
-        remainBadge.innerText = `${t.remaining}: ${remain} ${unitKcalTxt} (${normVal} + ${burnedVal} - ${totalEatenKcal})`;
-      } else {
-        remainBadge.innerText = `${t.remaining}: ${remain} ${unitKcalTxt}`;
-      }
-
+      remainBadge.innerText = `${t.remaining}: ${remain} ${unitKcalTxt}`;
       if (remain < 0) {
         remainBadge.className = "text-[11px] font-extrabold px-2.5 py-0.5 rounded-md bg-rose-500/15 text-rose-400 inline-block mt-1";
       } else {
         remainBadge.className = "text-[11px] font-extrabold px-2.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 inline-block mt-1";
       }
 
-      // Прогресс кольца калорий
       let kcalPercent = Math.min(Math.round((totalEatenKcal / Math.max(1, effectiveTarget)) * 100), 100);
       document.getElementById('kcalPercentText').innerText = kcalPercent + '%';
       let ringKcalOffset = 163.36 - (163.36 * kcalPercent) / 100;
       document.getElementById('ringKcal').style.strokeDashoffset = ringKcalOffset;
 
-      // Динамические цели БЖУ от нормы калорий
       const targetProt = Math.round((normVal * 0.26) / 4);
       const targetFats = Math.round((normVal * 0.29) / 9);
       const targetCarbs = Math.round((normVal * 0.45) / 4);
@@ -1296,7 +1307,6 @@
       document.getElementById('valXE').innerText = `${totalCU.toFixed(1)} ${cuUnit}`;
       document.getElementById('waterCountText').innerText = `${todayData.eatenWater} / ${todayData.targetWater} ml`;
 
-      // Отображение активности с кнопкой быстрого сброса
       const burnedEl = document.getElementById('burnedKcalText');
       if (burnedVal > 0) {
         burnedEl.innerHTML = `+${burnedVal} ${unitKcalTxt} <button type="button" onclick="resetActivityBurned()" class="ml-1 text-[10px] text-rose-400 underline font-extrabold">↺</button>`;
@@ -1304,13 +1314,11 @@
         burnedEl.innerText = `+0 ${unitKcalTxt}`;
       }
 
-      // Заголовок текущего приема пищи с локализацией
       const mealNamesMap = { breakfast: t.breakfast, lunch: t.lunch, dinner: t.dinner, snack: t.snack };
       const mealEmojisMap = { breakfast: '🌅', lunch: '☀️', dinner: '🌙', snack: '🍎' };
       document.getElementById('currentMealHeader').innerText = `${mealEmojisMap[activeMealSubTab]} ${mealNamesMap[activeMealSubTab]}`;
       document.getElementById('currentMealKcal').innerText = `${mealSpecificKcal} ${unitKcalTxt} • ${mealSpecificCU.toFixed(1)} ${cuUnit}`;
 
-      // Отрисовка списка блюд с автоматическим переводом названий
       const listContainer = document.getElementById('mealItemsList');
       listContainer.innerHTML = '';
       if (currentMeals.length === 0) {
@@ -1329,7 +1337,7 @@
           div.className = "sub-card p-2.5 rounded-xl flex items-center justify-between text-xs";
           div.innerHTML = `
             <div class="pr-2">
-              <p class="font-black text-slate-100 text-[13px] leading-snug">${localizedName}</p>
+              <p class="font-black text-slate-100 html-light:text-slate-800 text-[13px] leading-snug">${localizedName}</p>
               <p class="text-[11px] text-slate-400 mt-0.5">${item.weight}${gUnit} • ${pLbl}:${item.p}${gUnit} • ${fLbl}:${item.f}${gUnit} • ${cLbl}:${item.c}${gUnit} • <span class="text-rose-400 font-bold">${item.cu} ${cuUnit}</span></p>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -1342,7 +1350,7 @@
       }
     }
 
-    // УПРАВЛЕНИЕ ВОДОЙ И АКТИВНОСТЬЮ
+    // ВОДА И АКТИВНОСТЬ
     function addWater(amount) {
       todayData.eatenWater = Math.max(0, (Number(todayData.eatenWater) || 0) + amount);
       saveStateToLocalStorage();
@@ -1368,7 +1376,7 @@
         btn.innerHTML = `
           <div class="flex items-center gap-2.5">
             <span class="text-xl">${act.icon}</span>
-            <span class="text-xs font-black text-slate-200">${localizedActName}</span>
+            <span class="text-xs font-black text-slate-200 html-light:text-slate-800">${localizedActName}</span>
           </div>
           <span class="text-xs font-black text-orange-400">+${act.kcal} ${unitKcalTxt}</span>
         `;
@@ -1387,7 +1395,7 @@
       document.getElementById('activityModal').classList.add('hidden');
     }
 
-    // МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ ЕДЫ И ПРЕСЕТЫ
+    // ДОБАВЛЕНИЕ ЕДЫ
     function openFoodModal() {
       const presetsContainer = document.getElementById('quickPresetsContainer');
       presetsContainer.innerHTML = '';
@@ -1399,7 +1407,7 @@
         let pBtn = document.createElement('button');
         pBtn.type = "button";
         pBtn.className = "sub-card p-2 rounded-xl text-left text-xs active:scale-95 transition";
-        pBtn.innerHTML = `<p class="font-black text-slate-200 truncate">${localizedPresetName}</p><p class="text-[10px] text-blue-400">${preset.kcal} ${unitKcalTxt} • ${preset.cu} ${cuUnit}</p>`;
+        pBtn.innerHTML = `<p class="font-black text-slate-200 html-light:text-slate-800 truncate">${localizedPresetName}</p><p class="text-[10px] text-blue-400">${preset.kcal} ${unitKcalTxt} • ${preset.cu} ${cuUnit}</p>`;
         pBtn.onclick = () => {
           document.getElementById('foodInputName').value = localizedPresetName;
           document.getElementById('foodInputWeight').value = preset.weight;
@@ -1452,11 +1460,8 @@
         renderDiaryUI();
       }
     }
-  </script>
-  <script>
-    // ==========================================
-    // ЧАСТЬ 6.3: РАЦИОН, ФОРМА, ГРАФИКИ И ИИ GEMINI
-    // ==========================================
+
+    // ВКЛАДКА РАЦИОН
     function switchDietCategory(cat) {
       activeDietCategory = cat;
       ['diabetic', 'standard', 'veg'].forEach(c => {
@@ -1495,7 +1500,7 @@
         div.className = "sub-card p-3 rounded-2xl flex items-center justify-between text-xs";
         div.innerHTML = `
           <div class="pr-2">
-            <p class="font-black text-slate-100 text-[13px] leading-snug">${locTitle}</p>
+            <p class="font-black text-slate-100 html-light:text-slate-800 text-[13px] leading-snug">${locTitle}</p>
             <p class="text-[11px] text-slate-400 mt-0.5 leading-tight">${locDesc}</p>
             <p class="text-[11px] text-rose-400 font-bold mt-1">${pLbl}:${plan.p}${gUnit} • ${fLbl}:${plan.f}${gUnit} • ${cLbl}:${plan.c}${gUnit} • ${plan.cu} ${cuUnit}</p>
           </div>
@@ -1528,7 +1533,7 @@
       alert(msg);
     }
 
-    // ВКЛАДКА ФОРМА И ТЕЛО
+    // ВКЛАДКА ФОРМА И СЖАТИЕ ФОТО (CANVAS COMPRESSOR)
     function updateStartWeight(val) {
       userProfile.startWeight = parseFloat(val) || 82.0;
       saveStateToLocalStorage();
@@ -1567,9 +1572,29 @@
       if (inputElement.files && inputElement.files[0]) {
         let reader = new FileReader();
         reader.onload = function(e) {
-          todayData.bodyPhotos.push({ date: new Date().toISOString().split('T')[0], url: e.target.result });
-          saveStateToLocalStorage();
-          renderBodyUI();
+          let img = new Image();
+          img.onload = function() {
+            let canvas = document.createElement('canvas');
+            let MAX_WIDTH = 600;
+            let MAX_HEIGHT = 600;
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+            } else {
+              if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            let compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+
+            todayData.bodyPhotos.push({ date: new Date().toISOString().split('T')[0], url: compressedBase64 });
+            saveStateToLocalStorage();
+            renderBodyUI();
+          };
+          img.src = e.target.result;
         };
         reader.readAsDataURL(inputElement.files[0]);
       }
@@ -1585,7 +1610,7 @@
           [...todayData.weightHistory].reverse().forEach(item => {
             let row = document.createElement('div');
             row.className = "sub-card px-3 py-1.5 rounded-xl flex justify-between items-center";
-            row.innerHTML = `<span class="text-slate-400 font-bold">${item.date}</span><span class="font-black text-blue-400">${item.weight} kg</span>`;
+            row.innerHTML = `<span class="text-slate-400 font-bold">${item.date}</span><span class="font-black text-blue-400">${item.weight} кг</span>`;
             histContainer.appendChild(row);
           });
         }
@@ -1670,10 +1695,10 @@
       }
       const diff = (userProfile.currentWeight - userProfile.startWeight).toFixed(1);
       const diffEl = document.getElementById('weightDiffBadge');
-      if (diffEl) diffEl.innerText = `${diff > 0 ? '+' : ''}${diff} kg`;
+      if (diffEl) diffEl.innerText = `${diff > 0 ? '+' : ''}${diff} кг`;
     }
 
-    // ИИ СКАНИРОВАНИЕ ЕДЫ ПО ФОТО (GEMINI API)
+    // ИИ СКАНИРОВАНИЕ ЕДЫ (GEMINI API)
     function saveGeminiApiKey() {
       geminiApiKey = document.getElementById('geminiApiKeyInput').value.trim();
       localStorage.setItem('gemini_api_key', geminiApiKey);
@@ -1699,11 +1724,30 @@
       if (input.files && input.files[0]) {
         let reader = new FileReader();
         reader.onload = function(e) {
-          selectedAiImageBase64 = e.target.result;
-          document.getElementById('aiImagePreviewTag').src = selectedAiImageBase64;
-          document.getElementById('aiUploadPrompt').classList.add('hidden');
-          document.getElementById('aiImagePreviewContainer').classList.remove('hidden');
-          analyzeImageWithGemini(selectedAiImageBase64);
+          let img = new Image();
+          img.onload = function() {
+            let canvas = document.createElement('canvas');
+            let MAX_WIDTH = 600;
+            let MAX_HEIGHT = 600;
+            let width = img.width;
+            let height = img.height;
+            if (width > height) {
+              if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+            } else {
+              if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+            }
+            canvas.width = width;
+            canvas.height = height;
+            let ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            selectedAiImageBase64 = canvas.toDataURL('image/jpeg', 0.8);
+
+            document.getElementById('aiImagePreviewTag').src = selectedAiImageBase64;
+            document.getElementById('aiUploadPrompt').classList.add('hidden');
+            document.getElementById('aiImagePreviewContainer').classList.remove('hidden');
+            analyzeImageWithGemini(selectedAiImageBase64);
+          };
+          img.src = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
       }
