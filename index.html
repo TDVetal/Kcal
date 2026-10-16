@@ -41,7 +41,7 @@ label{display:block;font-size:11px;font-weight:700;color:var(--mu);margin:6px 0 
 <div id="app"><header id="hd"></header><main id="mn"></main><nav id="nv"></nav></div><div id="md"></div>
 <script>
 const $=s=>document.querySelector(s),M=["breakfast","lunch","dinner","snacks"],KEY="dietapro_v6";
-const API="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+const API="https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent"
 const T={ration:["Рацион","Ration","Voeding"],rnormal:["🍽️ Обычное","🍽️ Standard","🍽️ Normaal"],rveg:["🌱 Вегет.","🌱 Veggie","🌱 Vegetarisch"],rdiab:["🩸 Диабет.","🩸 Diabetic","🩸 Diabetisch"],
 rdnormal:["Баланс белков, жиров и углеводов для снижения веса или поддержания формы.","Balanced protein, fats and carbs for fat loss or maintenance.","Evenwicht van eiwitten, vetten en koolhydraten voor afvallen of balans."],
 rdveg:["Растительное меню: тофу, чечевица, киноа, много клетчатки.","Plant-based menu: tofu, lentils, quinoa, lots of fiber.","Plantaardig menu: tofu, linzen, quinoa, veel vezels."],
@@ -146,7 +146,7 @@ function aiModal(){ai=null;openM(`<div class="row"><b>${t("ai")}</b><button clas
 <label>${t("photo")}</label><input type="file" accept="image/*" onchange="scan(this)"><div id="al" class="hide" style="text-align:center;color:var(--ac);font-weight:700">${t("scan")}</div>
 <div id="ar" class="hide card" style="background:var(--ca)"><b id="an" style="color:var(--ok)"></b><div id="am" class="mu" style="margin:4px 0"></div><label>${t("portion")}</label><input id="ag" type="number" inputmode="decimal" oninput="showAi(Math.max(1,parseFloat(this.value)||1))"></div>
 <div class="grid g2"><button class="btn gh" onclick="closeM()">${t("cancel")}</button><button id="ab" class="btn pu hide" onclick="aiAdd()">${t("addD")}</button></div>`)}
-async function callG(key,b64,think){const gc={temperature:.2,maxOutputTokens:1024,responseMimeType:"application/json"};if(think)gc.thinkingConfig={thinkingBudget:0};
+async function callG(key,b64,think){const gc={temperature:.2,maxOutputTokens:4096,responseMimeType:"application/json"};if(think)gc.thinkingConfig={thinkingBudget:0};
 const L={ru:"Russian",en:"English",nl:"Dutch"}[A.lang];
 const pr=`Analyze this food photo. Return JSON: {"name": dish name in ${L}, "weight_g": number, "calories": number, "proteins": number, "fats": number, "carbs": number}. Values are for the whole portion shown. If there is no food, return {"error":"no_food"}.`;
 return fetch(API,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:pr},{inline_data:{mime_type:"image/jpeg",data:b64}}]}],generationConfig:gc})})}
