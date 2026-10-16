@@ -1753,7 +1753,7 @@
       }
     }
 
-        async function analyzeImageWithGemini(base64Data) {
+     async function analyzeImageWithGemini(base64Data) {
       if (!geminiApiKey) {
         const keyMsg = currentLang === 'ru'
           ? "Введите ваш Gemini API Key в поле выше и нажмите Save!"
@@ -1768,20 +1768,26 @@
       let langInstruction = currentLang === 'ru' ? 'Russian' : (currentLang === 'nl' ? 'Dutch' : 'English');
       let promptText = `Analyze this food image. Return STRICT JSON with keys: name (string in ${langInstruction}), weight_g (number), calories (number), proteins (number), fats (number), carbs (number), carb_units (number). Raw JSON only, no markdown.`;
 
-      const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
+      const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiApiKey}`;
 
       try {
         let response = await fetch(apiEndpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            contents: [{
-              parts: [
-                { text: promptText },
-                { inline_data: { mime_type: "image/jpeg", data: base64ImageBytes } }
-              ]
-            }]
-          })
+                      contents: [{
+            parts: [
+                            { text: promptText },
+              { inline_data: { 
+                  mime_type: "image/jpeg", 
+                  data: base64ImageBytes 
+                } 
+              }
+
+            ]
+          }]
+
+            
         });
 
         let data = await response.json();
@@ -1810,7 +1816,6 @@
         alert("Ошибка соединения с Gemini API: " + err.message);
       }
     }
-
 
     function confirmAiFoodResult() {
       if (!window.tempAiParsedFood) return;
