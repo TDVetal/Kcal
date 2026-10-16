@@ -1289,54 +1289,44 @@
     const cancelBtnText = currentLang === 'ru' ? "Отмена" : "Cancel";
     const saveBtnText = currentLang === 'ru' ? "Сохранить в дневник" : "Save to diary";
 
-    const modalHtml = `
-      <div class="modal" id="manualAddModal" role="dialog" aria-modal="true">
-        <div class="modal-content">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
-            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-color);">${modalTitleText}</h3>
-            <button onclick="closeManualModal()" class="secondary" style="padding: 6px 10px; font-size: 12px;">✕</button>
-          </div>
-          
-          <label>${nameLabelText}</label>
-          <input type="text" id="manName" placeholder="${namePlaceholderText}">
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div>
-              <label>${weightLabelText}</label>
-              <input type="number" id="manWeight" value="200" min="1">
-            </div>
-            <div>
-              <label>${kcalLabelText}</label>
-              <input type="number" id="manKcal" value="250" min="0">
-            </div>
-          </div>
+    function openManualAddModal() {
+    const tTitle = currentLang === 'ru' ? "Добавить продукт вручную" : "Add food manually";
+    const tName = currentLang === 'ru' ? "Название блюда или продукта" : "Dish or product name";
+    const tWeight = currentLang === 'ru' ? "Вес (граммы)" : "Weight (grams)";
+    const tKcal = currentLang === 'ru' ? "Калории (ккал)" : "Calories (kcal)";
+    const tP = currentLang === 'ru' ? "Белки (г)" : "Proteins (g)";
+    const tF = currentLang === 'ru' ? "Жиры (г)" : "Fats (g)";
+    const tC = currentLang === 'ru' ? "Углеводы (г)" : "Carbs (g)";
+    const tCu = currentLang === 'ru' ? "Хлебные единицы (ХЕ)" : "Carb Units (CU)";
+    const tCancel = currentLang === 'ru' ? "Отмена" : "Cancel";
+    const tSave = currentLang === 'ru' ? "Сохранить в дневник" : "Save to diary";
 
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
-            <div>
-              <label style="font-size: 10px;">${pLabelText}</label>
-              <input type="number" id="manP" value="10" step="0.1" min="0">
-            </div>
-            <div>
-              <label style="font-size: 10px;">${fLabelText}</label>
-              <input type="number" id="manF" value="5" step="0.1" min="0">
-            </div>
-            <div>
-              <label style="font-size: 10px;">${cLabelText}</label>
-              <input type="number" id="manC" value="30" step="0.1" min="0">
-            </div>
-            <div>
-              <label style="font-size: 10px;">${cuLabelText}</label>
-              <input type="number" id="manCU" value="2.5" step="0.1" min="0">
-            </div>
-          </div>
+    const modalHtml = '<div class="modal" id="manualAddModal" role="dialog" aria-modal="true">' +
+      '<div class="modal-content">' +
+      '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">' +
+      '<h3 style="font-size: 18px; font-weight: 700; color: var(--text-color);">' + tTitle + '</h3>' +
+      '<button onclick="closeManualModal()" class="secondary" style="padding: 6px 10px; font-size: 12px;">✕</button>' +
+      '</div>' +
+      '<label>' + tName + '</label>' +
+      '<input type="text" id="manName" placeholder="Например: Овсяная каша">' +
+      '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">' +
+      '<div><label>' + tWeight + '</label><input type="number" id="manWeight" value="200" min="1"></div>' +
+      '<div><label>' + tKcal + '</label><input type="number" id="manKcal" value="250" min="0"></div>' +
+      '</div>' +
+      '<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">' +
+      '<div><label style="font-size: 10px;">' + tP + '</label><input type="number" id="manP" value="10" step="0.1" min="0"></div>' +
+      '<div><label style="font-size: 10px;">' + tF + '</label><input type="number" id="manF" value="5" step="0.1" min="0"></div>' +
+      '<div><label style="font-size: 10px;">' + tC + '</label><input type="number" id="manC" value="30" step="0.1" min="0"></div>' +
+      '<div><label style="font-size: 10px;">' + tCu + '</label><input type="number" id="manCU" value="2.5" step="0.1" min="0"></div>' +
+      '</div>' +
+      '<div style="display: flex; gap: 12px; margin-top: 20px;">' +
+      '<button onclick="closeManualModal()" class="secondary" style="flex: 1;">' + tCancel + '</button>' +
+      '<button onclick="saveManualFoodItem()" style="flex: 1; background: var(--success);">' + tSave + '</button>' +
+      '</div></div></div>';
 
-          <div style="display: flex; gap: 12px; margin-top: 20px;">
-            <button onclick="closeManualModal()" class="secondary" style="flex: 1;">${cancelBtnText}</button>
-            <button onclick="saveManualFoodItem()" style="flex: 1; background: var(--success);">${saveBtnText}</button>
-          </div>
-        </div>
-      </div>
-    `;
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+  }
+
     document.body.insertAdjacentHTML('beforeend', modalHtml);
   }
 
