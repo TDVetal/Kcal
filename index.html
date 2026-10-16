@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Calories Pro - Professional Enterprise Edition</title>
+  <title>Calories Pro - Enterprise Professional Edition</title>
   <style>
     :root {
       --bg-color: #030712;
@@ -54,16 +54,9 @@
       overflow-x: hidden;
     }
 
-    .hidden {
-      display: none !important;
-    }
-
-    .container {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
+    .hidden { display: none !important; }
+    .container { max-width: 680px; margin: 0 auto; padding: 20px; }
+    
     .card {
       background-color: var(--card-bg);
       border-radius: var(--radius-md);
@@ -74,444 +67,146 @@
       transition: var(--transition);
     }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .card-title { font-size: 20px; font-weight: 700; letter-spacing: -0.025em; color: var(--text-color); }
+    .card-subtitle { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
 
-    .card-title {
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      color: var(--text-color);
-    }
-
-    .card-subtitle {
-      color: var(--text-muted);
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    /* Элементы управления, инпуты и кнопки */
     button {
-      cursor: pointer;
-      border: none;
-      border-radius: var(--radius-sm);
-      padding: 12px 20px;
-      font-weight: 600;
-      font-size: 14px;
-      background: var(--accent);
-      color: white;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      cursor: pointer; border: none; border-radius: var(--radius-sm);
+      padding: 12px 20px; font-weight: 600; font-size: 14px;
+      background: var(--accent); color: white; transition: var(--transition);
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
-
-    button:active {
-      transform: scale(0.97);
-    }
-
-    button:hover {
-      background: var(--accent-hover);
-      box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
-    }
-
-    button.secondary {
-      background: var(--card-bg-alt);
-      color: var(--text-color);
-      border: 1px solid var(--card-border);
-      box-shadow: none;
-    }
-
-    button.secondary:hover {
-      background: var(--card-border);
-    }
-
-    button.danger {
-      background: var(--danger);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    }
-
-    button.danger:hover {
-      background: #dc2626;
-    }
+    button:active { transform: scale(0.97); }
+    button:hover { background: var(--accent-hover); box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4); }
+    button.secondary { background: var(--card-bg-alt); color: var(--text-color); border: 1px solid var(--card-border); box-shadow: none; }
+    button.secondary:hover { background: var(--card-border); }
+    button.danger { background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
+    button.danger:hover { background: #dc2626; }
 
     input, select, textarea {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--card-border);
-      background: var(--card-bg-alt);
-      color: var(--text-color);
-      margin-top: 6px;
-      margin-bottom: 16px;
-      font-size: 15px;
+      width: 100%; padding: 14px 16px; border-radius: var(--radius-sm);
+      border: 1px solid var(--card-border); background: var(--card-bg-alt);
+      color: var(--text-color); margin-top: 6px; margin-bottom: 16px; font-size: 15px;
       transition: var(--transition);
     }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+    label { font-size: 13px; font-weight: 500; color: var(--text-muted); display: block; margin-bottom: 4px; }
 
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-light);
-    }
-
-    label {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-muted);
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    /* Навигационная панель PWA */
     .nav-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-top: 1px solid var(--card-border);
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0;
-      z-index: 1000;
-      box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.3);
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border); display: flex; justify-content: space-around;
+      padding: 12px 0; z-index: 1000; box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.3);
     }
-
     .nav-item {
-      background: none;
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 500;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      cursor: pointer;
-      border: none;
-      padding: 6px 14px;
-      border-radius: var(--radius-sm);
-      transition: var(--transition);
-      box-shadow: none;
+      background: none; color: var(--text-muted); font-size: 11px; font-weight: 500;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      cursor: pointer; border: none; padding: 6px 14px; border-radius: var(--radius-sm);
+      transition: var(--transition); box-shadow: none;
     }
+    .nav-item.active { color: var(--accent); background: var(--accent-light); }
+    .nav-item span.icon { font-size: 22px; }
 
-    .nav-item.active {
-      color: var(--accent);
-      background: var(--accent-light);
-    }
+    .macro-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+    .macro-card { background: var(--card-bg-alt); padding: 14px 8px; border-radius: var(--radius-sm); text-align: center; border: 1px solid var(--card-border); }
+    .macro-card .title { color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; }
+    .macro-card .val { font-size: 15px; font-weight: 700; margin-top: 6px; color: var(--text-color); }
 
-    .nav-item span.icon {
-      font-size: 22px;
-    }
+    .chart-container { position: relative; width: 100%; margin-top: 16px; background: var(--card-bg-alt); border-radius: var(--radius-sm); border: 1px solid var(--card-border); padding: 12px; }
+    canvas { width: 100% !important; height: 220px !important; border-radius: 8px; }
 
-    /* Макросы и сетка прогресса */
-    .macro-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .macro-card {
-      background: var(--card-bg-alt);
-      padding: 14px 8px;
-      border-radius: var(--radius-sm);
-      text-align: center;
-      border: 1px solid var(--card-border);
-    }
-
-    .macro-card .title {
-      color: var(--text-muted);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .macro-card .val {
-      font-size: 15px;
-      font-weight: 700;
-      margin-top: 6px;
-      color: var(--text-color);
-    }
-
-    /* Холст для графиков аналитики */
-    .chart-container {
-      position: relative;
-      width: 100%;
-      margin-top: 16px;
-      background: var(--card-bg-alt);
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--card-border);
-      padding: 12px;
-    }
-
-    canvas {
-      width: 100% !important;
-      height: 220px !important;
-      border-radius: 8px;
-    }
-
-    /* Модальные окна */
     .modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(3, 7, 18, 0.8);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      padding: 16px;
-      animation: fadeIn 0.2s ease;
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 16px;
     }
-
     .modal-content {
-      background: var(--card-bg);
-      width: 100%;
-      max-width: 520px;
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      border: 1px solid var(--card-border);
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: var(--shadow);
-      animation: scaleUp 0.25s ease;
+      background: var(--card-bg); width: 100%; max-width: 520px;
+      border-radius: var(--radius-lg); padding: 28px; border: 1px solid var(--card-border);
+      max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow);
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes scaleUp {
-      from { transform: scale(0.95); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    /* Вспомогательные утилиты */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 600;
-    }
-
-    .badge-success { background: var(--success-light); color: var(--success); }
-    .badge-danger { background: var(--danger-light); color: var(--danger); }
-    .badge-warning { background: var(--warning-light); color: var(--warning); }
   </style>
 </head>
 <body>
 
-  <div class="container" id="appViewContainer">
-    <!-- Сюда динамически монтируется интерфейс приложения -->
-  </div>
+  <div class="container" id="appViewContainer"></div>
 
   <nav class="nav-bar">
-    <button class="nav-item active" onclick="switchTab('diary')">
-      <span class="icon">📅</span>
-      <span data-i18n="nav_diary">Дневник</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('ai')">
-      <span class="icon">📸</span>
-      <span data-i18n="nav_ai">ИИ Сканер</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('body')">
-      <span class="icon">📊</span>
-      <span data-i18n="nav_body">Форма</span>
-    </button>
-    <button class="nav-item" onclick="switchTab('profile')">
-      <span class="icon">⚙️</span>
-      <span data-i18n="nav_profile">Профиль</span>
-    </button>
+    <button class="nav-item active" onclick="switchTab('diary')"><span class="icon">📅</span><span data-i18n="nav_diary">Дневник</span></button>
+    <button class="nav-item" onclick="switchTab('ai')"><span class="icon">📸</span><span data-i18n="nav_ai">ИИ Сканер</span></button>
+    <button class="nav-item" onclick="switchTab('body')"><span class="icon">📊</span><span data-i18n="nav_body">Форма</span></button>
+    <button class="nav-item" onclick="switchTab('profile')"><span class="icon">⚙️</span><span data-i18n="nav_profile">Профиль</span></button>
   </nav>
+
   <script>
-    // --- 1. РАСШИРЕННЫЙ МУЛЬТИЯЗЫЧНЫЙ СЛОВАРЬ (RU, EN, NL) ---
     const translations = {
       ru: {
-        nav_diary: "Дневник",
-        nav_ai: "ИИ Сканер",
-        nav_body: "Форма",
-        nav_profile: "Профиль",
-        diary_title: "📅 Дневник питания",
-        diary_subtitle: "Контроль КБЖУ, калорий и хлебных единиц",
-        meal_breakfast: "Завтрак",
-        meal_lunch: "Обед",
-        meal_dinner: "Ужин",
-        meal_snacks: "Перекус",
-        calories_goal: "Цель",
-        calories_consumed: "Съедено",
-        calories_left: "Осталось",
-        proteins: "Белки",
-        fats: "Жиры",
-        carbs: "Углеводы",
-        carb_units: "ХЕ",
+        nav_diary: "Дневник", nav_ai: "ИИ Сканер", nav_body: "Форма", nav_profile: "Профиль",
+        diary_title: "📅 Дневник питания", diary_subtitle: "Контроль КБЖУ, калорий и хлебных единиц",
+        meal_breakfast: "Завтрак", meal_lunch: "Обед", meal_dinner: "Ужин", meal_snacks: "Перекус",
+        calories_goal: "Цель", calories_consumed: "Съедено", calories_left: "Осталось",
+        proteins: "Белки", fats: "Жиры", carbs: "Углеводы", carb_units: "ХЕ",
         add_product: "+ Добавить блюдо",
         ai_title: "📸 Gemini AI Food Scanner",
-        ai_desc: "Загрузите или сфотографируйте вашу еду. Нейросеть мгновенно распознает блюдо, рассчитает его вес в граммах и точные параметры КБЖУ.",
-        ai_btn_take: "Снять или выбрать фото еды",
-        ai_loading: "Gemini анализирует состав блюда...",
-        ai_add: "Добавить в дневник",
-        body_title: "📊 Форма и Статистика Тела",
-        body_subtitle: "Динамика веса и научный расчет суточной нормы КБЖУ",
-        weight_label: "Текущий вес (кг):",
-        weight_btn: "Зафиксировать вес",
-        weight_history: "История изменений веса",
-        profile_title: "⚙️ Профиль и Настройки",
-        api_key_label: "Google Gemini API Key:",
-        save_key: "Сохранить ключ в памяти",
-        lang_label: "Язык интерфейса:",
-        theme_label: "Тема оформления:",
-        theme_dark: "🌙 Темная",
-        theme_light: "☀️ Светлая",
-        saved_success: "Изменения успешно сохранены!",
-        calc_title: "🧮 Калькулятор Миффлина-Сан Жеора",
-        height_label: "Рост (см):",
-        age_label: "Возраст (лет):",
-        gender_label: "Пол:",
-        gender_male: "Мужской",
-        gender_female: "Женский",
-        activity_label: "Уровень физической активности:",
-        act_min: "Минимальная (сидячий образ жизни)",
-        act_low: "Низкая (1-3 тренировки в неделю)",
-        act_mod: "Умеренная (3-5 тренировок в неделю)",
-        act_high: "Высокая (6-7 тренировок в неделю)",
-        goal_label: "Ваша цель:",
-        goal_lose: "Похудение (-15% калорий)",
-        goal_maintain: "Поддержание веса",
-        goal_gain: "Набор мышечной массы (+15% калорий)",
-        calculate_btn: "Рассчитать и применить норму",
-        search_food: "Поиск по базе продуктов...",
-        database_title: "📖 База продуктов",
-        empty_meal: "Прием пищи пока пуст"
+        ai_desc: "Сфотографируйте еду. ИИ мгновенно распознает блюдо, рассчитает вес и КБЖУ.",
+        ai_btn_take: "Снять или выбрать фото еды", ai_loading: "Gemini анализирует блюдо...", ai_add: "Добавить в дневник",
+        body_title: "📊 Форма и Статистика Тела", body_subtitle: "Динамика веса и расчет суточной нормы КБЖУ",
+        weight_label: "Текущий вес (кг):", weight_btn: "Зафиксировать вес", weight_history: "История изменений веса",
+        profile_title: "⚙️ Профиль и Настройки", api_key_label: "Google Gemini API Key:", save_key: "Сохранить ключ",
+        lang_label: "Язык интерфейса:", theme_label: "Тема оформления:", theme_dark: "🌙 Темная", theme_light: "☀️ Светлая",
+        calc_title: "🧮 Калькулятор Миффлина-Сан Жеора", height_label: "Рост (см):", age_label: "Возраст (лет):",
+        gender_label: "Пол:", gender_male: "Мужской", gender_female: "Женский",
+        activity_label: "Уровень физической активности:", act_min: "Сидячий", act_low: "Низкая (1-3 тренировки)",
+        act_mod: "Умеренная (3-5 тренировок)", act_high: "Высокая (6-7 тренировок)", goal_label: "Ваша цель:",
+        goal_lose: "Похудение (-15%)", goal_maintain: "Поддержание веса", goal_gain: "Набор массы (+15%)",
+        calculate_btn: "Рассчитать и применить норму", search_food: "Поиск по базе продуктов...",
+        database_title: "📖 База продуктов", empty_meal: "Прием пищи пока пуст"
       },
       en: {
-        nav_diary: "Diary",
-        nav_ai: "AI Scanner",
-        nav_body: "Body",
-        nav_profile: "Profile",
-        diary_title: "📅 Food Diary",
-        diary_subtitle: "Control calories, macros and bread units",
-        meal_breakfast: "Breakfast",
-        meal_lunch: "Lunch",
-        meal_dinner: "Dinner",
-        meal_snacks: "Snacks",
-        calories_goal: "Goal",
-        calories_consumed: "Consumed",
-        calories_left: "Remaining",
-        proteins: "Proteins",
-        fats: "Fats",
-        carbs: "Carbs",
-        carb_units: "CU",
+        nav_diary: "Diary", nav_ai: "AI Scanner", nav_body: "Body", nav_profile: "Profile",
+        diary_title: "📅 Food Diary", diary_subtitle: "Control calories, macros and bread units",
+        meal_breakfast: "Breakfast", meal_lunch: "Lunch", meal_dinner: "Dinner", meal_snacks: "Snacks",
+        calories_goal: "Goal", calories_consumed: "Consumed", calories_left: "Remaining",
+        proteins: "Proteins", fats: "Fats", carbs: "Carbs", carb_units: "CU",
         add_product: "+ Add Dish",
         ai_title: "📸 Gemini AI Food Scanner",
-        ai_desc: "Upload or take a photo of your food. AI will instantly recognize the dish, calculate its weight and exact nutritional values.",
-        ai_btn_take: "Take or Choose Food Photo",
-        ai_loading: "Gemini is analyzing the dish...",
-        ai_add: "Add to Diary",
-        body_title: "📊 Body & Statistics",
-        body_subtitle: "Weight dynamics and scientific calorie calculation",
-        weight_label: "Current weight (kg):",
-        weight_btn: "Log Weight",
-        weight_history: "Weight History",
-        profile_title: "⚙️ Profile & Settings",
-        api_key_label: "Google Gemini API Key:",
-        save_key: "Save Key Securely",
-        lang_label: "Interface Language:",
-        theme_label: "App Theme:",
-        theme_dark: "🌙 Dark",
-        theme_light: "☀️ Light",
-        saved_success: "Changes successfully saved!",
-        calc_title: "🧮 Mifflin-St Jeor Calculator",
-        height_label: "Height (cm):",
-        age_label: "Age (years):",
-        gender_label: "Gender:",
-        gender_male: "Male",
-        gender_female: "Female",
-        activity_label: "Physical Activity Level:",
-        act_min: "Sedentary (little or no exercise)",
-        act_low: "Light (1-3 workouts/week)",
-        act_mod: "Moderate (3-5 workouts/week)",
-        act_high: "High (6-7 workouts/week)",
-        goal_label: "Your Goal:",
-        goal_lose: "Weight loss (-15% calories)",
-        goal_maintain: "Maintain weight",
-        goal_gain: "Muscle gain (+15% calories)",
-        calculate_btn: "Calculate & Apply Norms",
-        search_food: "Search food database...",
-        database_title: "📖 Food Database",
-        empty_meal: "Meal is currently empty"
+        ai_desc: "Take a photo of your food. AI will instantly recognize it and calculate nutritional values.",
+        ai_btn_take: "Take or Choose Food Photo", ai_loading: "Gemini is analyzing...", ai_add: "Add to Diary",
+        body_title: "📊 Body & Statistics", body_subtitle: "Weight dynamics and scientific calorie calculation",
+        weight_label: "Current weight (kg):", weight_btn: "Log Weight", weight_history: "Weight History",
+        profile_title: "⚙️ Profile & Settings", api_key_label: "Google Gemini API Key:", save_key: "Save Key",
+        lang_label: "Interface Language:", theme_label: "App Theme:", theme_dark: "🌙 Dark", theme_light: "☀️ Light",
+        calc_title: "🧮 Mifflin-St Jeor Calculator", height_label: "Height (cm):", age_label: "Age (years):",
+        gender_label: "Gender:", gender_male: "Male", gender_female: "Female",
+        activity_label: "Physical Activity Level:", act_min: "Sedentary", act_low: "Light (1-3 workouts)",
+        act_mod: "Moderate (3-5 workouts)", act_high: "High (6-7 workouts)", goal_label: "Your Goal:",
+        goal_lose: "Weight loss (-15%)", goal_maintain: "Maintain weight", goal_gain: "Muscle gain (+15%)",
+        calculate_btn: "Calculate & Apply Norms", search_food: "Search food database...",
+        database_title: "📖 Food Database", empty_meal: "Meal is currently empty"
       },
       nl: {
-        nav_diary: "Dagboek",
-        nav_ai: "AI Scanner",
-        nav_body: "Lichaam",
-        nav_profile: "Profiel",
-        diary_title: "📅 Voedingsdagboek",
-        diary_subtitle: "Beheer calorieën, macro's en broodeenheden",
-        meal_breakfast: "Ontbijt",
-        meal_lunch: "Lunch",
-        meal_dinner: "Diner",
-        meal_snacks: "Tussendoortje",
-        calories_goal: "Doel",
-        calories_consumed: "Gegeten",
-        calories_left: "Over",
-        proteins: "Eiwitten",
-        fats: "Vetten",
-        carbs: "Koolhydraten",
-        carb_units: "KH",
+        nav_diary: "Dagboek", nav_ai: "AI Scanner", nav_body: "Lichaam", nav_profile: "Profiel",
+        diary_title: "📅 Voedingsdagboek", diary_subtitle: "Beheer calorieën, macro's en broodeenheden",
+        meal_breakfast: "Ontbijt", meal_lunch: "Lunch", meal_dinner: "Diner", meal_snacks: "Tussendoortje",
+        calories_goal: "Doel", calories_consumed: "Gegeten", calories_left: "Over",
+        proteins: "Eiwitten", fats: "Vetten", carbs: "Koolhydraten", carb_units: "KH",
         add_product: "+ Maaltijd toevoegen",
         ai_title: "📸 Gemini AI Eetservice",
-        ai_desc: "Upload of maak een foto van je eten. AI herkent het gerecht direct, berekent het gewicht en de voedingswaarden.",
-        ai_btn_take: "Maak of kies een foto",
-        ai_loading: "Gemini analyseert het gerecht...",
-        ai_add: "Toevoegen aan dagboek",
-        body_title: "📊 Lichaam & Statistieken",
-        body_subtitle: "Gewichtsverloop en wetenschappelijke berekening",
-        weight_label: "Huidig gewicht (kg):",
-        weight_btn: "Gewicht opslaan",
-        weight_history: "Gewichtsgeschiedenis",
-        profile_title: "⚙️ Profiel & Instellingen",
-        api_key_label: "Google Gemini API Sleutel:",
-        save_key: "Sleutel Opslaan",
-        lang_label: "Interfacetaal:",
-        theme_label: "App-thema:",
-        theme_dark: "🌙 Donker",
-        theme_light: "☀️ Licht",
-        saved_success: "Wijzigingen succesvol opgeslagen!",
-        calc_title: "🧮 Mifflin-St Jeor Calculator",
-        height_label: "Lengte (cm):",
-        age_label: "Leeftijd (jaar):",
-        gender_label: "Geslacht:",
-        gender_male: "Man",
-        gender_female: "Vrouw",
-        activity_label: "Activiteitsniveau:",
-        act_min: "Zittend (weinig tot geen beweging)",
-        act_low: "Licht (1-3 trainingen/week)",
-        act_mod: "Gemiddeld (3-5 trainingen/week)",
-        act_high: "Hoog (6-7 trainingen/week)",
-        goal_label: "Jouw doel:",
-        goal_lose: "Gewichtsverlies (-15% calorieën)",
-        goal_maintain: "Gewicht behouden",
-        goal_gain: "Spieropbouw (+15% calorieën)",
-        calculate_btn: "Bereken en Pas Normen Toe",
-        search_food: "Zoek in voedingsdatabase...",
-        database_title: "📖 Voedingsdatabase",
-        empty_meal: "Maaltijd is momenteel leeg"
+        ai_desc: "Maak een foto van je eten. AI herkent het gerecht direct en berekent de waarden.",
+        ai_btn_take: "Maak of kies een foto", ai_loading: "Gemini analyseert...", ai_add: "Toevoegen",
+        body_title: "📊 Lichaam & Statistieken", body_subtitle: "Gewichtsverloop en wetenschappelijke berekening",
+        weight_label: "Huidig gewicht (kg):", weight_btn: "Gewicht opslaan", weight_history: "Gewichtsgeschiedenis",
+        profile_title: "⚙️ Profiel & Instellingen", api_key_label: "Google Gemini API Sleutel:", save_key: "Sleutel Opslaan",
+        lang_label: "Interfacetaal:", theme_label: "App-thema:", theme_dark: "🌙 Donker", theme_light: "☀️ Licht",
+        calc_title: "🧮 Mifflin-St Jeor Calculator", height_label: "Lengte (cm):", age_label: "Leeftijd (jaar):",
+        gender_label: "Geslacht:", gender_male: "Man", gender_female: "Vrouw",
+        activity_label: "Activiteitsniveau:", act_min: "Zittend", act_low: "Licht (1-3 trainingen)",
+        act_mod: "Gemiddeld (3-5 trainingen)", act_high: "Hoog (6-7 trainingen)", goal_label: "Jouw doel:",
+        goal_lose: "Gewichtsverlies (-15%)", goal_maintain: "Gewicht behouden", goal_gain: "Spieropbouw (+15%)",
+        calculate_btn: "Bereken en Pas Toe", search_food: "Zoek in database...",
+        database_title: "📖 Voedingsdatabase", empty_meal: "Maaltijd is leeg"
       }
     };
 
@@ -519,11 +214,8 @@
     let currentTheme = localStorage.getItem('cp_theme') || 'dark';
     let geminiApiKey = localStorage.getItem('cp_gemini_key') || '';
 
-    function t(key) {
-      return translations[currentLang][key] || translations['ru'][key] || key;
-    }
+    function t(key) { return translations[currentLang][key] || translations['ru'][key] || key; }
 
-    // --- 2. ВСТРОЕННАЯ БАЗА ПРОДУКТОВ ПО УМОЛЧАНИЮ (НА 100Г) ---
     const defaultFoodDatabase = [
       { id: 1, name: "Овсяная каша на воде", kcal: 88, p: 3.0, f: 1.7, c: 15.0, cu: 1.2 },
       { id: 2, name: "Куриная грудка отварная", kcal: 165, p: 31.0, f: 3.6, c: 0.0, cu: 0.0 },
@@ -532,73 +224,83 @@
       { id: 5, name: "Творог 5%", kcal: 121, p: 16.5, f: 5.0, c: 2.0, cu: 0.2 },
       { id: 6, name: "Яблоко", kcal: 52, p: 0.4, f: 0.4, c: 13.0, cu: 1.1 },
       { id: 7, name: "Банан", kcal: 89, p: 1.1, f: 0.3, c: 22.8, cu: 1.9 },
-      { id: 8, name: "Лосось запеченный", kcal: 206, p: 22.1, f: 12.4, c: 0.0, cu: 0.0 },
-      { id: 9, name: "Гречка отварная", kcal: 103, p: 3.6, f: 1.0, c: 20.0, cu: 1.7 },
-      { id: 10, name: "Хлеб цельнозерновой", kcal: 247, p: 9.0, f: 1.8, c: 48.0, cu: 4.0 }
+      { id: 8, name: "Лосось запеченный", kcal: 206, p: 22.1, f: 12.4, c: 0.0, cu: 0.0 }
     ];
 
     let customFoodDatabase = JSON.parse(localStorage.getItem('cp_custom_foods')) || defaultFoodDatabase;
 
-    // --- 3. УПРАВЛЕНИЕ ГЛОБАЛЬНЫМ СОСТОЯНИЕМ ПРИЛОЖЕНИЯ ---
     let userProfile = JSON.parse(localStorage.getItem('cp_user_profile')) || {
-      weight: 75,
-      height: 175,
-      age: 30,
-      gender: 'male',
-      goal: 'maintain',
-      activity: 'moderate',
-      targetCalories: 2000,
-      targetProtein: 130,
-      targetFat: 70,
-      targetCarbs: 200
+      weight: 75, height: 175, age: 30, gender: 'male', goal: 'maintain', activity: 'moderate',
+      targetCalories: 2000, targetProtein: 130, targetFat: 70, targetCarbs: 200
     };
 
     let todayData = JSON.parse(localStorage.getItem('cp_today_data')) || {
       meals: { breakfast: [], lunch: [], dinner: [], snacks: [] },
-      weightHistory: [],
-      measurements: {}
+      weightHistory: []
     };
 
     let activeTab = 'diary';
     let activeMealSubTab = 'breakfast';
-
-    function switchTab(tabName) {
-      activeTab = tabName;
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      event.currentTarget.classList.add('active');
-      renderApp();
-      window.scrollTo(0, 0);
-    }
-
-    function saveStateToLocalStorage() {
-      localStorage.setItem('cp_user_profile', JSON.stringify(userProfile));
-      localStorage.setItem('cp_today_data', JSON.stringify(todayData));
-      localStorage.setItem('cp_custom_foods', JSON.stringify(customFoodDatabase));
-      localStorage.setItem('cp_gemini_key', geminiApiKey);
-      localStorage.setItem('cp_lang', currentLang);
-      localStorage.setItem('cp_theme', currentTheme);
-    }
-
-    function applyTheme() {
-      if (currentTheme === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-      } else {
-        document.documentElement.removeAttribute('data-theme');
-      }
-    }
-
-    // Вспомогательные математические и форматирующие функции
-    function roundNum(val, decimals = 1) {
-      return Math.round(val * Math.pow(10, decimals)) / Math.pow(10, decimals);
-    }
-
-    function getFormattedDate(date = new Date()) {
-      return date.toISOString().split('T')[0];
-    }
   </script>
-  // --- 4. РЕНДЕРИНГ ИНТЕРФЕЙСА ДНЕВНИКА И УПРАВЛЕНИЕ ВКЛАДКАМИ ---
+  // --- РАСШИРЕННЫЙ МОДУЛЬ РЕНДЕРИНГА ИНТЕРФЕЙСА ДНЕВНИКА И УПРАВЛЕНИЯ ВКЛАДКАМИ ---
+  function switchTab(tabName) {
+    activeTab = tabName;
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(btn => {
+      if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabName)) {
+        btn.classList.add('active');
+      }
+    });
+    renderApp();
+    window.scrollTo(0, 0);
+  }
+
+  function saveStateToLocalStorage() {
+    localStorage.setItem('cp_user_profile', JSON.stringify(userProfile));
+    localStorage.setItem('cp_today_data', JSON.stringify(todayData));
+    localStorage.setItem('cp_custom_foods', JSON.stringify(customFoodDatabase));
+    localStorage.setItem('cp_gemini_key', geminiApiKey);
+    localStorage.setItem('cp_lang', currentLang);
+    localStorage.setItem('cp_theme', currentTheme);
+  }
+
+  function applyTheme() {
+    if (currentTheme === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+  }
+
+  function roundNum(val, decimals = 1) {
+    return Math.round(val * Math.pow(10, decimals)) / Math.pow(10, decimals);
+  }
+
+  function getFormattedDate(date = new Date()) {
+    return date.toISOString().split('T')[0];
+  }
+
+  function calculateDailyTotals() {
+    let totals = { kcal: 0, p: 0, f: 0, c: 0, cu: 0 };
+    Object.keys(todayData.meals).forEach(mealKey => {
+      (todayData.meals[mealKey] || []).forEach(item => {
+        totals.kcal += Number(item.kcal) || 0;
+        totals.p += Number(item.p) || 0;
+        totals.f += Number(item.f) || 0;
+        totals.c += Number(item.c) || 0;
+        totals.cu += Number(item.cu) || 0;
+      });
+    });
+    totals.p = Math.round(totals.p);
+    totals.f = Math.round(totals.f);
+    totals.c = Math.round(totals.c);
+    totals.cu = roundNum(totals.cu, 1);
+    return totals;
+  }
+
   function renderApp() {
     const container = document.getElementById('appViewContainer');
+    if (!container) return;
     container.innerHTML = '';
 
     if (activeTab === 'diary') {
@@ -615,7 +317,6 @@
             <button onclick="openManualAddModal()" class="secondary" style="padding: 8px 14px; font-size: 12px;">${t('add_product')}</button>
           </div>
 
-          <!-- Шкала общего прогресса калорий -->
           <div style="background: var(--card-bg-alt); padding: 18px; border-radius: var(--radius-sm); border: 1px solid var(--card-border); margin-bottom: 18px;">
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
               <span>${t('calories_consumed')}: <strong style="color: var(--success);">${totals.kcal}</strong></span>
@@ -627,28 +328,14 @@
             </div>
           </div>
 
-          <!-- Сводка макронутриентов -->
           <div class="macro-grid">
-            <div class="macro-card">
-              <div class="title">${t('proteins')}</div>
-              <div class="val">${totals.p} / ${userProfile.targetProtein}г</div>
-            </div>
-            <div class="macro-card">
-              <div class="title">${t('fats')}</div>
-              <div class="val">${totals.f} / ${userProfile.targetFat}г</div>
-            </div>
-            <div class="macro-card">
-              <div class="title">${t('carbs')}</div>
-              <div class="val">${totals.c} / ${userProfile.targetCarbs}г</div>
-            </div>
-            <div class="macro-card">
-              <div class="title">${t('carb_units')}</div>
-              <div class="val">${totals.cu}</div>
-            </div>
+            <div class="macro-card"><div class="title">${t('proteins')}</div><div class="val">${totals.p} / ${userProfile.targetProtein}г</div></div>
+            <div class="macro-card"><div class="title">${t('fats')}</div><div class="val">${totals.f} / ${userProfile.targetFat}г</div></div>
+            <div class="macro-card"><div class="title">${t('carbs')}</div><div class="val">${totals.c} / ${userProfile.targetCarbs}г</div></div>
+            <div class="macro-card"><div class="title">${t('carb_units')}</div><div class="val">${totals.cu}</div></div>
           </div>
         </div>
 
-        <!-- Переключатели приемов пищи -->
         <div class="card">
           <div style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 18px;">
             <button onclick="activeMealSubTab='breakfast'; renderApp();" class="${activeMealSubTab==='breakfast'?'':'secondary'}" style="flex: 1; white-space: nowrap;">${t('meal_breakfast')}</button>
@@ -657,15 +344,12 @@
             <button onclick="activeMealSubTab='snacks'; renderApp();" class="${activeMealSubTab==='snacks'?'':'secondary'}" style="flex: 1; white-space: nowrap;">${t('meal_snacks')}</button>
           </div>
 
-          <!-- Поиск по продуктовой базе для быстрого добавления -->
           <div style="margin-bottom: 16px;">
             <input type="text" id="foodSearchInput" placeholder="${t('search_food')}" oninput="filterFoodDatabase(this.value)">
             <div id="foodSearchResults" class="hidden" style="background: var(--card-bg-alt); border: 1px solid var(--card-border); border-radius: var(--radius-sm); max-height: 180px; overflow-y: auto; margin-top: 6px;"></div>
           </div>
 
-          <div id="mealItemsContainer">
-            <!-- Сюда динамически рендерятся блюда выбранного приема пищи -->
-          </div>
+          <div id="mealItemsContainer"></div>
         </div>
       `;
       renderDiaryItems();
@@ -677,17 +361,15 @@
           <p class="card-subtitle" style="line-height: 1.5; margin-bottom: 22px;">${t('ai_desc')}</p>
           
           <input type="file" id="aiFoodPhotoInput" accept="image/*" capture="environment" class="hidden" onchange="handleAiPhotoSelected(this)">
-          <button onclick="document.getElementById('aiFoodPhotoInput').click()" style="width: 100%; padding: 16px; font-size: 16px; border-radius: var(--radius-sm);">
+          <button onclick="document.getElementById('aiFoodPhotoInput').click()" style="width: 100%; padding: 16px; font-size: 16px;">
             ${t('ai_btn_take')}
           </button>
 
-          <!-- Индикатор загрузки нейросети -->
           <div id="aiLoadingIndicator" class="hidden" style="text-align: center; margin-top: 32px;">
-            <div style="font-size: 36px; animation: spin 1s linear infinite;">⏳</div>
+            <div style="font-size: 36px;">⏳</div>
             <p style="color: var(--text-muted); font-size: 14px; margin-top: 14px;">${t('ai_loading')}</p>
           </div>
 
-          <!-- Блок результатов работы Gemini AI -->
           <div id="aiResultBox" class="hidden" style="margin-top: 32px; border-top: 1px solid var(--card-border); padding-top: 22px;">
             <h3 id="aiResName" style="color: var(--success); font-size: 18px; margin-bottom: 14px; font-weight: 700;"></h3>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px; margin-bottom: 22px; background: var(--card-bg-alt); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--card-border);">
@@ -698,7 +380,7 @@
               <div>Углеводы: <span id="aiResCarbs"></span></div>
               <div>ХЕ: <span id="aiResCU" style="font-weight: bold; color: var(--warning);"></span></div>
             </div>
-            <button id="aiBtnAdd" onclick="confirmAiFoodResult()" style="width: 100%; background: var(--success); padding: 14px; font-size: 16px;">
+            <button onclick="confirmAiFoodResult()" style="width: 100%; background: var(--success); padding: 14px; font-size: 16px;">
               ${t('ai_add')}
             </button>
           </div>
@@ -718,25 +400,17 @@
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; border-top: 1px solid var(--card-border); padding-top: 18px;">${t('weight_history')}</h3>
           <div id="weightHistoryList"></div>
 
-          <!-- Холст для отрисовки графиков динамики веса -->
           <div class="chart-container">
             <canvas id="weightChartCanvas"></canvas>
           </div>
         </div>
 
-        <!-- Калькулятор суточной нормы КБЖУ -->
         <div class="card">
           <h3 class="card-title" style="font-size: 18px; margin-bottom: 16px;">${t('calc_title')}</h3>
           
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-            <div>
-              <label>${t('height_label')}</label>
-              <input type="number" id="calcHeight" value="${userProfile.height}">
-            </div>
-            <div>
-              <label>${t('age_label')}</label>
-              <input type="number" id="calcAge" value="${userProfile.age}">
-            </div>
+            <div><label>${t('height_label')}</label><input type="number" id="calcHeight" value="${userProfile.height}"></div>
+            <div><label>${t('age_label')}</label><input type="number" id="calcAge" value="${userProfile.age}"></div>
           </div>
 
           <label>${t('gender_label')}</label>
@@ -767,47 +441,45 @@
       setTimeout(drawWeightChart, 50);
     }
     else if (activeTab === 'profile') {
-      container.innerHTML = `
-        <div class="card">
-          <h2 class="card-title" style="margin-bottom: 20px;">${t('profile_title')}</h2>
-          
-          <label>${t('api_key_label')}</label>
-          <input type="password" id="geminiKeyInput" value="${geminiApiKey}" placeholder="AIzaSy...">
-          <button onclick="saveApiKeyFromUI()" style="width: 100%; margin-bottom: 20px;">${t('save_key')}</button>
-          
-          <label>${t('lang_label')}</label>
-          <select id="langSelect" onchange="changeLanguage(this.value)">
-            <option value="ru" ${currentLang==='ru'?'selected':''}>🇷🇺 Русский</option>
-            <option value="en" ${currentLang==='en'?'selected':''}>🇬🇧 English</option>
-            <option value="nl" ${currentLang==='nl'?'selected':''}>🇳🇱 Nederlands</option>
-          </select>
-
-          <label style="margin-top: 16px;">${t('theme_label')}</label>
-          <select id="themeSelect" onchange="changeTheme(this.value)">
-            <option value="dark" ${currentTheme==='dark'?'selected':''}>${t('theme_dark')}</option>
-            <option value="light" ${currentTheme==='light'?'selected':''}>${t('theme_light')}</option>
-          </select>
-        </div>
-      `;
+      renderProfileExtended();
     }
   }
 
-  function calculateDailyTotals() {
-    let totals = { kcal: 0, p: 0, f: 0, c: 0, cu: 0 };
-    Object.keys(todayData.meals).forEach(mealKey => {
-      (todayData.meals[mealKey] || []).forEach(item => {
-        totals.kcal += Number(item.kcal) || 0;
-        totals.p += Number(item.p) || 0;
-        totals.f += Number(item.f) || 0;
-        totals.c += Number(item.c) || 0;
-        totals.cu += Number(item.cu) || 0;
-      });
-    });
-    totals.p = Math.round(totals.p);
-    totals.f = Math.round(totals.f);
-    totals.c = Math.round(totals.c);
-    totals.cu = roundNum(totals.cu, 1);
-    return totals;
+  function renderProfileExtended() {
+    const container = document.getElementById('appViewContainer');
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="card">
+        <h2 class="card-title" style="margin-bottom: 20px;">${t('profile_title')}</h2>
+        
+        <label>${t('api_key_label')}</label>
+        <input type="password" id="geminiKeyInput" value="${geminiApiKey}" placeholder="AIzaSy...">
+        <button onclick="saveApiKeyFromUI()" style="width: 100%; margin-bottom: 20px;">${t('save_key')}</button>
+        
+        <label>${t('lang_label')}</label>
+        <select id="langSelect" onchange="changeLanguage(this.value)">
+          <option value="ru" ${currentLang==='ru'?'selected':''}>🇷🇺 Русский</option>
+          <option value="en" ${currentLang==='en'?'selected':''}>🇬🇧 English</option>
+          <option value="nl" ${currentLang==='nl'?'selected':''}>🇳🇱 Nederlands</option>
+        </select>
+
+        <label style="margin-top: 16px;">${t('theme_label')}</label>
+        <select id="themeSelect" onchange="changeTheme(this.value)">
+          <option value="dark" ${currentTheme==='dark'?'selected':''}>${t('theme_dark')}</option>
+          <option value="light" ${currentTheme==='light'?'selected':''}>${t('theme_light')}</option>
+        </select>
+      </div>
+
+      <div class="card">
+        <h3 class="card-title" style="font-size: 18px; margin-bottom: 14px;">Управление данными</h3>
+        <p class="card-subtitle" style="margin-bottom: 16px;">Экспорт резервной копии или сброс данных.</p>
+        <div style="display: flex; gap: 10px; flex-direction: column;">
+          <button onclick="exportAppDataAsJson()" class="secondary" style="width: 100%;">💾 Экспортировать данные (JSON)</button>
+          <button onclick="resetAllAppData()" class="danger" style="width: 100%;">⚠️ Сбросить все данные</button>
+        </div>
+      </div>
+    `;
   }
 
   function renderDiaryItems() {
@@ -859,190 +531,16 @@
     const defaultWeight = 150;
     const factor = defaultWeight / 100;
     
-    if (!todayData.meals[activeMealSubTab]) {
-      todayData.meals[activeMealSubTab] = [];
-    }
+    if (!todayData.meals[activeMealSubTab]) todayData.meals[activeMealSubTab] = [];
     todayData.meals[activeMealSubTab].push({
-      name: food.name,
-      weight: defaultWeight,
+      name: food.name, weight: defaultWeight,
       kcal: Math.round(food.kcal * factor),
-      p: roundNum(food.p * factor),
-      f: roundNum(food.f * factor),
-      c: roundNum(food.c * factor),
-      cu: roundNum(food.cu * factor, 1)
+      p: roundNum(food.p * factor), f: roundNum(food.f * factor),
+      c: roundNum(food.c * factor), cu: roundNum(food.cu * factor, 1)
     });
     saveStateToLocalStorage();
     document.getElementById('foodSearchInput').value = '';
     document.getElementById('foodSearchResults').classList.add('hidden');
-    renderApp();
-  }
-  // --- 5. МОДУЛЬ ИИ-СКАНЕРА, АНАЛИЗА ИЗОБРАЖЕНИЙ И ВИЗУАЛИЗАЦИИ ГРАФИКОВ ---
-  function handleAiPhotoSelected(inputElement) {
-    if (inputElement.files && inputElement.files[0]) {
-      let reader = new FileReader();
-      reader.onload = function(e) {
-        let img = new Image();
-        img.onload = function() {
-          let canvas = document.createElement('canvas');
-          let MAX_WIDTH = 700;
-          let MAX_HEIGHT = 700;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-          let ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          let dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-          analyzeImageWithGemini(dataUrl);
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(inputElement.files[0]);
-    }
-  }
-
-  async function analyzeImageWithGemini(base64Data) {
-    if (!geminiApiKey || geminiApiKey.trim() === '') {
-      const keyMsg = currentLang === 'ru'
-        ? "Пожалуйста, введите ваш Google Gemini API Key во вкладке 'Профиль' и сохраните его перед сканированием!"
-        : (currentLang === 'nl' ? "Voer uw Google Gemini API-sleutel in bij 'Profiel'!" : "Please enter your Google Gemini API Key in 'Profile'!");
-      alert(keyMsg);
-      switchTab('profile');
-      return;
-    }
-
-    const loadingIndicator = document.getElementById('aiLoadingIndicator');
-    const resultBox = document.getElementById('aiResultBox');
-    
-    if (loadingIndicator) loadingIndicator.classList.remove('hidden');
-    if (resultBox) resultBox.classList.add('hidden');
-
-    let base64ImageBytes = base64Data.split(',')[1];
-    let langInstruction = currentLang === 'ru' ? 'Russian' : (currentLang === 'nl' ? 'Dutch' : 'English');
-    
-    let promptText = `Analyze this food image in detail. Return STRICT JSON format only (no markdown, no backticks, no introductory text) with the following exact keys:
-    - "name": string (descriptive name of the dish in ${langInstruction})
-    - "weight_g": number (estimated total weight in grams)
-    - "calories": number (total kilocalories)
-    - "proteins": number (proteins in grams)
-    - "fats": number (fats in grams)
-    - "carbs": number (carbohydrates in grams)
-    - "carb_units": number (bread units / carbohydrate exchanges, where 1 HE = 12g carbs)`;
-
-    const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiApiKey}`;
-
-    try {
-      let response = await fetch(apiEndpoint, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [
-              { text: promptText },
-              { 
-                inline_data: { 
-                  mime_type: "image/jpeg", 
-                  data: base64ImageBytes 
-                } 
-              }
-            ]
-          }],
-          generationConfig: {
-            temperature: 0.2,
-            maxOutputTokens: 1024
-          }
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      let data = await response.json();
-      if (loadingIndicator) loadingIndicator.classList.add('hidden');
-
-      if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts[0].text) {
-        let rawText = data.candidates[0].content.parts[0].text;
-        
-        // Очистка от возможных Markdown-форматирований
-        rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-        
-        let parsed;
-        try {
-          parsed = JSON.parse(rawText);
-        } catch (parseErr) {
-          console.error("JSON Parse Error:", parseErr, rawText);
-          throw new Error("Не удалось корректно расшифровать ответ искусственного интеллекта.");
-        }
-
-        const nameEl = document.getElementById('aiResName');
-        const weightEl = document.getElementById('aiResWeight');
-        const kcalEl = document.getElementById('aiResKcal');
-        const protEl = document.getElementById('aiResProt');
-        const fatsEl = document.getElementById('aiResFats');
-        const carbsEl = document.getElementById('aiResCarbs');
-        const cuEl = document.getElementById('aiResCU');
-
-        if (nameEl) nameEl.innerText = parsed.name || "Готовое блюдо";
-        if (weightEl) weightEl.innerText = (parsed.weight_g || 250) + ' г';
-        if (kcalEl) kcalEl.innerText = (parsed.calories || 350) + ' ккал';
-        if (protEl) protEl.innerText = (parsed.proteins || 15) + ' г';
-        if (fatsEl) fatsEl.innerText = (parsed.fats || 12) + ' г';
-        if (carbsEl) carbsEl.innerText = (parsed.carbs || 30) + ' г';
-        if (cuEl) cuEl.innerText = roundNum(parsed.carb_units || 2.5, 1);
-
-        window.tempAiParsedFood = parsed;
-        if (resultBox) resultBox.classList.remove('hidden');
-      } else {
-        throw new Error("Пустой ответ от сервера Gemini API.");
-      }
-    } catch (err) {
-      if (loadingIndicator) loadingIndicator.classList.add('hidden');
-      console.error("Gemini API Error:", err);
-      const errMsg = currentLang === 'ru' 
-        ? "Ошибка при анализе изображения: " + err.message 
-        : "Error analyzing image: " + err.message;
-      alert(errMsg);
-    }
-  }
-
-  function confirmAiFoodResult() {
-    if (!window.tempAiParsedFood) return;
-    let f = window.tempAiParsedFood;
-    
-    if (!todayData.meals[activeMealSubTab]) {
-      todayData.meals[activeMealSubTab] = [];
-    }
-    
-    todayData.meals[activeMealSubTab].push({
-      name: f.name || "AI Meal",
-      weight: Number(f.weight_g) || 250,
-      kcal: Number(f.calories) || 350,
-      p: Number(f.proteins) || 15,
-      f: Number(f.fats) || 12,
-      c: Number(f.carbs) || 30,
-      cu: Number(f.carb_units) || 2.5
-    });
-
-    saveStateToLocalStorage();
-    window.tempAiParsedFood = null;
-    activeTab = 'diary';
     renderApp();
   }
 
@@ -1053,89 +551,241 @@
       renderDiaryItems();
     }
   }
+  // --- РАСШИРЕННЫЙ МОДУЛЬ РУЧНОГО ВВОДА, МОДАЛЬНЫХ ОКОН, ИИ-СКАНЕРА И БАЗЫ ДАННЫХ ---
+  function openManualAddModal() {
+    const tTitle = currentLang === 'ru' ? "Добавить продукт вручную" : "Add food manually";
+    const tName = currentLang === 'ru' ? "Название блюда или продукта" : "Dish or product name";
+    const tWeight = currentLang === 'ru' ? "Вес (граммы)" : "Weight (grams)";
+    const tKcal = currentLang === 'ru' ? "Калории (ккал)" : "Calories (kcal)";
+    const tP = currentLang === 'ru' ? "Белки (г)" : "Proteins (g)";
+    const tF = currentLang === 'ru' ? "Жиры (г)" : "Fats (g)";
+    const tC = currentLang === 'ru' ? "Углеводы (г)" : "Carbs (g)";
+    const tCu = currentLang === 'ru' ? "Хлебные единицы (ХЕ)" : "Carb Units (CU)";
+    const tCancel = currentLang === 'ru' ? "Отмена" : "Cancel";
+    const tSave = currentLang === 'ru' ? "Сохранить в дневник" : "Save to diary";
+    const tSaveToDb = currentLang === 'ru' ? "Сохранить в общую базу продуктов" : "Save to global food database";
 
-  // --- 6. МОДУЛЬ ОТРИСОВКИ АНАЛИТИЧЕСКИХ ГРАФИКОВ НА CANVAS ---
-  function drawWeightChart() {
-    const canvas = document.getElementById('weightChartCanvas');
-    if (!canvas) return;
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.id = 'manualAddModal';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+          <h3 style="font-size: 18px; font-weight: 700; color: var(--text-color);">${tTitle}</h3>
+          <button onclick="closeManualModal()" class="secondary" style="padding: 6px 10px; font-size: 12px;">✕</button>
+        </div>
+        
+        <label>${tName}</label>
+        <input type="text" id="manName" placeholder="Например: Овсяная каша с орехами">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div>
+            <label>${tWeight}</label>
+            <input type="number" id="manWeight" value="200" min="1">
+          </div>
+          <div>
+            <label>${tKcal}</label>
+            <input type="number" id="manKcal" value="250" min="0">
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">
+          <div>
+            <label style="font-size: 10px;">${tP}</label>
+            <input type="number" id="manP" value="10" step="0.1" min="0">
+          </div>
+          <div>
+            <label style="font-size: 10px;">${tF}</label>
+            <input type="number" id="manF" value="5" step="0.1" min="0">
+          </div>
+          <div>
+            <label style="font-size: 10px;">${tC}</label>
+            <input type="number" id="manC" value="30" step="0.1" min="0">
+          </div>
+          <div>
+            <label style="font-size: 10px;">${tCu}</label>
+            <input type="number" id="manCU" value="2.5" step="0.1" min="0">
+          </div>
+        </div>
+
+        <div style="margin-top: 14px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="manSaveToDbCheck" style="width: 18px; height: 18px; margin: 0; cursor: pointer;">
+          <label for="manSaveToDbCheck" style="margin: 0; cursor: pointer; font-size: 13px; color: var(--text-color);">${tSaveToDb}</label>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 20px;">
+          <button onclick="closeManualModal()" class="secondary" style="flex: 1;">${tCancel}</button>
+          <button onclick="saveManualFoodItem()" style="flex: 1; background: var(--success);">${tSave}</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+
+  function closeManualModal() {
+    const modal = document.getElementById('manualAddModal');
+    if (modal) modal.remove();
+  }
+
+  function saveManualFoodItem() {
+    const nameInput = document.getElementById('manName');
+    const weightInput = document.getElementById('manWeight');
+    const kcalInput = document.getElementById('manKcal');
+    const pInput = document.getElementById('manP');
+    const fInput = document.getElementById('manF');
+    const cInput = document.getElementById('manC');
+    const cuInput = document.getElementById('manCU');
+    const saveToDbCheck = document.getElementById('manSaveToDbCheck');
+
+    if (!nameInput) return;
+    const name = nameInput.value.trim() || "Custom meal";
+    const weight = Number(weightInput.value) || 100;
+    const kcal = Number(kcalInput.value) || 0;
+    const p = Number(pInput.value) || 0;
+    const f = Number(fInput.value) || 0;
+    const c = Number(cInput.value) || 0;
+    const cu = Number(cuInput.value) || 0;
+
+    if (!todayData.meals[activeMealSubTab]) todayData.meals[activeMealSubTab] = [];
     
-    const ctx = canvas.getContext('2d');
-    const history = todayData.weightHistory || [];
+    // Добавляем в текущий прием пищи
+    todayData.meals[activeMealSubTab].push({ 
+      name, weight, kcal, 
+      p: roundNum(p, 1), 
+      f: roundNum(f, 1), 
+      c: roundNum(c, 1), 
+      cu: roundNum(cu, 1) 
+    });
 
-    // Настройка размеров холста с учетом плотности пикселей дисплея
-    const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = 220 * dpr;
-    ctx.scale(dpr, dpr);
+    // Если пользователь отметил галочку, сохраняем также в кастомную базу продуктов на 100г
+    if (saveToDbCheck && saveToDbCheck.checked) {
+      const factor = 100 / weight;
+      customFoodDatabase.push({
+        id: Date.now(),
+        name: name,
+        kcal: Math.round(kcal * factor),
+        p: roundNum(p * factor, 1),
+        f: roundNum(f * factor, 1),
+        c: roundNum(c * factor, 1),
+        cu: roundNum(cu * factor, 1)
+      });
+    }
 
-    const width = rect.width;
-    const height = 220;
+    saveStateToLocalStorage();
+    closeManualModal();
+    renderApp();
+  }
 
-    ctx.clearRect(0, 0, width, height);
+  async function handleAiPhotoSelected(inputElement) {
+    if (inputElement.files && inputElement.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        let img = new Image();
+        img.onload = function() {
+          let canvas = document.createElement('canvas');
+          let MAX_WIDTH = 800, MAX_HEIGHT = 800, width = img.width, height = img.height;
+          if (width > height) { 
+            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; } 
+          } else { 
+            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; } 
+          }
+          canvas.width = width; 
+          canvas.height = height;
+          let ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          analyzeImageWithGemini(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(inputElement.files[0]);
+    }
+  }
 
-    // Если данных мало, выводим информационное сообщение на холст
-    if (history.length === 0) {
-      ctx.fillStyle = '#9ca3af';
-      ctx.font = '14px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(currentLang === 'ru' ? 'Нет данных для построения графика' : 'No chart data available', width / 2, height / 2);
+  async function analyzeImageWithGemini(base64Data) {
+    if (!geminiApiKey || geminiApiKey.trim() === '') {
+      alert("Пожалуйста, введите ваш Google Gemini API Key во вкладке 'Профиль'!");
+      switchTab('profile');
       return;
     }
 
-    const weights = history.map(h => h.weight);
-    const minW = Math.min(...weights) - 1;
-    const maxW = Math.max(...weights) + 1;
-    const padding = 40;
-    const chartWidth = width - padding * 2;
-    const chartHeight = height - padding * 2;
+    document.getElementById('aiLoadingIndicator')?.classList.remove('hidden');
+    document.getElementById('aiResultBox')?.classList.add('hidden');
 
-    // Отрисовка фоновой сетки
-    ctx.strokeStyle = '#374151';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    for (let i = 0; i <= 4; i++) {
-      let y = padding + (chartHeight / 4) * i;
-      ctx.moveTo(padding, y);
-      ctx.lineTo(width - padding, y);
+    let base64ImageBytes = base64Data.split(',')[1];
+    let langInstruction = currentLang === 'ru' ? 'Russian' : (currentLang === 'nl' ? 'Dutch' : 'English');
+    let promptText = `Analyze this food image in extreme detail. Return STRICT JSON format only (no markdown, no backticks) with keys: 
+    - "name": string (descriptive name in ${langInstruction})
+    - "weight_g": number (estimated weight in grams)
+    - "calories": number (total kcal)
+    - "proteins": number (grams)
+    - "fats": number (grams)
+    - "carbs": number (grams)
+    - "carb_units": number (bread units, 1 HE = 12g carbs)`;
+
+    try {
+      let response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${geminiApiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          contents: [{ 
+            parts: [
+              { text: promptText }, 
+              { inline_data: { mime_type: "image/jpeg", data: base64ImageBytes } }
+            ] 
+          }],
+          generationConfig: { temperature: 0.2, maxOutputTokens: 1024 }
+        })
+      });
+
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      let data = await response.json();
+      document.getElementById('aiLoadingIndicator')?.classList.add('hidden');
+
+      if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+        throw new Error("Пустой ответ от нейросети Gemini.");
+      }
+
+      let rawText = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
+      let parsed = JSON.parse(rawText);
+
+      document.getElementById('aiResName').innerText = parsed.name || "Meal";
+      document.getElementById('aiResWeight').innerText = (parsed.weight_g || 250) + ' г';
+      document.getElementById('aiResKcal').innerText = (parsed.calories || 350) + ' ккал';
+      document.getElementById('aiResProt').innerText = (parsed.proteins || 15) + ' г';
+      document.getElementById('aiResFats').innerText = (parsed.fats || 12) + ' г';
+      document.getElementById('aiResCarbs').innerText = (parsed.carbs || 30) + ' г';
+      document.getElementById('aiResCU').innerText = roundNum(parsed.carb_units || 2.5, 1);
+
+      window.tempAiParsedFood = parsed;
+      document.getElementById('aiResultBox')?.classList.remove('hidden');
+    } catch (err) {
+      document.getElementById('aiLoadingIndicator')?.classList.add('hidden');
+      alert("Ошибка при анализе изображения: " + err.message);
     }
-    ctx.stroke();
-
-    // Вычисление координат точек графика
-    const points = history.map((item, index) => {
-      let x = history.length === 1 ? width / 2 : padding + (chartWidth / (history.length - 1)) * index;
-      let y = padding + chartHeight - ((item.weight - minW) / (maxW - minW || 1)) * chartHeight;
-      return { x, y, weight: item.weight, date: item.date };
-    });
-
-    // Отрисовка плавной линии тренда
-    ctx.strokeStyle = '#6366f1';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    points.forEach((pt, idx) => {
-      if (idx === 0) ctx.moveTo(pt.x, pt.y);
-      else ctx.lineTo(pt.x, pt.y);
-    });
-    ctx.stroke();
-
-    // Отрисовка маркеров точек на графике
-    points.forEach(pt => {
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#6366f1';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-
-      // Подпись значения веса над точкой
-      ctx.fillStyle = '#f9fafb';
-      ctx.font = '11px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(pt.weight + ' кг', pt.x, pt.y - 10);
-    });
   }
-  // --- 7. МОДУЛЬ НАУЧНОГО РАСЧЕТА КБЖУ И ТРЕКЕРА ВЕСА ТЕЛА ---
+
+  function confirmAiFoodResult() {
+    if (!window.tempAiParsedFood) return;
+    let f = window.tempAiParsedFood;
+    if (!todayData.meals[activeMealSubTab]) todayData.meals[activeMealSubTab] = [];
+    todayData.meals[activeMealSubTab].push({
+      name: f.name || "AI Meal", 
+      weight: Number(f.weight_g) || 250,
+      kcal: Number(f.calories) || 350, 
+      p: Number(f.proteins) || 15,
+      f: Number(f.fats) || 12, 
+      c: Number(f.carbs) || 30, 
+      cu: Number(f.carb_units) || 2.5
+    });
+    saveStateToLocalStorage();
+    window.tempAiParsedFood = null;
+    activeTab = 'diary';
+    renderApp();
+  }
+  // --- НАУЧНЫЙ МОДУЛЬ РАСЧЕТА МИФФЛИНА-САН ЖЕОРА, ТРЕКЕРА ВЕСА И CANVAS-ГРАФИКОВ ---
   function calculateMifflinStJeor() {
     const heightInput = document.getElementById('calcHeight');
     const ageInput = document.getElementById('calcAge');
@@ -1171,9 +821,9 @@
     // Коэффициенты физической активности (PAL)
     const activityMultipliers = {
       min: 1.2,      // Сидячий образ жизни
-      low: 1.375,    // Легкая активность (1-3 тренировки)
-      moderate: 1.55,// Умеренная активность (3-5 тренировок)
-      high: 1.725    // Высокая активность (6-7 тренировок)
+      low: 1.375,    // Легкая активность (1-3 тренировки в неделю)
+      moderate: 1.55,// Умеренная активность (3-5 тренировок в неделю)
+      high: 1.725    // Высокая активность (6-7 тренировок в неделю)
     };
     
     let pal = activityMultipliers[activity] || 1.2;
@@ -1226,7 +876,7 @@
     if (!input) return;
     
     const val = parseFloat(input.value);
-    if (!isNaN(val) && val > 20 && val > 0) {
+    if (!isNaN(val) && val > 20 && val < 300) {
       userProfile.weight = val;
       
       if (!todayData.weightHistory) {
@@ -1234,7 +884,7 @@
       }
       
       const todayStr = getFormattedDate();
-      // Проверяем, есть ли запись за сегодня, если есть — обновляем, если нет — добавляем
+      // Проверяем, есть ли запись за сегодня, если есть — обновляем, если нет — добавляем новую
       const existingIndex = todayData.weightHistory.findIndex(h => h.date === todayStr);
       if (existingIndex >= 0) {
         todayData.weightHistory[existingIndex].weight = val;
@@ -1275,102 +925,85 @@
     `).join('');
   }
 
-  // --- 8. МОДАЛЬНОЕ ОКНО РУЧНОГО ДОБАВЛЕНИЯ БЛЮД И ПРОДУКТОВ ---
-  function openManualAddModal() {
-    const modalTitleText = currentLang === 'ru' ? "Добавить продукт вручную" : "Add food manually";
-    const nameLabelText = currentLang === 'ru' ? "Название блюда или продукта" : "Dish or product name";
-    const namePlaceholderText = currentLang === 'ru' ? "Например: Гречневая каша с маслом" : "e.g., Oatmeal with milk";
-    const weightLabelText = currentLang === 'ru' ? "Вес (граммы)" : "Weight (grams)";
-    const kcalLabelText = currentLang === 'ru' ? "Калории (ккал)" : "Calories (kcal)";
-    const pLabelText = currentLang === 'ru' ? "Белки (г)" : "Proteins (g)";
-    const fLabelText = currentLang === 'ru' ? "Жиры (г)" : "Fats (g)";
-    const cLabelText = currentLang === 'ru' ? "Углеводы (г)" : "Carbs (g)";
-    const cuLabelText = currentLang === 'ru' ? "Хлебные единицы (ХЕ)" : "Carb Units (CU)";
-    const cancelBtnText = currentLang === 'ru' ? "Отмена" : "Cancel";
-    const saveBtnText = currentLang === 'ru' ? "Сохранить в дневник" : "Save to diary";
+  function drawWeightChart() {
+    const canvas = document.getElementById('weightChartCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const history = todayData.weightHistory || [];
 
-    function openManualAddModal() {
-    const tTitle = currentLang === 'ru' ? "Добавить продукт вручную" : "Add food manually";
-    const tName = currentLang === 'ru' ? "Название блюда или продукта" : "Dish or product name";
-    const tWeight = currentLang === 'ru' ? "Вес (граммы)" : "Weight (grams)";
-    const tKcal = currentLang === 'ru' ? "Калории (ккал)" : "Calories (kcal)";
-    const tP = currentLang === 'ru' ? "Белки (г)" : "Proteins (g)";
-    const tF = currentLang === 'ru' ? "Жиры (г)" : "Fats (g)";
-    const tC = currentLang === 'ru' ? "Углеводы (г)" : "Carbs (g)";
-    const tCu = currentLang === 'ru' ? "Хлебные единицы (ХЕ)" : "Carb Units (CU)";
-    const tCancel = currentLang === 'ru' ? "Отмена" : "Cancel";
-    const tSave = currentLang === 'ru' ? "Сохранить в дневник" : "Save to diary";
+    // Настройка размеров холста с учетом плотности пикселей Retina-дисплеев
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = 220 * dpr;
+    ctx.scale(dpr, dpr);
 
-    const modalHtml = '<div class="modal" id="manualAddModal" role="dialog" aria-modal="true">' +
-      '<div class="modal-content">' +
-      '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">' +
-      '<h3 style="font-size: 18px; font-weight: 700; color: var(--text-color);">' + tTitle + '</h3>' +
-      '<button onclick="closeManualModal()" class="secondary" style="padding: 6px 10px; font-size: 12px;">✕</button>' +
-      '</div>' +
-      '<label>' + tName + '</label>' +
-      '<input type="text" id="manName" placeholder="Например: Овсяная каша">' +
-      '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">' +
-      '<div><label>' + tWeight + '</label><input type="number" id="manWeight" value="200" min="1"></div>' +
-      '<div><label>' + tKcal + '</label><input type="number" id="manKcal" value="250" min="0"></div>' +
-      '</div>' +
-      '<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;">' +
-      '<div><label style="font-size: 10px;">' + tP + '</label><input type="number" id="manP" value="10" step="0.1" min="0"></div>' +
-      '<div><label style="font-size: 10px;">' + tF + '</label><input type="number" id="manF" value="5" step="0.1" min="0"></div>' +
-      '<div><label style="font-size: 10px;">' + tC + '</label><input type="number" id="manC" value="30" step="0.1" min="0"></div>' +
-      '<div><label style="font-size: 10px;">' + tCu + '</label><input type="number" id="manCU" value="2.5" step="0.1" min="0"></div>' +
-      '</div>' +
-      '<div style="display: flex; gap: 12px; margin-top: 20px;">' +
-      '<button onclick="closeManualModal()" class="secondary" style="flex: 1;">' + tCancel + '</button>' +
-      '<button onclick="saveManualFoodItem()" style="flex: 1; background: var(--success);">' + tSave + '</button>' +
-      '</div></div></div>';
+    const width = rect.width;
+    const height = 220;
 
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-  }
+    ctx.clearRect(0, 0, width, height);
 
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-  }
-
-  function closeManualModal() {
-    const modal = document.getElementById('manualAddModal');
-    if (modal) modal.remove();
-  }
-
-  function saveManualFoodItem() {
-    const nameInput = document.getElementById('manName');
-    const weightInput = document.getElementById('manWeight');
-    const kcalInput = document.getElementById('manKcal');
-    const pInput = document.getElementById('manP');
-    const fInput = document.getElementById('manF');
-    const cInput = document.getElementById('manC');
-    const cuInput = document.getElementById('manCU');
-
-    if (!nameInput) return;
-
-    const name = nameInput.value.trim() || (currentLang === 'ru' ? "Пользовательское блюдо" : "Custom meal");
-    const weight = Number(weightInput.value) || 100;
-    const kcal = Number(kcalInput.value) || 0;
-    const p = Number(pInput.value) || 0;
-    const f = Number(fInput.value) || 0;
-    const c = Number(cInput.value) || 0;
-    const cu = Number(cuInput.value) || 0;
-
-    if (!todayData.meals[activeMealSubTab]) {
-      todayData.meals[activeMealSubTab] = [];
+    // Если данных мало, выводим информационное сообщение прямо на холст
+    if (history.length === 0) {
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '14px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(currentLang === 'ru' ? 'Нет данных для построения графика' : 'No chart data available', width / 2, height / 2);
+      return;
     }
 
-    todayData.meals[activeMealSubTab].push({
-      name,
-      weight,
-      kcal,
-      p: roundNum(p, 1),
-      f: roundNum(f, 1),
-      c: roundNum(c, 1),
-      cu: roundNum(cu, 1)
+    const weights = history.map(h => h.weight);
+    const minW = Math.min(...weights) - 1;
+    const maxW = Math.max(...weights) + 1;
+    const padding = 40;
+    const chartWidth = width - padding * 2;
+    const chartHeight = height - padding * 2;
+
+    // Отрисовка фоновой сетки тренда
+    ctx.strokeStyle = '#374151';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let i = 0; i <= 4; i++) {
+      let y = padding + (chartHeight / 4) * i;
+      ctx.moveTo(padding, y);
+      ctx.lineTo(width - padding, y);
+    }
+    ctx.stroke();
+
+    // Вычисление координат точек графика
+    const points = history.map((item, index) => {
+      let x = history.length === 1 ? width / 2 : padding + (chartWidth / (history.length - 1)) * index;
+      let y = padding + chartHeight - ((item.weight - minW) / (maxW - minW || 1)) * chartHeight;
+      return { x, y, weight: item.weight, date: item.date };
     });
 
-    saveStateToLocalStorage();
-    closeManualModal();
-    renderApp();
+    // Отрисовка плавной линии графика динамики веса
+    ctx.strokeStyle = '#6366f1';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    points.forEach((pt, idx) => {
+      if (idx === 0) ctx.moveTo(pt.x, pt.y);
+      else ctx.lineTo(pt.x, pt.y);
+    });
+    ctx.stroke();
+
+    // Отрисовка интерактивных точек и подписей значений
+    points.forEach(pt => {
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#6366f1';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(pt.x, pt.y, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Подпись значения веса над точкой
+      ctx.fillStyle = '#f9fafb';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(pt.weight + ' кг', pt.x, pt.y - 10);
+    });
   }
   // --- 9. МОДУЛЬ НАСТРОЙКИ ПРОФИЛЯ, API-КЛЮЧА И ТЕМЫ ОФОРМЛЕНИЯ ---
   function saveApiKeyFromUI() {
@@ -1478,7 +1111,6 @@
     activeTab = tabName;
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     
-    // Находим нужную кнопку навигации и активируем её
     const navButtons = document.querySelectorAll('.nav-item');
     navButtons.forEach(btn => {
       if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabName)) {
@@ -1498,23 +1130,19 @@
   window.addEventListener('DOMContentLoaded', () => {
     applyTheme();
     
-    // Проверка актуальности даты в дневнике (сброс при наступлении нового дня)
     const lastActiveDate = localStorage.getItem('cp_active_date');
     const todayStr = getFormattedDate();
     
     if (lastActiveDate !== todayStr) {
-      // Сохраняем вчерашние итоги в историю, если нужно, и обновляем дату
       localStorage.setItem('cp_active_date', todayStr);
     }
 
-    // Первичный рендеринг активной вкладки
     if (activeTab === 'profile') {
       renderProfileExtended();
     } else {
       renderApp();
     }
 
-    // Регистрация Service Worker для поддержки PWA оффлайн-режима (если поддерживается)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js').catch(err => {
         console.log('Service Worker registration skipped or failed:', err);
@@ -1522,7 +1150,6 @@
     }
   });
 
-  // Глобальные обработчики закрытия модальных окон по клику вне их области
   window.addEventListener('click', (event) => {
     const modal = document.getElementById('manualAddModal');
     if (modal && event.target === modal) {
@@ -1530,7 +1157,6 @@
     }
   });
 
-  // Обработка нажатия клавиши Escape для закрытия модальных окон
   window.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
       closeManualModal();
