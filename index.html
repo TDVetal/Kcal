@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="ru" class="dark">
 <head>
   <meta charset="UTF-8">
@@ -18,7 +18,7 @@
       height: 100dvh; width: 100%; margin: 0; padding: 0; overflow: hidden;
       touch-action: manipulation; user-select: none; -webkit-user-select: none;
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-      font-size: 15px; /* Увеличенный базовый шрифт */
+      font-size: 15px;
     }
     .safe-top { padding-top: env(safe-area-inset-top, 0px); }
     .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
@@ -32,12 +32,8 @@
     html.dark .sub-card { background: rgba(30, 41, 59, 0.65); border: 1px solid rgba(51, 65, 85, 0.5); }
     .tab-screen { display: none; height: 100%; flex-direction: column; overflow: hidden; }
     .tab-screen.active { display: flex; }
-    
-    /* Стили для круговых прогресс-баров */
     .progress-ring { transform: rotate(-90deg); transform-origin: 50% 50%; }
     .progress-ring-circle { transition: stroke-dashoffset 0.5s ease-in-out; }
-
-    /* Анимация выполнения нормы калорий */
     @keyframes pulseGlow {
       0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
       70% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
@@ -48,7 +44,6 @@
 </head>
 <body class="flex flex-col h-full w-full max-w-md mx-auto safe-top safe-bottom relative shadow-2xl">
 
-  <!-- ВЕРХНЯЯ ШАПКА -->
   <header class="glass-panel px-3.5 py-3 flex items-center justify-between shrink-0 z-30 border-b">
     <div class="flex items-center space-x-2.5">
       <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-xl shadow-md shrink-0">🔥</div>
@@ -62,21 +57,16 @@
         <span id="headerGoalIcon">🔥</span>
         <span id="headerGoalType">Похудение</span>
       </button>
-      <!-- Переключатель светлой / темной темы (без auto) -->
       <button type="button" onclick="toggleThemeMode()" id="themeBtn" class="sub-card px-2.5 py-2 rounded-xl text-sm font-bold flex items-center gap-1 active:scale-95 transition">
         <span id="themeIcon">🌙</span>
       </button>
-      <!-- Переключатель языка (RU, EN, NL) -->
       <button type="button" onclick="cycleAppLanguage()" id="langSelectorBtn" class="sub-card px-3 py-2 rounded-xl text-xs font-black text-blue-600 dark:text-blue-400 flex items-center gap-1 active:scale-95 transition">
         🌐 <span id="currentLangLabel">RU</span>
       </button>
     </div>
   </header>
 
-  <!-- ОСНОВНОЙ КОНТЕНТ -->
   <main class="flex-1 overflow-hidden relative p-3 flex flex-col">
-
-    <!-- ВКЛАДКА 1: ДНЕВНИК С КРУГОВЫМИ ПРОГРЕСС-БАРАМИ -->
     <div id="tab-diary" class="tab-screen active justify-between space-y-2.5">
       <div id="diaryMainCard" class="glass-panel rounded-2xl p-3.5 shrink-0 shadow-sm transition-all duration-300">
         <div class="flex items-center justify-between mb-3">
@@ -87,7 +77,6 @@
             </div>
             <span id="remainBadge" class="text-xs font-extrabold px-2.5 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 inline-block mt-1">Осталось: 2000</span>
           </div>
-          <!-- Главный круговой прогресс-бар калорий -->
           <div class="relative w-16 h-16 flex items-center justify-center">
             <svg class="w-full h-full progress-ring" width="64" height="64">
               <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="5" class="text-slate-200 dark:text-slate-800" fill="transparent"/>
@@ -103,9 +92,7 @@
           </div>
         </div>
 
-        <!-- Круговые прогресс-бары для БЖУ -->
         <div class="grid grid-cols-4 gap-2 text-center pt-2 border-t border-slate-200 dark:border-slate-800">
-          <!-- Белки -->
           <div class="flex flex-col items-center">
             <div class="relative w-11 h-11 flex items-center justify-center mb-1">
               <svg class="w-full h-full progress-ring" width="44" height="44">
@@ -117,7 +104,6 @@
             <span id="lblProteins" class="text-[11px] font-bold text-slate-500">Белки</span>
             <span id="valProteins" class="text-xs font-black">0/130г</span>
           </div>
-          <!-- Жиры -->
           <div class="flex flex-col items-center">
             <div class="relative w-11 h-11 flex items-center justify-center mb-1">
               <svg class="w-full h-full progress-ring" width="44" height="44">
@@ -129,7 +115,6 @@
             <span id="lblFats" class="text-[11px] font-bold text-slate-500">Жиры</span>
             <span id="valFats" class="text-xs font-black">0/65г</span>
           </div>
-          <!-- Углеводы -->
           <div class="flex flex-col items-center">
             <div class="relative w-11 h-11 flex items-center justify-center mb-1">
               <svg class="w-full h-full progress-ring" width="44" height="44">
@@ -141,7 +126,6 @@
             <span id="lblCarbs" class="text-[11px] font-bold text-slate-500">Углев.</span>
             <span id="valCarbs" class="text-xs font-black">0/200г</span>
           </div>
-          <!-- ХЕ -->
           <div class="flex flex-col items-center justify-center bg-rose-500/10 rounded-xl p-1 border border-rose-500/20">
             <span class="text-base font-black text-rose-500 mb-0.5">🩸</span>
             <span id="lblXE" class="text-[10px] font-bold text-rose-500">Сахар / ХЕ</span>
@@ -189,7 +173,6 @@
       </div>
     </div>
 
-    <!-- ВКЛАДКА 2: РАЦИОН -->
     <div id="tab-diet" class="tab-screen space-y-3">
       <div class="glass-panel rounded-2xl p-3.5 shrink-0">
         <div class="flex items-center justify-between mb-2.5">
@@ -212,7 +195,6 @@
       <div id="dietCardsContainer" class="flex-1 overflow-y-auto no-scrollbar space-y-2.5 pb-1"></div>
     </div>
 
-    <!-- ВКЛАДКА 3: ФОРМА И СРАВНЕНИЕ ФОТО ПРОГРЕССА -->
     <div id="tab-body" class="tab-screen space-y-3 overflow-y-auto no-scrollbar">
       <div class="glass-panel rounded-2xl p-4 shrink-0">
         <div class="flex justify-between items-center mb-2.5">
@@ -228,21 +210,17 @@
           <input type="number" id="quickWeightInput" step="0.1" placeholder="Новый вес (кг)..." class="flex-1 sub-card rounded-xl px-3.5 py-2.5 text-sm font-bold outline-none">
           <button type="button" onclick="logNewWeight()" id="btnLogWeight" class="px-4 py-2.5 bg-blue-600 active:bg-blue-700 text-white font-black rounded-xl text-xs shadow">Записать вес</button>
         </div>
-
-        <!-- Кнопка фото прогресса и интерактивное сравнение -->
         <div class="mt-4 pt-3.5 border-t border-slate-200 dark:border-slate-800 space-y-3">
           <input type="file" id="bodyPhotoInput" accept="image/*" capture="user" class="hidden" onchange="saveBodyProgressPhoto(this)">
           <button type="button" onclick="document.getElementById('bodyPhotoInput').click()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 active:scale-95 text-white font-black rounded-xl text-xs flex items-center justify-center gap-2 shadow-md">
             <span>📸</span> <span id="btnPhotoProgressTxt">Сделать фото прогресса сегодня</span>
           </button>
-          
           <div>
             <p class="text-xs font-bold text-slate-400 mb-2" id="lblPhotoGalleryTitle">История результатов и сравнение:</p>
             <div id="bodyPhotoGallery" class="grid grid-cols-3 gap-2.5 pt-1"></div>
           </div>
         </div>
       </div>
-
       <div class="glass-panel rounded-2xl p-4 shrink-0">
         <div class="flex justify-between items-center mb-3">
           <h3 id="measTitle" class="font-black text-xs uppercase tracking-wider text-slate-400">📏 Объемы тела (см)</h3>
@@ -261,7 +239,6 @@
       </div>
     </div>
 
-    <!-- ВКЛАДКА 4: ГРАФИКИ -->
     <div id="tab-charts" class="tab-screen space-y-3 overflow-y-auto no-scrollbar">
       <div class="glass-panel rounded-2xl p-4">
         <div class="flex justify-between items-center mb-2.5"><h3 id="chartKcalHeader" class="font-black text-xs uppercase text-slate-400">📊 Калории (7 дней)</h3><span id="avgKcalBadge" class="text-xs font-extrabold text-blue-500">Среднее: 1850 ккал</span></div>
@@ -273,7 +250,6 @@
       </div>
     </div>
 
-    <!-- ВКЛАДКА 5: ПРОФИЛЬ -->
     <div id="tab-profile" class="tab-screen space-y-3 overflow-y-auto no-scrollbar">
       <div class="glass-panel rounded-2xl p-4 space-y-3.5 text-sm">
         <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2.5">
@@ -303,7 +279,6 @@
     </div>
   </main>
 
-  <!-- НИЖНЯЯ НАВИГАЦИЯ -->
   <nav class="glass-panel px-3 py-2.5 border-t flex justify-around items-center shrink-0 z-30 text-xs font-extrabold">
     <button type="button" onclick="switchMainTab('diary')" id="navBtn-diary" class="flex flex-col items-center gap-1 text-blue-600 dark:text-blue-400 transition"><span class="text-xl leading-none">🍏</span><span id="navTxtDiary">Дневник</span></button>
     <button type="button" onclick="switchMainTab('diet')" id="navBtn-diet" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">🥗</span><span id="navTxtDiet">Рацион</span></button>
@@ -312,7 +287,6 @@
     <button type="button" onclick="switchMainTab('profile')" id="navBtn-profile" class="flex flex-col items-center gap-1 text-slate-400 transition"><span class="text-xl leading-none">⚙️</span><span id="navTxtProfile">Профиль</span></button>
   </nav>
 
-  <!-- МОДАЛКА ЕДЫ И ИИ-АНАЛИЗА ФОТО -->
   <div id="foodModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-end justify-center">
     <div class="glass-panel w-full max-w-md rounded-t-3xl p-5 space-y-3.5 max-h-[92dvh] flex flex-col overflow-hidden border-t">
       <div class="flex justify-between items-center shrink-0">
@@ -356,7 +330,6 @@
     </div>
   </div>
 
-  <!-- МОДАЛКА РАСШИРЕННОЙ АКТИВНОСТИ -->
   <div id="activityModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="glass-panel w-full max-w-sm rounded-3xl p-5 space-y-3.5 border">
       <div class="flex justify-between items-center"><h3 id="actModalTitle" class="font-black text-sm">🏃 Выбрать активность</h3><button type="button" onclick="closeActivityModal()" class="w-8 h-8 rounded-full sub-card font-bold">✕</button></div>
@@ -376,7 +349,6 @@
     </div>
   </div>
 
-  <!-- МОДАЛКА ПРОСМОТРА СРАВНЕНИЯ ФОТО ПРОГРЕССА -->
   <div id="photoCompareModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4">
     <div class="w-full max-w-sm flex justify-between items-center mb-3">
       <h3 id="compareModalTitle" class="text-white font-black text-sm">📸 Сравнение результатов</h3>
@@ -389,7 +361,6 @@
     <button type="button" onclick="deleteCurrentProgressPhoto()" class="mt-3 px-4 py-2 bg-rose-600 text-white font-bold rounded-xl text-xs">🗑️ Удалить это фото</button>
   </div>
   <script>
-    // --- 1. ТОЧНЫЙ ПЕРЕВОД (RU, EN, NL) ---
     const i18n = {
       ru: {
         code: 'RU', appTitle: 'Калории Pro', today: 'Сегодня',
@@ -490,29 +461,23 @@
         currentAppLang = langKey;
         localStorage.setItem('kcal_pro_lang', langKey);
         const t = i18n[langKey] || i18n.ru;
-
         document.getElementById('currentLangLabel').innerText = t.code;
         document.getElementById('appTitle').innerText = t.appTitle;
         document.getElementById('currentDateLabel').innerText = t.today;
         document.getElementById('unitKcal').innerText = t.unitKcal;
-
         document.getElementById('lblProteins').innerText = t.proteins;
         document.getElementById('lblFats').innerText = t.fats;
         document.getElementById('lblCarbs').innerText = t.carbs;
         document.getElementById('lblXE').innerText = t.xe;
-
         document.getElementById('lblWaterTitle').innerText = t.waterTitle;
         document.getElementById('lblBurnTitle').innerText = t.burnTitle;
         document.getElementById('btnAddAct').innerText = t.btnAddAct;
-
         document.getElementById('tabNameBreakfast').innerText = t.tabBreakfast;
         document.getElementById('tabNameLunch').innerText = t.tabLunch;
         document.getElementById('tabNameDinner').innerText = t.tabDinner;
         document.getElementById('tabNameSnack').innerText = t.tabSnack;
-
         document.getElementById('btnAddFoodTxt').innerText = t.btnAddFood;
         document.getElementById('btnAiPhotoTxt').innerText = t.btnAiPhoto;
-
         document.getElementById('dietTitle').innerText = t.dietTitle;
         document.getElementById('dietSubBadge').innerText = t.dietBalanced;
         document.getElementById('dietBtn-diabetic').innerText = t.diabBtn;
@@ -520,7 +485,6 @@
         document.getElementById('dietBtn-veg').innerText = t.vegBtn;
         document.getElementById('diabBoxTitle').innerText = t.diabBoxTitle;
         document.getElementById('diabBoxDesc').innerText = t.diabBoxDesc;
-
         document.getElementById('bodyTitle').innerText = t.bodyTitle;
         document.getElementById('bodySub').innerText = t.bodySub;
         document.getElementById('btnPhotoProgressTxt').innerText = t.btnPhotoProgressTxt;
@@ -536,10 +500,8 @@
         document.getElementById('lblHips').innerText = t.hips;
         document.getElementById('lblNeck').innerText = t.bicep;
         document.getElementById('weightHistTitle').innerText = t.weightHist;
-
         document.getElementById('chartKcalHeader').innerText = t.chartKcalHeader;
         document.getElementById('chartWeightHeader').innerText = t.chartWeightHeader;
-
         document.getElementById('profHeader').innerText = t.profHeader;
         document.getElementById('profSub').innerText = t.profSub;
         document.getElementById('lblGender').innerText = t.gender;
@@ -555,13 +517,11 @@
         document.getElementById('act4').innerText = t.act4;
         document.getElementById('btnCalcNorm').innerText = t.btnCalcNorm;
         document.getElementById('btnClearDay').innerText = t.btnClearDay;
-
         document.getElementById('navTxtDiary').innerText = t.navTxtDiary;
         document.getElementById('navTxtDiet').innerText = t.navTxtDiet;
         document.getElementById('navTxtBody').innerText = t.navTxtBody;
         document.getElementById('navTxtCharts').innerText = t.navTxtCharts;
         document.getElementById('navTxtProfile').innerText = t.navTxtProfile;
-
         document.getElementById('modalFoodTitle').innerText = t.modalFoodTitle;
         document.getElementById('aiPhotoHeader').innerText = t.aiPhotoHeader;
         document.getElementById('aiPhotoSub').innerText = t.aiPhotoSub;
@@ -572,7 +532,6 @@
         document.getElementById('btnConfirmFood').innerText = t.btnConfirmFood;
         document.getElementById('actModalTitle').innerText = t.actModalTitle;
       } catch (e) {}
-
       try { renderDiaryUI(); } catch (e) {}
       try { renderDietPlansList(); } catch (e) {}
       try { renderQuickChips(); } catch (e) {}
@@ -580,26 +539,20 @@
 
     function cycleAppLanguage() {
       const order = ['ru', 'en', 'nl'];
-      const next = order[(order.indexOf(currentAppLang) + 1) % order.length];
-      setAppLanguage(next);
+      setAppLanguage(order[(order.indexOf(currentAppLang) + 1) % order.length]);
     }
 
-    // --- 2. РУЧНОЕ ПЕРЕКЛЮЧЕНИЕ ТЕМЫ (СВЕТЛАЯ / ТЕМНАЯ) ---
     let isDarkMode = localStorage.getItem('theme_dark') !== 'false';
-
     function applyAppTheme() {
       document.documentElement.classList.toggle('dark', isDarkMode);
       const icon = document.getElementById('themeIcon');
       if (icon) icon.innerText = isDarkMode ? '🌙' : '☀️';
     }
-
     function toggleThemeMode() {
       isDarkMode = !isDarkMode;
       localStorage.setItem('theme_dark', isDarkMode);
       applyAppTheme();
     }
-
-    // --- 3. БАЗА ПРОДУКТОВ И РАЦИОНОВ ---
     const foodDatabase = [
       { id: 1, name: 'Куриное филе грудки', kcal: 110, b: 23.1, z: 1.2, u: 0, gi: 0 },
       { id: 2, name: 'Яйцо куриное (1 шт = ~50г)', kcal: 155, b: 12.7, z: 11.5, u: 0.7, gi: 0 },
@@ -635,46 +588,30 @@
       ]
     };
 
-    // --- 4. СОСТОЯНИЕ И ЛОГИКА ---
     let userProfile = JSON.parse(localStorage.getItem('kcal_user_profile')) || {
       gender: 'male', age: 41, height: 178, weight: 78.5, goalWeight: 74.0,
       activity: 1.375, goalType: 'loss', dailyTargetKcal: 2000
     };
-
-    let diaryData
-    let diaryData = JSON.parse(localStorage.getItem('kcal_diary_data')) || {
-      breakfast: [], lunch: [], dinner: [], snack: []
-    };
-
+    let diaryData = JSON.parse(localStorage.getItem('kcal_diary_data')) || { breakfast: [], lunch: [], dinner: [], snack: [] };
     let waterIntake = Number(localStorage.getItem('kcal_water_val')) || 0;
     let burnedKcal = Number(localStorage.getItem('kcal_burned_val')) || 0;
     let currentMealCategory = 'breakfast';
     let currentDietTab = 'diabetic';
-
-    let weightHistory = JSON.parse(localStorage.getItem('kcal_weight_history')) || [
-      { date: '10.10', weight: 80.2 }, { date: '14.10', weight: 78.5 }
-    ];
-
-    let bodyMeasurements = JSON.parse(localStorage.getItem('kcal_body_meas')) || {
-      waist: 84, chest: 102, hips: 98, bicep: 38
-    };
-
+    let weightHistory = JSON.parse(localStorage.getItem('kcal_weight_history')) || [{ date: '10.10', weight: 80.2 }, { date: '14.10', weight: 78.5 }];
+    let bodyMeasurements = JSON.parse(localStorage.getItem('kcal_body_meas')) || { waist: 84, chest: 102, hips: 98, bicep: 38 };
     let bodyPhotosHistory = JSON.parse(localStorage.getItem('kcal_body_photos')) || [];
 
     function saveBodyProgressPhoto(input) {
       if (!input.files || !input.files[0]) return;
-      const file = input.files[0];
       const reader = new FileReader();
       reader.onload = function(e) {
-        const base64Image = e.target.result;
-        const todayStr = `${new Date().getDate()}.${new Date().getMonth() + 1}.${new Date().getFullYear()}`;
-        bodyPhotosHistory.unshift({ date: todayStr, img: base64Image });
+        bodyPhotosHistory.unshift({ date: `${new Date().getDate()}.${new Date().getMonth() + 1}.${new Date().getFullYear()}`, img: e.target.result });
         if (bodyPhotosHistory.length > 9) bodyPhotosHistory.pop();
         localStorage.setItem('kcal_body_photos', JSON.stringify(bodyPhotosHistory));
         renderBodyPhotosGallery();
-        alert('✓ Фото прогресса за ' + todayStr + ' сохранено!');
+        alert('✓ Фото прогресса сохранено!');
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(input.files[0]);
     }
 
     function renderBodyPhotosGallery() {
@@ -701,9 +638,7 @@
       document.getElementById('compareModalDate').innerText = `Результат за ${item.date}`;
       document.getElementById('photoCompareModal').classList.remove('hidden');
     }
-    function closePhotoCompareModal() {
-      document.getElementById('photoCompareModal').classList.add('hidden');
-    }
+    function closePhotoCompareModal() { document.getElementById('photoCompareModal').classList.add('hidden'); }
     function deleteCurrentProgressPhoto() {
       if (confirm('Удалить это фото прогресса?')) {
         bodyPhotosHistory.splice(activeCompareIdx, 1);
@@ -737,23 +672,15 @@
     function selectMealSubTab(mealKey) {
       currentMealCategory = mealKey;
       const t = i18n[currentAppLang] || i18n.ru;
-      const titles = {
-        breakfast: `🌅 ${t.tabBreakfast}`, lunch: `☀️ ${t.tabLunch}`,
-        dinner: `🌙 ${t.tabDinner}`, snack: `🍎 ${t.tabSnack}`
-      };
+      const titles = { breakfast: `🌅 ${t.tabBreakfast}`, lunch: `☀️ ${t.tabLunch}`, dinner: `🌙 ${t.tabDinner}`, snack: `🍎 ${t.tabSnack}` };
 
       ['breakfast', 'lunch', 'dinner', 'snack'].forEach(k => {
         const btn = document.getElementById(`subTab-${k}`);
         if (!btn) return;
-        if (k === mealKey) {
-          btn.className = 'py-2 rounded-lg text-xs font-black bg-blue-600 text-white shadow transition';
-        } else {
-          btn.className = 'py-2 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 transition';
-        }
+        btn.className = (k === mealKey) ? 'py-2 rounded-lg text-xs font-black bg-blue-600 text-white shadow transition' : 'py-2 rounded-lg text-xs font-bold text-slate-500 dark:text-slate-400 transition';
       });
 
-      const header = document.getElementById('currentMealHeader');
-      if (header) header.innerText = titles[mealKey];
+      document.getElementById('currentMealHeader').innerText = titles[mealKey];
       renderCurrentMealList();
     }
 
@@ -771,53 +698,42 @@
       const t = i18n[currentAppLang] || i18n.ru;
       const norm = Number(userProfile.dailyTargetKcal || 2000);
       const remain = norm + burnedKcal - totalKcal;
-      const xeTotal = (totalU / 12).toFixed(1);
 
       document.getElementById('eatenKcal').innerText = Math.round(totalKcal);
       document.getElementById('normKcal').innerText = norm;
       document.getElementById('valProteins').innerText = `${Math.round(totalB)}/130г`;
       document.getElementById('valFats').innerText = `${Math.round(totalZ)}/65г`;
       document.getElementById('valCarbs').innerText = `${Math.round(totalU)}/200г`;
-      document.getElementById('valXE').innerText = `${xeTotal} ХЕ`;
+      document.getElementById('valXE').innerText = `${(totalU / 12).toFixed(1)} ХЕ`;
 
       const pKcal = Math.min(1, totalKcal / (norm + burnedKcal));
-      const pB = Math.min(1, totalB / 130);
-      const pZ = Math.min(1, totalZ / 65);
-      const pU = Math.min(1, totalU / 200);
-
       document.getElementById('ringKcal').style.strokeDashoffset = 175 - (pKcal * 175);
       document.getElementById('kcalPercentText').innerText = `${Math.round(pKcal * 100)}%`;
 
-      document.getElementById('ringProt').style.strokeDashoffset = 113 - (pB * 113);
-      document.getElementById('protPercentText').innerText = `${Math.round(pB * 100)}%`;
+      document.getElementById('ringProt').style.strokeDashoffset = 113 - (Math.min(1, totalB / 130) * 113);
+      document.getElementById('protPercentText').innerText = `${Math.round(Math.min(1, totalB / 130) * 100)}%`;
 
-      document.getElementById('ringFats').style.strokeDashoffset = 113 - (pZ * 113);
-      document.getElementById('fatsPercentText').innerText = `${Math.round(pZ * 100)}%`;
+      document.getElementById('ringFats').style.strokeDashoffset = 113 - (Math.min(1, totalZ / 65) * 113);
+      document.getElementById('fatsPercentText').innerText = `${Math.round(Math.min(1, totalZ / 65) * 100)}%`;
 
-      document.getElementById('ringCarbs').style.strokeDashoffset = 113 - (pU * 113);
-      document.getElementById('carbsPercentText').innerText = `${Math.round(pU * 100)}%`;
+      document.getElementById('ringCarbs').style.strokeDashoffset = 113 - (Math.min(1, totalU / 200) * 113);
+      document.getElementById('carbsPercentText').innerText = `${Math.round(Math.min(1, totalU / 200) * 100)}%`;
 
       const diaryCard = document.getElementById('diaryMainCard');
-      if (totalKcal >= (norm + burnedKcal)) {
-        diaryCard.classList.add('goal-achieved-anim');
-      } else {
-        diaryCard.classList.remove('goal-achieved-anim');
-      }
+      if (totalKcal >= (norm + burnedKcal)) diaryCard.classList.add('goal-achieved-anim');
+      else diaryCard.classList.remove('goal-achieved-anim');
 
       const badge = document.getElementById('remainBadge');
-      if (badge) {
-        if (remain >= 0) {
-          badge.innerText = `${t.remain} ${Math.round(remain)}`;
-          badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 inline-block mt-1';
-        } else {
-          badge.innerText = `${t.over} ${Math.abs(Math.round(remain))}`;
-          badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-lg bg-rose-500/15 text-rose-600 dark:text-rose-400 inline-block mt-1';
-        }
+      if (remain >= 0) {
+        badge.innerText = `${t.remain} ${Math.round(remain)}`;
+        badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-lg bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 inline-block mt-1';
+      } else {
+        badge.innerText = `${t.over} ${Math.abs(Math.round(remain))}`;
+        badge.className = 'text-xs font-extrabold px-2.5 py-0.5 rounded-lg bg-rose-500/15 text-rose-600 dark:text-rose-400 inline-block mt-1';
       }
 
       document.getElementById('waterCountText').innerText = `${waterIntake} / 2000 мл`;
       document.getElementById('burnedKcalText').innerText = `+${burnedKcal} ккал`;
-
       renderCurrentMealList();
     }
 
@@ -828,40 +744,26 @@
       const t = i18n[currentAppLang] || i18n.ru;
 
       let mealKcal = 0, mealCarbs = 0;
-      items.forEach(i => {
-        mealKcal += Number(i.kcal || 0);
-        mealCarbs += Number(i.u || 0);
-      });
-      const mealXE = (mealCarbs / 12).toFixed(1);
-      document.getElementById('currentMealKcal').innerText = `${Math.round(mealKcal)} ${t.unitKcal} • ${mealXE} ХЕ`;
+      items.forEach(i => { mealKcal += Number(i.kcal || 0); mealCarbs += Number(i.u || 0); });
+      document.getElementById('currentMealKcal').innerText = `${Math.round(mealKcal)} ${t.unitKcal} • ${(mealCarbs / 12).toFixed(1)} ХЕ`;
 
       if (items.length === 0) {
-        container.innerHTML = `
-          <div class="h-full flex flex-col items-center justify-center py-8 text-center text-slate-400">
-            <span class="text-3xl opacity-40 mb-1.5">🍽️</span>
-            <p class="text-xs">${t.emptyMeal}</p>
-          </div>
-        `;
+        container.innerHTML = `<div class="h-full flex flex-col items-center justify-center py-8 text-center text-slate-400"><span class="text-3xl opacity-40 mb-1.5">🍽️</span><p class="text-xs">${t.emptyMeal}</p></div>`;
         return;
       }
 
-      container.innerHTML = items.map((item, idx) => {
-        const itemXE = ((item.u || 0) / 12).toFixed(1);
-        return `
-          <div class="flex items-center justify-between p-2.5 sub-card rounded-xl text-xs">
-            <div class="flex-1 pr-2">
-              <span class="font-black text-sm text-slate-800 dark:text-slate-100 block truncate">${item.name}</span>
-              <span class="text-xs text-slate-400 font-semibold">
-                ${item.grams}г • Б:${item.b}г • Ж:${item.z}г • У:${item.u}г ${item.u > 0 ? `• <b class="text-rose-400">${itemXE} ХЕ</b>` : ''}
-              </span>
-            </div>
-            <div class="flex items-center gap-2.5 shrink-0">
-              <span class="font-black text-sm text-blue-500">${item.kcal}</span>
-              <button type="button" onclick="deleteMealItem(${idx})" class="w-7 h-7 rounded-lg bg-slate-500/10 hover:bg-rose-500/20 text-slate-400 hover:text-rose-500 flex items-center justify-center font-bold">✕</button>
-            </div>
+      container.innerHTML = items.map((item, idx) => `
+        <div class="flex items-center justify-between p-2.5 sub-card rounded-xl text-xs">
+          <div class="flex-1 pr-2">
+            <span class="font-black text-sm text-slate-800 dark:text-slate-100 block truncate">${item.name}</span>
+            <span class="text-xs text-slate-400 font-semibold">${item.grams}г • Б:${item.b}г • Ж:${item.z}г • У:${item.u}г ${item.u > 0 ? `• <b class="text-rose-400">${(item.u / 12).toFixed(1)} ХЕ</b>` : ''}</span>
           </div>
-        `;
-      }).join('');
+          <div class="flex items-center gap-2.5 shrink-0">
+            <span class="font-black text-sm text-blue-500">${item.kcal}</span>
+            <button type="button" onclick="deleteMealItem(${idx})" class="w-7 h-7 rounded-lg bg-slate-500/10 hover:bg-rose-500/20 text-slate-400 hover:text-rose-500 flex items-center justify-center font-bold">✕</button>
+          </div>
+        </div>
+      `).join('');
     }
 
     function deleteMealItem(index) {
@@ -878,10 +780,7 @@
 
     function openActivityModal() { document.getElementById('activityModal').classList.remove('hidden'); }
     function closeActivityModal() { document.getElementById('activityModal').classList.add('hidden'); }
-    function fillPresetActivity(name, kcal) {
-      document.getElementById('inpActName').value = name;
-      document.getElementById('inpActKcal').value = kcal;
-    }
+    function fillPresetActivity(name, kcal) { document.getElementById('inpActName').value = name; document.getElementById('inpActKcal').value = kcal; }
     function saveActivityEntry() {
       const kcal = Number(document.getElementById('inpActKcal').value) || 0;
       if (kcal > 0) {
@@ -892,35 +791,26 @@
       }
     }
 
-    function triggerAiCamera() {
-      openFoodModal();
-      document.getElementById('aiCameraInput').click();
-    }
+    function triggerAiCamera() { openFoodModal(); document.getElementById('aiCameraInput').click(); }
 
     function analyzeFoodPhotoAI(input) {
       if (!input.files || !input.files[0]) return;
-      const file = input.files[0];
       const previewBox = document.getElementById('aiPhotoPreviewBox');
-      const previewImg = document.getElementById('aiPreviewImg');
-      const detectStatus = document.getElementById('aiDetectStatus');
-      const detectResult = document.getElementById('aiDetectResult');
-
       previewBox.classList.remove('hidden');
-      previewImg.src = URL.createObjectURL(file);
-      detectStatus.innerText = '🤖 ИИ сканирует тарелку в реальном времени...';
-      detectResult.innerText = '';
+      document.getElementById('aiPreviewImg').src = URL.createObjectURL(input.files[0]);
+      document.getElementById('aiDetectStatus').innerText = '🤖 ИИ сканирует тарелку...';
+      document.getElementById('aiDetectResult').innerText = '';
 
       setTimeout(() => {
-        const smartDetections = [
+        const res = [
           { name: 'Лосось на гриле со шпинатом и авокадо', grams: 240, kcal: 385, b: 32, z: 22, u: 4.2 },
           { name: 'Куриная грудка с гречкой и овощами', grams: 280, kcal: 340, b: 42, z: 4, u: 32.0 },
           { name: 'Омлет с сыром, томатами и зеленью', grams: 220, kcal: 310, b: 20, z: 24, u: 5.0 }
-        ];
-        const res = smartDetections[Math.floor(Math.random() * smartDetections.length)];
+        ][Math.floor(Math.random() * 3)];
 
-        detectStatus.innerText = '✓ ИИ распознал блюдо (100% точность)';
-        detectStatus.className = 'font-black text-emerald-500';
-        detectResult.innerText = `${res.name} (~${res.grams}г)`;
+        document.getElementById('aiDetectStatus').innerText = '✓ ИИ распознал блюдо (100% точность)';
+        document.getElementById('aiDetectStatus').className = 'font-black text-emerald-500';
+        document.getElementById('aiDetectResult').innerText = `${res.name} (~${res.grams}г)`;
 
         document.getElementById('inpFoodName').value = res.name;
         document.getElementById('inpFoodGrams').value = res.grams;
@@ -932,33 +822,19 @@
     }
 
     let selectedDbFood = null;
-
     function openFoodModal() { document.getElementById('foodModal').classList.remove('hidden'); renderQuickChips(); }
-    function closeFoodModal() {
-      document.getElementById('foodModal').classList.add('hidden');
-      document.getElementById('aiPhotoPreviewBox').classList.add('hidden');
-      selectedDbFood = null;
-    }
+    function closeFoodModal() { document.getElementById('foodModal').classList.add('hidden'); document.getElementById('aiPhotoPreviewBox').classList.add('hidden'); selectedDbFood = null; }
 
     function renderQuickChips() {
       const container = document.getElementById('foodQuickList');
       if (!container) return;
-      container.innerHTML = foodDatabase.slice(0, 8).map(f => `
-        <button type="button" onclick="selectDbFood(${f.id})" class="sub-card px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 hover:border-blue-500 transition">
-          ${f.name}
-        </button>
-      `).join('');
+      container.innerHTML = foodDatabase.slice(0, 8).map(f => `<button type="button" onclick="selectDbFood(${f.id})" class="sub-card px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 hover:border-blue-500 transition">${f.name}</button>`).join('');
     }
 
     function filterFoodDatabase(query) {
       if (!query.trim()) { renderQuickChips(); return; }
       const matches = foodDatabase.filter(f => f.name.toLowerCase().includes(query.toLowerCase()));
-      const container = document.getElementById('foodQuickList');
-      container.innerHTML = matches.slice(0, 8).map(f => `
-        <button type="button" onclick="selectDbFood(${f.id})" class="sub-card px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 hover:border-blue-500 text-blue-500">
-          ${f.name}
-        </button>
-      `).join('');
+      document.getElementById('foodQuickList').innerHTML = matches.slice(0, 8).map(f => `<button type="button" onclick="selectDbFood(${f.id})" class="sub-card px-3 py-1.5 rounded-xl text-xs font-bold shrink-0 hover:border-blue-500 text-blue-500">${f.name}</button>`).join('');
     }
 
     function selectDbFood(id) {
@@ -971,8 +847,7 @@
 
     function recalcFoodByGrams(gramsVal) {
       if (!selectedDbFood) return;
-      const g = Number(gramsVal) || 100;
-      const ratio = g / 100;
+      const ratio = (Number(gramsVal) || 100) / 100;
       document.getElementById('inpFoodKcal').value = Math.round(selectedDbFood.kcal * ratio);
       document.getElementById('inpFoodB').value = (selectedDbFood.b * ratio).toFixed(1);
       document.getElementById('inpFoodZ').value = (selectedDbFood.z * ratio).toFixed(1);
@@ -981,19 +856,18 @@
 
     function saveFoodToMeal() {
       const name = document.getElementById('inpFoodName').value.trim();
-      const grams = Number(document.getElementById('inpFoodGrams').value) || 100;
-      const kcal = Number(document.getElementById('inpFoodKcal').value) || 0;
-      const b = Number(document.getElementById('inpFoodB').value) || 0;
-      const z = Number(document.getElementById('inpFoodZ').value) || 0;
-      const u = Number(document.getElementById('inpFoodU').value) || 0;
-
       if (!name) return;
-
-      diaryData[currentMealCategory].push({ name, grams, kcal, b, z, u });
+      diaryData[currentMealCategory].push({
+        name,
+        grams: Number(document.getElementById('inpFoodGrams').value) || 100,
+        kcal: Number(document.getElementById('inpFoodKcal').value) || 0,
+        b: Number(document.getElementById('inpFoodB').value) || 0,
+        z: Number(document.getElementById('inpFoodZ').value) || 0,
+        u: Number(document.getElementById('inpFoodU').value) || 0
+      });
       localStorage.setItem('kcal_diary_data', JSON.stringify(diaryData));
       closeFoodModal();
       renderDiaryUI();
-
       document.getElementById('inpFoodName').value = '';
       document.getElementById('inpFoodKcal').value = '';
       document.getElementById('inpFoodB').value = '';
@@ -1006,32 +880,20 @@
       ['diabetic', 'standard', 'veg'].forEach(k => {
         const btn = document.getElementById(`dietBtn-${k}`);
         if (!btn) return;
-        if (k === type) {
-          btn.className = `py-2 rounded-lg text-white shadow transition ${type === 'diabetic' ? 'bg-rose-600' : 'bg-blue-600'}`;
-        } else {
-          btn.className = 'py-2 rounded-lg text-slate-500 dark:text-slate-400 transition';
-        }
+        btn.className = (k === type) ? `py-2 rounded-lg text-white shadow transition ${type === 'diabetic' ? 'bg-rose-600' : 'bg-blue-600'}` : 'py-2 rounded-lg text-slate-500 dark:text-slate-400 transition';
       });
-      const alertBox = document.getElementById('diabeticAlertBox');
-      if (alertBox) alertBox.style.display = (type === 'diabetic') ? 'block' : 'none';
+      document.getElementById('diabeticAlertBox').style.display = (type === 'diabetic') ? 'block' : 'none';
       renderDietPlansList();
     }
 
     function renderDietPlansList() {
       const container = document.getElementById('dietCardsContainer');
       if (!container) return;
-      const list = dietMealPlans[currentDietTab] || dietMealPlans.diabetic;
       const t = i18n[currentAppLang] || i18n.ru;
-
-      container.innerHTML = list.map(item => `
+      container.innerHTML = (dietMealPlans[currentDietTab] || dietMealPlans.diabetic).map(item => `
         <div class="glass-panel rounded-2xl p-3.5 space-y-2">
-          <div class="flex justify-between items-start gap-2">
-            <span class="font-black text-sm text-slate-800 dark:text-slate-100">${item.title}</span>
-            <span class="text-sm font-black text-blue-500 shrink-0">${item.kcal} ${t.unitKcal}</span>
-          </div>
-          <div class="text-xs text-slate-400 font-bold">
-            Б: ${item.b}г • Ж: ${item.z}г • У: ${item.u}г ${item.xe ? `• <b class="text-rose-500 dark:text-rose-400">${item.xe} ХЕ</b>` : ''}
-          </div>
+          <div class="flex justify-between items-start gap-2"><span class="font-black text-sm text-slate-800 dark:text-slate-100">${item.title}</span><span class="text-sm font-black text-blue-500 shrink-0">${item.kcal} ${t.unitKcal}</span></div>
+          <div class="text-xs text-slate-400 font-bold">Б: ${item.b}г • Ж: ${item.z}г • У: ${item.u}г ${item.xe ? `• <b class="text-rose-500 dark:text-rose-400">${item.xe} ХЕ</b>` : ''}</div>
           ${item.desc ? `<p class="text-xs text-indigo-400/90 leading-tight">${item.desc}</p>` : ''}
         </div>
       `).join('');
@@ -1042,11 +904,8 @@
       if (!w || w <= 30 || w >= 300) return;
       userProfile.weight = w;
       localStorage.setItem('kcal_user_profile', JSON.stringify(userProfile));
-
-      const todayStr = `${new Date().getDate()}.${new Date().getMonth() + 1}`;
-      weightHistory.push({ date: todayStr, weight: w });
+      weightHistory.push({ date: `${new Date().getDate()}.${new Date().getMonth() + 1}`, weight: w });
       localStorage.setItem('kcal_weight_history', JSON.stringify(weightHistory));
-      
       document.getElementById('quickWeightInput').value = '';
       renderBodyHistory();
       renderCharts();
@@ -1062,59 +921,33 @@
     }
 
     function renderBodyHistory() {
-      const hM = userProfile.height / 100;
-      const bmi = (userProfile.weight / (hM * hM)).toFixed(1);
-      const currW = document.getElementById('valCurrW');
-      if (currW) currW.innerText = `${userProfile.weight} кг`;
-      const goalW = document.getElementById('valGoalW');
-      if (goalW) goalW.innerText = `${userProfile.goalWeight} кг`;
-      const bmiBadge = document.getElementById('bmiBadge');
-      if (bmiBadge) bmiBadge.innerText = `ИМТ: ${bmi}`;
-
-      const list = document.getElementById('weightHistoryList');
-      if (list) {
-        list.innerHTML = weightHistory.slice(-6).reverse().map(item => `
-          <div class="flex justify-between items-center p-2.5 sub-card rounded-xl text-sm">
-            <span class="text-slate-400 font-bold">${item.date}</span>
-            <span class="font-black text-slate-800 dark:text-slate-100">${item.weight} кг</span>
-          </div>
-        `).join('');
-      }
+      document.getElementById('valCurrW').innerText = `${userProfile.weight} кг`;
+      document.getElementById('valGoalW').innerText = `${userProfile.goalWeight} кг`;
+      document.getElementById('bmiBadge').innerText = `ИМТ: ${(userProfile.weight / Math.pow(userProfile.height / 100, 2)).toFixed(1)}`;
+      document.getElementById('weightHistoryList').innerHTML = weightHistory.slice(-6).reverse().map(item => `
+        <div class="flex justify-between items-center p-2.5 sub-card rounded-xl text-sm">
+          <span class="text-slate-400 font-bold">${item.date}</span>
+          <span class="font-black text-slate-800 dark:text-slate-100">${item.weight} кг</span>
+        </div>
+      `).join('');
     }
 
-    let kcalChartInstance = null;
-    let weightChartInstance = null;
-
+    let kcalChartInstance = null, weightChartInstance = null;
     function renderCharts() {
       const ctxK = document.getElementById('caloriesChartCanvas');
       const ctxW = document.getElementById('weightChartCanvas');
       if (!ctxK || !ctxW) return;
-
       if (kcalChartInstance) kcalChartInstance.destroy();
       if (weightChartInstance) weightChartInstance.destroy();
 
       kcalChartInstance = new Chart(ctxK, {
         type: 'bar',
-        data: {
-          labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-          datasets: [{
-            label: 'Ккал',
-            data: [1950, 1820, 2050, 1780, 1920, 2100, 1850],
-            backgroundColor: '#3b82f6', borderRadius: 6
-          }]
-        },
+        data: { labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'], datasets: [{ label: 'Ккал', data: [1950, 1820, 2050, 1780, 1920, 2100, 1850], backgroundColor: '#3b82f6', borderRadius: 6 }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
-
       weightChartInstance = new Chart(ctxW, {
         type: 'line',
-        data: {
-          labels: weightHistory.map(i => i.date),
-          datasets: [{
-            label: 'Вес (кг)', data: weightHistory.map(i => i.weight),
-            borderColor: '#10b981', tension: 0.3, fill: false
-          }]
-        },
+        data: { labels: weightHistory.map(i => i.date), datasets: [{ label: 'Вес (кг)', data: weightHistory.map(i => i.weight), borderColor: '#10b981', tension: 0.3, fill: false }] },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
     }
@@ -1126,10 +959,8 @@
     }
 
     function recalcMifflinNorm() {
-      const w = userProfile.weight, h = userProfile.height, a = userProfile.age;
-      let bmr = (10 * w) + (6.25 * h) - (5 * a) + (userProfile.gender === 'male' ? 5 : -161);
+      let bmr = (10 * userProfile.weight) + (6.25 * userProfile.height) - (5 * userProfile.age) + (userProfile.gender === 'male' ? 5 : -161);
       let tdee = bmr * (userProfile.activity || 1.375);
-
       if (userProfile.goalType === 'loss') tdee -= 400;
       else if (userProfile.goalType === 'gain') tdee += 350;
 
@@ -1137,13 +968,11 @@
       localStorage.setItem('kcal_user_profile', JSON.stringify(userProfile));
 
       const t = i18n[currentAppLang] || i18n.ru;
-      const goalNames = { loss: t.goalLoss, maint: t.goalMaint, gain: t.goalGain };
-      const goalIcons = { loss: '🔥', maint: '⚖️', gain: '💪' };
+      const icons = { loss: '🔥', maint: '⚖️', gain: '💪' };
+      const names = { loss: t.goalLoss, maint: t.goalMaint, gain: t.goalGain };
 
-      const gIcon = document.getElementById('headerGoalIcon');
-      if (gIcon) gIcon.innerText = goalIcons[userProfile.goalType];
-      const gType = document.getElementById('headerGoalType');
-      if (gType) gType.innerText = goalNames[userProfile.goalType];
+      document.getElementById('headerGoalIcon').innerText = icons[userProfile.goalType];
+      document.getElementById('headerGoalType').innerText = names[userProfile.goalType];
       renderDiaryUI();
     }
 
@@ -1155,7 +984,7 @@
         userProfile.gender = document.getElementById('profGender').value;
         userProfile.activity = parseFloat(document.getElementById('profActivity').value) || 1.375;
         recalcMifflinNorm();
-        alert('✓ Настройки профиля успешно обновлены!');
+        alert('✓ Профиль успешно обновлен!');
       } catch (e) {}
     }
 
@@ -1183,26 +1012,3 @@
   </script>
 </body>
 </html>
-  <script>
-    // --- ДОПОЛНИТЕЛЬНЫЙ МОДУЛЬ РАСШИРЕННОЙ БАЗЫ И ПЕРЕВОДОВ ---
-    const extendedFoodDatabase = [
-      { id: 16, name: 'Творог 0% обезжиренный', kcal: 88, b: 18.0, z: 0.6, u: 1.8, gi: 30 },
-      { id: 17, name: 'Кефир 1% стакан (200мл)', kcal: 82, b: 5.8, z: 2.0, u: 8.0, gi: 25 },
-      { id: 18, name: 'Хлебцы цельнозерновые (1 шт)', kcal: 30, b: 1.0, z: 0.3, u: 6.0, gi: 45 },
-      { id: 19, name: 'Груша свежая сочная', kcal: 42, b: 0.4, z: 0.3, u: 10.7, gi: 35 },
-      { id: 20, name: 'Орехи грецкие очищенные', kcal: 654, b: 15.2, z: 65.2, u: 7.0, gi: 15 }
-    ];
-    // Объединяем с основной базой
-    foodDatabase.push(...extendedFoodDatabase);
-
-    // Дополнительная проверка целостности локального хранилища и рендеринга при старте
-    window.addEventListener('load', () => {
-      try {
-        renderDiaryUI();
-        renderBodyPhotosGallery();
-      } catch(err) {
-        console.log("Initialization check passed");
-      }
-    });
-  </script>
-
