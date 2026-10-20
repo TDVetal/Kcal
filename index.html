@@ -45,6 +45,9 @@ label{display:block;font-size:11px;font-weight:700;color:var(--mu);margin:6px 0 
 .rg.pl{animation:pl .9s ease 1}
 @keyframes pl{40%{transform:scale(1.07);filter:drop-shadow(0 0 10px var(--ok))}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.hide{display:none!important}
+.dl{animation:dl 1.2s ease}@keyframes dl{from{stroke-dashoffset:1000}}
+.gb{transform-box:fill-box;transform-origin:bottom;animation:gb .8s cubic-bezier(.22,1,.36,1)}@keyframes gb{from{transform:scaleY(0)}}
 </style></head><body>
 <div id="app"><header id="hd"></header><main id="mn"></main><nav id="nv"></nav></div><div id="md"></div>
 <script>
@@ -52,8 +55,7 @@ const $=s=>document.querySelector(s),M=["breakfast","lunch","dinner","snacks"],K
 const T={diary:["Дневник","Diary","Dagboek"],ration:["Рацион","Ration","Voeding"],form:["Вес","Weight","Gewicht"],charts:["Графики","Charts","Grafiek"],prof:["Профиль","Profile","Profiel"],
 breakfast:["Завтрак","Breakfast","Ontbijt"],lunch:["Обед","Lunch","Lunch"],dinner:["Ужин","Dinner","Diner"],snacks:["Перекус","Snacks","Snack"],
 kcal:["ккал","kcal","kcal"],g:["г","g","g"],ml:["мл","ml","ml"],loss:["🔥 Похудение","🔥 Fat loss","🔥 Afvallen"],gain:["💪 Набор","💪 Gain","💪 Spieropbouw"],norm:["⚖️ Норма","⚖️ Maintain","⚖️ Balans"],
-cancel:["Отмена","Cancel","Annuleren"],saved:["Сохранено!","Saved!","Opgeslagen!"],full:["Нет места в памяти","Storage is full","Opslag is vol"],
-soon:["Раздел подключится в следующей части","This section arrives in the next part","Dit onderdeel volgt in het volgende deel"]};
+cancel:["Отмена","Cancel","Annuleren"],saved:["Сохранено!","Saved!","Opgeslagen!"],full:["Нет места в памяти","Storage is full","Opslag is vol"]};
 const V={},ACT={},PV={},PN={},CR=2*Math.PI*44;let PHD=true;
 const li=()=>["ru","en","nl"].indexOf(A.lang),t=k=>(T[k]||[k,k,k])[li()];
 const iso=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),today=()=>iso(new Date());
@@ -94,7 +96,6 @@ document.querySelectorAll(".cu").forEach(e=>{const to=+e.dataset.to,n=e.dataset.
 const t0=performance.now();(function s(now){const p=Math.min(1,(now-t0)/800);e.textContent=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(s)})(t0)})}))}
 function openM(h){$("#md").innerHTML='<div class="bk"><div class="mw">'+h+'</div></div>'}
 function closeM(){$("#md").innerHTML=""}
-const stub=()=>`<div class="card mu" style="text-align:center;padding:36px 12px">${t("soon")}</div>`;
 Object.assign(ACT,{
 go:v=>{A.tab=v;save();render()},
 lang:()=>{A.lang=A.lang=="ru"?"en":A.lang=="en"?"nl":"ru";save();render()},
@@ -103,21 +104,19 @@ goal:()=>{A.goal=A.goal=="loss"?"gain":A.goal=="gain"?"norm":"loss";A.manual=fal
 function render(){document.documentElement.dataset.theme=A.theme;document.documentElement.lang=A.lang;document.documentElement.style.setProperty("--np",A.np+"px");
 $("#hd").innerHTML=`<b style="font-size:16px">🔥 Dieta Pro</b><div class="ra"><button class="pill" data-a="goal">${t(A.goal)}</button><button class="ib" data-a="theme">${A.theme=="dark"?"🌙":"☀️"}</button><button class="ib" data-a="lang">🌐 ${A.lang.toUpperCase()}</button></div>`;
 $("#nv").innerHTML=[["diary","🍏"],["ration","🥗"],["form","⚖️"],["charts","📊"],["prof","⚙️"]].map(([k,i])=>`<button class="${A.tab==k?"on":""}" data-a="go" data-v="${k}"><i>${i}</i>${t(k)}</button>`).join("");
-const mn=$("#mn");mn.className=A.tab=="diary"?"fill":"";mn.innerHTML=(V[A.tab]||stub)();animRings()}
+const mn=$("#mn");mn.className=A.tab=="diary"?"fill":"";mn.innerHTML=(V[A.tab]||(()=>""))();animRings()}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b&&ACT[b.dataset.a])ACT[b.dataset.a](b.dataset.v,b,e);else if(e.target.classList.contains("bk"))closeM()});
 document.addEventListener("input",e=>{const b=e.target.closest("[data-i]");if(b&&ACT[b.dataset.i])ACT[b.dataset.i](b.value,b)});
 document.addEventListener("change",e=>{const b=e.target.closest("[data-c]");if(b&&ACT[b.dataset.c])ACT[b.dataset.c](b.value,b,e)});
 ["gesturestart","gesturechange","gestureend"].forEach(n=>document.addEventListener(n,e=>e.preventDefault()));
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&today()!==lastT){if(A.cur===lastT)A.cur=today();lastT=today();render()}});
-</script>
-<script>
 Object.assign(T,{eaten:["Съедено","Eaten","Gegeten"],goal:["Цель","Goal","Doel"],left:["Осталось","Left","Over"],over:["Перебор","Over","Te veel"],
 p:["Белки","Protein","Eiwit"],f:["Жиры","Fat","Vet"],c:["Углеводы","Carbs","Koolh."],xe:["ХЕ","BU","BE"],water:["Вода","Water","Water"],act:["Активность","Activity","Activiteit"],
 pick:["+ Выбрать","+ Pick","+ Kies"],add:["+ Еда","+ Food","+ Eten"],ai:["📸 ИИ-фото","📸 AI photo","📸 AI foto"],empty:["Пусто","Empty","Leeg"],
 search:["Поиск блюда...","Search food...","Zoek gerecht..."],custom:["✍️ Своё блюдо (значения на 100 г)","✍️ Custom dish (values per 100 g)","✍️ Eigen gerecht (per 100 g)"],
 cname:["Название","Name","Naam"],portion:["Порция (г)","Portion (g)","Portie (g)"],addD:["✅ Добавить в дневник","✅ Add to diary","✅ Toevoegen"],
 other:["Или введите ккал вручную","Or enter kcal manually","Of voer kcal in"],today:["Сегодня","Today","Vandaag"],
-done:["🎉 Цель выполнена!","🎉 Goal reached!","🎉 Doel bereikt!"],soon2:["ИИ-скан подключится в следующей части","AI scan arrives in the next part","AI-scan volgt in het volgende deel"]});
+done:["🎉 Цель выполнена!","🎉 Goal reached!","🎉 Doel bereikt!"]});
 const DB=[["Омлет с сыром","Cheese omelet","Kaasomelet",145,10.5,10.8,2.3],["Тост с авокадо и яйцом","Avocado egg toast","Avocadotoast met ei",195,8.2,11.4,15],
 ["Овсянка с ягодами","Oatmeal with berries","Havermout met bessen",118,4.1,3.2,18.5],["Курица гриль с рисом","Grilled chicken & rice","Kip met rijst",142,19.5,2.4,11.2],
 ["Лосось с брокколи","Salmon & broccoli","Zalm met broccoli",168,18,9.6,2.4],["Творог 5%","Cottage cheese 5%","Kwark 5%",121,16.5,5,2.8],
@@ -150,7 +149,6 @@ day:v=>{A.cur=+v==0?today():addDays(A.cur,+v);if(A.cur>today())A.cur=today();sav
 meal:v=>{A.meal=v;save();render()},
 water:v=>{const d=DW();d.water=Math.max(0,d.water+ +v);save();render()},
 del:v=>{DW().meals[A.meal].splice(+v,1);save();render()},
-ai:()=>toast(t("soon2")),
 food:()=>{custom=false;sel=0;openM(`<div class="row"><b>📖 ${t(A.meal)}</b><button class="x" data-a="close">✕</button></div>
 <input id="fs" data-i="fs" placeholder="${t("search")}"><div id="fl" class="grid" style="max-height:34dvh;overflow-y:auto">${foodList("")}</div>
 <button class="pill" data-a="cust">${t("custom")}</button>
@@ -170,30 +168,36 @@ ${AC.map(a=>`<div class="fr" data-a="addAct" data-v="${a[3]}" style="cursor:poin
 <label>${t("other")}</label><div class="row"><input id="ac" type="number" inputmode="numeric" placeholder="300"><button class="pill" data-a="addActM" style="white-space:nowrap">+</button></div>`),
 addAct:v=>{const k=+v;if(k>0){DW().act+=Math.round(k);save();closeM();render()}},
 addActM:()=>ACT.addAct(num("ac",0))});
-</script>
-<style>.hide{display:none!important}</style>
-<script>
 Object.assign(T,{key:["Ключ Google Gemini API","Google Gemini API key","Google Gemini API-sleutel"],autoKey:["Ключ хранится только на этом устройстве","Key is stored on this device only","Sleutel staat alleen op dit apparaat"],
 photo:["📷 Сфотографировать или выбрать фото","📷 Take or choose a photo","📷 Maak of kies een foto"],scan:["⏳ ИИ анализирует фото...","⏳ AI is analyzing...","⏳ AI analyseert..."],
 nokey:["Введите ключ Gemini API","Enter your Gemini API key","Voer je Gemini API-sleutel in"],err:["Ошибка ИИ: ","AI error: ","AI-fout: "],nofood:["Еда на фото не найдена","No food found in photo","Geen eten gevonden"]});
 let ai=null;
 function shrink(file,max){return new Promise((ok,no)=>{const r=new FileReader();r.onerror=()=>no(new Error("read"));r.onload=e=>{const im=new Image();im.onerror=()=>no(new Error("decode"));
 im.onload=()=>{const s=Math.min(1,max/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.8))};im.src=e.target.result};r.readAsDataURL(file)})}
-function callG(key,b64,model,think){const gc={temperature:.2,maxOutputTokens:4096,responseMimeType:"application/json"};if(think)gc.thinkingConfig={thinkingBudget:0};
-const L={ru:"Russian",en:"English",nl:"Dutch"}[A.lang];
-const pr=`Analyze this food photo. Return JSON: {"name": dish name in ${L}, "weight_g": number, "calories": number, "proteins": number, "fats": number, "carbs": number}. Values are for the whole portion shown. If there is no food, return {"error":"no_food"}.`;
-return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify({contents:[{parts:[{text:pr},{inline_data:{mime_type:"image/jpeg",data:b64}}]}],generationConfig:gc})})}
+const GB="https://generativelanguage.googleapis.com/v1beta/";let MODELS=null;
+Object.assign(T,{neterr:["Нет связи с Google. Проверь интернет, отключи VPN и блокировщик рекламы и попробуй ещё раз.","No connection to Google. Check your internet, turn off VPN/ad blockers and try again.","Geen verbinding met Google. Controleer internet, zet VPN/adblocker uit en probeer opnieuw."]});
+async function gj(url,opt,step){let r;try{r=await fetch(url,opt)}catch(e){const n=new Error("["+step+"] "+(e&&e.name=="AbortError"?"timeout":e&&e.message||e));n.net=1;throw n}
+if(!r.ok){let m="HTTP "+r.status+" ["+step+"]";try{const j=await r.json();if(j.error&&j.error.message)m+=": "+j.error.message}catch(_){}const n=new Error(m);n.st=r.status;throw n}
+return r.json()}
+async function getModels(key){if(MODELS&&MODELS.k===key)return MODELS.l;
+const d=await gj(GB+"models?pageSize=200&key="+encodeURIComponent(key),{},"models"),v=n=>parseFloat((n.match(/gemini-([\d.]+)-flash/)||[0,0])[1]),
+l=(d.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes("generateContent")).map(m=>m.name.replace("models/","")).filter(n=>/^gemini-[\d.]+-flash(-lite)?$/.test(n)).sort((a,b)=>/lite/.test(a)-/lite/.test(b)||v(b)-v(a));
+if(!l.length)l.push("gemini-flash-latest");MODELS={k:key,l};return l}
+async function gen(key,b64,model,think){const gc={temperature:.2,maxOutputTokens:4096,responseMimeType:"application/json"};if(think)gc.thinkingConfig={thinkingBudget:0};
+const L={ru:"Russian",en:"English",nl:"Dutch"}[A.lang],pr=`Analyze this food photo. Return JSON: {"name": dish name in ${L}, "weight_g": number, "calories": number, "proteins": number, "fats": number, "carbs": number}. Values are for the whole portion shown. If there is no food, return {"error":"no_food"}.`,
+ac=new AbortController(),to=setTimeout(()=>ac.abort(),60000);
+try{return await gj(GB+"models/"+model+":generateContent?key="+encodeURIComponent(key),{method:"POST",headers:{"Content-Type":"application/json"},signal:ac.signal,body:JSON.stringify({contents:[{parts:[{text:pr},{inline_data:{mime_type:"image/jpeg",data:b64}}]}],generationConfig:gc})},model)}finally{clearTimeout(to)}}
 async function scan(inp){const f=inp.files[0];inp.value="";if(!f)return;const key=$("#k").value.trim();if(!key){alert(t("nokey"));return}A.key=key;save();
-const sh=i=>$("#"+i).classList.remove("hide"),hd=i=>$("#"+i).classList.add("hide");sh("al");hd("ar");hd("ab");
-try{const b64=(await shrink(f,768)).split(",")[1];let r;
-for(const m of ["gemini-3.8-flash","gemini-3.5-flash","gemini-flash-latest"]){r=await callG(key,b64,m,true);if(r.status==400)r=await callG(key,b64,m,false);if(r.status!=404)break}
-if(!r.ok){let m="HTTP "+r.status;try{const e=await r.json();if(e.error&&e.error.message)m+=": "+e.error.message}catch(_){}throw new Error(m)}
-const d=await r.json(),parts=d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts;if(!parts)throw new Error("empty response");
-let o=JSON.parse(parts.map(p=>p.text||"").join("").replace(/```json|```/g,"").trim());if(Array.isArray(o))o=o[0];
-if(!o||o.error){hd("al");alert(t("nofood"));return}
+const sh=i=>{const e=$("#"+i);e&&e.classList.remove("hide")},hd=i=>{const e=$("#"+i);e&&e.classList.add("hide")};sh("al");hd("ar");hd("ab");
+try{const b64=(await shrink(f,768)).split(",")[1];let d,last;
+for(const m of(await getModels(key)).slice(0,3)){try{try{d=await gen(key,b64,m,true)}catch(e){if(e.st==400)d=await gen(key,b64,m,false);else throw e}break}catch(e){last=e;if(!(e.net||[404,429,500,503].includes(e.st)))throw e}}
+if(!d)throw last;
+const parts=d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts;if(!parts)throw new Error("empty response");
+const tx=parts.map(p=>p.text||"").join("");let o;try{o=JSON.parse(tx.replace(/```json|```/g,"").trim())}catch(_){const mm=tx.match(/\{[\s\S]*\}/);o=JSON.parse(mm?mm[0]:"x")}
+if(Array.isArray(o))o=o[0];if(!o||o.error){hd("al");alert(t("nofood"));return}
 ai={n:String(o.name||"?"),g:Math.max(1,Number(o.weight_g)||250),k:Number(o.calories)||0,p:Number(o.proteins)||0,f:Number(o.fats)||0,c:Number(o.carbs)||0};
-$("#ag").value=ai.g;hd("al");sh("ar");sh("ab");showAi(ai.g)}
-catch(e){hd("al");alert(t("err")+e.message)}}
+const ag=$("#ag");if(ag)ag.value=ai.g;hd("al");sh("ar");sh("ab");showAi(ai.g)}
+catch(e){hd("al");alert(t("err")+(e.net?t("neterr")+"\n":"")+e.message)}}
 function showAi(g){if(!ai)return;const f=g/ai.g;ai.cur={n:[ai.n,ai.n,ai.n],g,k:Math.round(ai.k*f),p:r1(ai.p*f),f:r1(ai.f*f),c:r1(ai.c*f)};$("#an").textContent=ai.n;
 $("#am").textContent=`${g}${t("g")} · ${ai.cur.k} ${t("kcal")} · ${t("p")[0]}${ai.cur.p} ${t("f")[0]}${ai.cur.f} ${t("c")[0]}${ai.cur.c}`}
 Object.assign(ACT,{
@@ -206,8 +210,6 @@ saveKey:v=>{A.key=$("#"+v).value.trim();save();toast(t("saved"))},
 scan:(v,el)=>scan(el),
 aiG:v=>showAi(Math.max(1,parseFloat(v)||1)),
 aiAdd:()=>{if(!ai||!ai.cur)return;DW().meals[A.meal].push(ai.cur);ai=null;save();closeM();render()}});
-</script>
-<script>
 Object.assign(T,{gender:["Пол","Gender","Geslacht"],male:["Мужской","Male","Man"],female:["Женский","Female","Vrouw"],age:["Возраст","Age","Leeftijd"],mult:["Активность в жизни","Lifestyle activity","Activiteitsniveau"],
 m1:["Сидячий (1.2)","Sedentary (1.2)","Zittend (1.2)"],m2:["Лёгкая (1.375)","Light (1.375)","Licht (1.375)"],m3:["Средняя (1.55)","Moderate (1.55)","Matig (1.55)"],m4:["Высокая (1.725)","High (1.725)","Hoog (1.725)"],
 calc:["⚡ Рассчитать нормы автоматически","⚡ Calculate targets","⚡ Doelen berekenen"],kcalG:["Калории (ккал)","Calories (kcal)","Calorieën (kcal)"],waterG:["Вода (мл)","Water (ml)","Water (ml)"],
@@ -242,8 +244,6 @@ restore:(v,el)=>{const f=el.files[0];el.value="";if(!f)return;const r=new FileRe
 if(!o.days){o.days={};if(o.day&&o.meals)o.days[o.day]={meals:o.meals,water:o.water||0,act:o.act||0};Object.entries(o.log||{}).forEach(([d,k])=>{if(!o.days[d])o.days[d]={...emptyDay(),lk:k}});["meals","water","act","day","log"].forEach(k=>delete o[k])}
 A=Object.assign(def(),o);if(!Array.isArray(A.hist)||!A.hist.length)A.hist=[{d:today(),w:A.weight}];A.cur=today();PHD=true;save();render();toast(t("restored"))}catch(e){alert(t("badfile"))}};r.readAsText(f)},
 factory:()=>{if(confirm(t("confirm"))){[KEY,KEY+"_ph",OLD].forEach(k=>localStorage.removeItem(k));location.reload()}}});
-</script>
-<script>
 Object.assign(T,{kg:["кг","kg","kg"],bmi:["ИМТ","BMI","BMI"],start:["Старт","Start","Start"],weight:["Вес (кг)","Weight (kg)","Gewicht (kg)"],height:["Рост (см)","Height (cm)","Lengte (cm)"],target:["Цель (кг)","Goal (kg)","Doel (kg)"],
 startw:["Стартовый вес (кг)","Start weight (kg)","Startgewicht (kg)"],fw:["⚖️ Вес","⚖️ Weight","⚖️ Gewicht"],fm:["📏 Объёмы","📏 Body","📏 Maten"],fp:["📸 Фото","📸 Photos","📸 Foto's"],
 waist:["Талия (см)","Waist (cm)","Taille (cm)"],chest:["Грудь (см)","Chest (cm)","Borst (cm)"],hips:["Бёдра (см)","Hips (cm)","Heupen (cm)"],bicep:["Бицепс (см)","Bicep (cm)","Biceps (cm)"],neck:["Шея (см)","Neck (cm)","Nek (cm)"],thigh:["Бедро (см)","Thigh (cm)","Dijbeen (cm)"],
@@ -279,9 +279,6 @@ saveM:()=>{MK.forEach(k=>{const v=num("m_"+k,0);if(v>0)A.meas[k]=v});save();toas
 addPhoto:async(v,el)=>{const f=el.files[0];el.value="";if(!f)return;try{const u=await shrink(f,640);A.photos.unshift({id:Date.now(),d:today(),w:A.weight,u});PHD=true;save();render();toast(t("saved"))}catch(e){alert(e.message)}},
 delPhoto:v=>{A.photos=A.photos.filter(p=>p.id!=v);PHD=true;save();render()},
 loadRt:()=>{const d=DW();plan().forEach((L,x)=>L.forEach(it=>{if(!d.meals[M[x]].some(e=>nm(e)==nm(it)))d.meals[M[x]].push(it)}));A.tab="diary";save();render();toast(t("rloaded"))}});
-</script>
-<style>.dl{animation:dl 1.2s ease}@keyframes dl{from{stroke-dashoffset:1000}}.gb{transform-box:fill-box;transform-origin:bottom;animation:gb .8s cubic-bezier(.22,1,.36,1)}@keyframes gb{from{transform:scaleY(0)}}</style>
-<script>
 Object.assign(T,{avg:["Средний калораж","Avg calories","Gem. calorieën"],chg:["Изменение веса","Weight change","Gewichtsverandering"],wavg:["Вода, среднее","Water, avg","Water, gem."],
 days:["Дни","Days","Dagen"],weeks:["Недели","Weeks","Weken"],months:["Месяцы","Months","Maanden"],wchart:["Вес, кг","Weight, kg","Gewicht, kg"],kchart:["Калории по дням","Daily calories","Calorieën per dag"]});
 const lab=k=>k.length==7?k.slice(5)+"."+k.slice(2,4):k.slice(8)+"."+k.slice(5,7);
@@ -307,6 +304,6 @@ return`<div class="card"><div class="tabs">${["days","weeks","months"].map(p=>`<
 <div class="card"><div class="mu" style="margin-bottom:4px">${t("kchart")} · ${t("goal")} ${A.kcalG}</div>${barSvg(kSeries(),A.kcalG)}</div>
 <div class="grid g2">${sc("avg",avg?avg+" "+t("kcal"):"—","var(--ac)")}${sc("chg",(ch>0?"+":"")+ch+" "+t("kg"),(A.goal=="gain"?ch>=0:ch<=0)?"var(--ok)":"var(--dg)")}${sc("wavg",wp,"var(--ac)")}${sc("bmi",r1(b),bmiC(b))}</div>`};
 ACT.period=v=>{A.period=v;save();render()};
+render();
 </script>
-<script>render()</script>
 </body></html>
